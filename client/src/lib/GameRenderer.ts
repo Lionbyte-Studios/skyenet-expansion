@@ -114,7 +114,7 @@ export class GameRenderer {
     this.ctx.textAlign = "center";
     this.ctx.fillText(`${game.players.length} person is connected`, 0, -100);
 
-    for (let i = 0; i < game.players.length; i++) {
+    for (let i = game.players.length-1; i >= 0; i--) {
       for (let a = 0; a < game.players[i].flames.length; a++) {
         this.ctx.translate(
           game.players[i].flames[a].x,
