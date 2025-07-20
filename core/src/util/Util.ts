@@ -31,11 +31,3 @@ export function entitiyToZodEntitySchema(entity: Entity) {
     entityData: entity,
   });
 }
-
-/*
-export const EntitySchema = z.object({
-  entityID: z.string(),
-  entityType: z.enum(EntityType),
-  entityData: z.any(),
-})
-*/
