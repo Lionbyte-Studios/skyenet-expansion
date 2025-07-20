@@ -22,11 +22,11 @@ export class MyPlayer extends ClientPlayer {
     YOffset: number = 0,
     speed: number = 1,
   ) {
-    var X = horizontal * XOffset + vertical * YOffset;
-    var Y = -vertical * XOffset + horizontal * YOffset;
+    const x = horizontal * XOffset + vertical * YOffset;
+    const y = -vertical * XOffset + horizontal * YOffset;
     this.flames[this.flames.length] = {
-      x: this.x + X,
-      y: this.y + Y,
+      x: this.x + x,
+      y: this.y + y,
       z: Math.random() / 4 + 0.3,
       velX: this.velX + vertical * speed + (Math.random() - 0.5) * 2,
       velY: this.velY + horizontal * speed + (Math.random() - 0.5) * 2,
