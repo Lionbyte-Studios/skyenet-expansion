@@ -15,15 +15,21 @@ export class MyPlayer extends ClientPlayer {
     this.move();
     this.sendMovement();
   }
-  private makeFlame(horizontal: number, vertical: number,XOffset:number=0,YOffset:number=0,speed:number=1) {
-    var X = horizontal * XOffset + vertical*YOffset
-    var Y = -vertical * XOffset + horizontal*YOffset
+  private makeFlame(
+    horizontal: number,
+    vertical: number,
+    XOffset: number = 0,
+    YOffset: number = 0,
+    speed: number = 1,
+  ) {
+    const x = horizontal * XOffset + vertical * YOffset;
+    const y = -vertical * XOffset + horizontal * YOffset;
     this.flames[this.flames.length] = {
-      x: this.x + X,
-      y: this.y + Y,
+      x: this.x + x,
+      y: this.y + y,
       z: Math.random() / 4 + 0.3,
-      velX: this.velX + vertical*speed + (Math.random() - 0.5) * 2,
-      velY: this.velY + horizontal*speed + (Math.random() - 0.5) * 2,
+      velX: this.velX + vertical * speed + (Math.random() - 0.5) * 2,
+      velY: this.velY + horizontal * speed + (Math.random() - 0.5) * 2,
       size: 10,
       rotation: this.rotation,
     };
@@ -37,7 +43,7 @@ export class MyPlayer extends ClientPlayer {
     if (game.keyManager.isKeyPressed("KeyW")) {
       // this.engineActive = true; // Set engine active when W is pressed
       for (let i = 0; i < 10; i++) {
-        this.makeFlame(horizontal, vertical,0,110,1);
+        this.makeFlame(horizontal, vertical, 0, 110, 1);
       }
       this.velY -= horizontal;
       this.velX -= vertical;
@@ -66,10 +72,10 @@ export class MyPlayer extends ClientPlayer {
       // }
 
       for (let i = 0; i < 2; i++) {
-        this.makeFlame(horizontal, vertical,70,20,-3);
+        this.makeFlame(horizontal, vertical, 70, 20, -3);
       }
       for (let i = 0; i < 2; i++) {
-        this.makeFlame(horizontal, vertical,-70,20,-3);
+        this.makeFlame(horizontal, vertical, -70, 20, -3);
       }
       this.velY += horizontal / 2;
       this.velX += vertical / 2;
@@ -80,19 +86,19 @@ export class MyPlayer extends ClientPlayer {
       //   this.cameraDist=((this.cameraDist*99)-10)/100
       // }
       for (let i = 0; i < 2; i++) {
-        this.makeFlame(horizontal, vertical,70,30,5);
+        this.makeFlame(horizontal, vertical, 70, 30, 5);
       }
       for (let i = 0; i < 2; i++) {
-        this.makeFlame(horizontal, vertical,-70,20,-5);
+        this.makeFlame(horizontal, vertical, -70, 20, -5);
       }
     }
     if (game.keyManager.isKeyPressed("KeyD")) {
       this.velR -= 0.1;
       for (let i = 0; i < 2; i++) {
-        this.makeFlame(horizontal, vertical,70,20,-5);
+        this.makeFlame(horizontal, vertical, 70, 20, -5);
       }
       for (let i = 0; i < 2; i++) {
-        this.makeFlame(horizontal, vertical,-70,30,5);
+        this.makeFlame(horizontal, vertical, -70, 30, 5);
       }
       // if(this.cameraDist>-10){
       //   this.cameraDist=((this.cameraDist*99)-10)/100

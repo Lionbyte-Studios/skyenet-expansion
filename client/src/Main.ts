@@ -17,12 +17,14 @@ import {
   type GameID,
   type PlayerID,
 } from "../../core/src/types.d.js";
+import { ClientStorage } from "./lib/settings/ClientStorage.js";
 
 export let game: ClientGame;
 let renderer: GameRenderer;
 let menu: GameMenu;
 export let atlasManager: AtlasManager;
 let gameState: "menu" | "playing" = "menu";
+export const clientStorage = new ClientStorage();
 
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   <div>
@@ -145,7 +147,7 @@ function tick() {
     game.keyManager.update();
     game.myPlayer.tick();
     game.camera.tick();
-    game.debug.tick()
+    game.debug.tick();
     renderer.drawGame(game);
     game.tick();
   }

@@ -114,7 +114,7 @@ export class GameRenderer {
     this.ctx.textAlign = "center";
     this.ctx.fillText(`${game.players.length} person is connected`, 0, -100);
 
-    for (let i = game.players.length-1; i >= 0; i--) {
+    for (let i = game.players.length - 1; i >= 0; i--) {
       for (let a = 0; a < game.players[i].flames.length; a++) {
         this.ctx.translate(
           game.players[i].flames[a].x,
@@ -152,10 +152,15 @@ export class GameRenderer {
       //   : game.myPlayer.shipSprite;
       // this.ctx.translate(game.camera.x, game.camera.y);
       this.ctx.translate(game.players[i].x, game.players[i].y);
-        this.ctx.fillStyle = `#aaaaaa77`;
-      this.ctx.fillRect(-52,-52,104,14)
-        this.ctx.fillStyle = `#ffffaa77`;
-      this.ctx.fillRect(-50,-50,(100/game.players[i].MaxHP)*game.players[i].HP,10)
+      this.ctx.fillStyle = `#aaaaaa77`;
+      this.ctx.fillRect(-52, -52, 104, 14);
+      this.ctx.fillStyle = `#ffffaa77`;
+      this.ctx.fillRect(
+        -50,
+        -50,
+        (100 / game.players[i].MaxHP) * game.players[i].HP,
+        10,
+      );
       this.ctx.rotate(-((game.players[i].rotation * Math.PI) / 180));
 
       // Apply 3  x scale for player ship
@@ -196,14 +201,14 @@ export class GameRenderer {
     }
     this.ctx.translate(-game.camera.x, -game.camera.y);
 
-    if(game.debug.info){
-      var fontSize=20
+    if (game.debug.info) {
+      const fontSize = 20;
       this.ctx.font = `${fontSize}px serif`;
       this.ctx.textAlign = "left";
       this.ctx.fillStyle = "#fff9";
-      let debugList=[]
+      const debugList = [];
 
-      debugList.push(`X:${Math.round(game.myPlayer.x)} `)
+      debugList.push(`X:${Math.round(game.myPlayer.x)} `);
       debugList.push(`Y:${Math.round(game.myPlayer.y)} `);
       debugList.push(`R:${Math.round(game.myPlayer.rotation)} `);
       debugList.push(`VelX:${Math.round(game.myPlayer.velX)} `);
@@ -212,9 +217,8 @@ export class GameRenderer {
       debugList.push(`HP:${game.myPlayer.HP} / ${game.myPlayer.MaxHP} `);
       debugList.push(`${game.players.length} person is connected`);
 
-      for(let i = 0; i<debugList.length;i++){
-        this.ctx.fillText(`${debugList[i]}`, 0, (i+1)*fontSize);
-
+      for (let i = 0; i < debugList.length; i++) {
+        this.ctx.fillText(`${debugList[i]}`, 0, (i + 1) * fontSize);
       }
     }
     // this.ctx.scale(

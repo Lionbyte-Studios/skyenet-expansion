@@ -10,13 +10,15 @@ import { MyPlayer } from "./entity/MyPlayer";
 import { Camera } from "./lib/Camera";
 import { KeyManager } from "./lib/Keyman";
 import { Debug } from "./lib/Debug";
+import { ClientSettings } from "./lib/settings/ClientSettings";
+import { clientStorage } from "./Main";
 
 export class ClientGame extends Game {
   public players: ClientPlayer[] = [];
   public keyManager = new KeyManager();
   public camera = new Camera(this);
   public myPlayer: MyPlayer;
-  public debug = new Debug(this)
+  public debug = new Debug(this);
   public stars: {
     x: number;
     y: number;
@@ -25,6 +27,7 @@ export class ClientGame extends Game {
     velY?: number;
     size?: number;
   }[] = [];
+  public clientSettings: ClientSettings;
 
   constructor(
     gameID: GameID,
@@ -50,6 +53,11 @@ export class ClientGame extends Game {
         z: 5 + Math.random() * 4,
       });
     }
+    const settings = clientStorage.get("settings", ClientSettings);
+    if (settings === undefined) this.clientSettings = new ClientSettings();
+    else this.clientSettings = settings;
+    console.log("Client Settings: " + JSON.stringify(this.clientSettings));
+    this.saveSettings();
   }
 
   public tick() {
@@ -57,5 +65,9 @@ export class ClientGame extends Game {
       .filter((player) => player.playerID !== this.myPlayer.playerID)
       .forEach((player) => player.move());
     this.entities.forEach((entity) => entity.tick());
+  }
+
+  public saveSettings() {
+    this.clientSettings.save();
   }
 }
