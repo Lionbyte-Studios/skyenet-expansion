@@ -44,7 +44,7 @@ export class Player extends Entity {
     this.shipEngineSprite = shipEngineSprite;
   }
 
-  public move() {
+  private move() {
     this.y += this.velY;
     this.x += this.velX;
     this.rotation += this.velR;
@@ -81,5 +81,8 @@ export class Player extends Entity {
       // }
     }
     */
+  }
+  public override tick() {
+    this.move();
   }
 }

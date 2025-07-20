@@ -12,6 +12,16 @@ import { KeyManager } from "./lib/Keyman";
 import { Debug } from "./lib/Debug";
 import { ClientSettings } from "./lib/settings/ClientSettings";
 import { clientStorage } from "./Main";
+import { calculateNextTickTimeRemaining } from "../../core/src/util/Util";
+
+export interface ClientGameStats {
+  fps: number;
+  tps: number;
+  ticksThisSecond: number;
+  framesThisSecond: number;
+  lastTickSecondTimestamp: number;
+  lastFrameSecondTimestamp: number;
+}
 
 export class ClientGame extends Game {
   public players: ClientPlayer[] = [];
@@ -28,6 +38,7 @@ export class ClientGame extends Game {
     size?: number;
   }[] = [];
   public clientSettings: ClientSettings;
+  public stats: ClientGameStats;
 
   constructor(
     gameID: GameID,
@@ -36,6 +47,7 @@ export class ClientGame extends Game {
     myEntityID: EntityID,
   ) {
     super(gameID, gameMode);
+    this.stats = {fps: 0, tps: 0, lastTickSecondTimestamp: Date.now(), lastFrameSecondTimestamp: Date.now(), ticksThisSecond: 0, framesThisSecond: 0};
     this.myPlayer = new MyPlayer(
       myPlayerID,
       myEntityID,
@@ -60,11 +72,22 @@ export class ClientGame extends Game {
     this.saveSettings();
   }
 
-  public tick() {
-    this.players
-      .filter((player) => player.playerID !== this.myPlayer.playerID)
-      .forEach((player) => player.move());
-    this.entities.forEach((entity) => entity.tick());
+  public override tick() {
+    this.lastTickTimestamp = Date.now();
+    if(this.stats.lastTickSecondTimestamp + 1000 < this.lastTickTimestamp) {
+      this.stats.lastTickSecondTimestamp = this.lastTickTimestamp;
+      this.stats.tps = this.stats.ticksThisSecond;
+      this.stats.ticksThisSecond = 1;
+    } else this.stats.ticksThisSecond++;
+
+    this.entities.forEach(entity => {
+      entity.tick();
+    });
+    this.keyManager.update();
+    this.myPlayer.tick();
+    this.camera.tick();
+    this.debug.tick();
+    setTimeout(() => this.tick(), calculateNextTickTimeRemaining(this.config.tps, this.lastTickTimestamp));
   }
 
   public saveSettings() {

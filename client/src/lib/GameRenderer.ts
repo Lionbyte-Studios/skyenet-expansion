@@ -21,6 +21,13 @@ export class GameRenderer {
   }
 
   public drawGame(game: ClientGame) {
+    const currentTimestamp = Date.now();
+    if(game.stats.lastFrameSecondTimestamp + 1000 < currentTimestamp) {
+      game.stats.lastFrameSecondTimestamp = currentTimestamp;
+      game.stats.fps = game.stats.framesThisSecond;
+      game.stats.framesThisSecond = 1;
+    } else game.stats.framesThisSecond++;
+
     this.resize();
     this.ctx.imageSmoothingEnabled = false;
     this.ctx.fillStyle = "#03050cff";
@@ -208,6 +215,8 @@ export class GameRenderer {
       this.ctx.fillStyle = "#fff9";
       const debugList = [];
 
+      debugList.push(`FPS:${game.stats.fps} `);
+      debugList.push(`TPS:${game.stats.tps} (client) `);
       debugList.push(`X:${Math.round(game.myPlayer.x)} `);
       debugList.push(`Y:${Math.round(game.myPlayer.y)} `);
       debugList.push(`R:${Math.round(game.myPlayer.rotation)} `);

@@ -31,3 +31,12 @@ export function entitiyToZodEntitySchema(entity: Entity) {
     entityData: entity,
   });
 }
+
+// Will not return a negative value.
+export function calculateNextTickTimeRemaining(tps: number, lastTick: number) {
+  const timePerTick = 1000 / tps;
+  const delta = Date.now() - lastTick;
+  const remaining = timePerTick - delta;
+  if(remaining < 0) return 0;
+  return remaining;
+}

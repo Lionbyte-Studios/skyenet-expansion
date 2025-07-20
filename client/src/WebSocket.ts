@@ -68,7 +68,7 @@ export function initWebSocket() {
       case WebSocketMessageType.Status:
         result = StatusMessage.safeParse(json);
         if (!result.success) break;
-        handleStatusMessage(json, socket);
+        handleStatusMessage(json);
         break;
       case WebSocketMessageType.PlayerJoinCallback:
         result = PlayerJoinMessageCallback.safeParse(json);
@@ -98,8 +98,6 @@ export function initWebSocket() {
 
 function handleStatusMessage(
   msg: MessageType.StatusMessage,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  socket: WebSocket,
 ) {
   if (msg.status === "connected") {
     console.log("Connected to Server!");

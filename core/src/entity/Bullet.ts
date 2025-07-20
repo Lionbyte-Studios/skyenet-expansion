@@ -25,7 +25,8 @@ export class Bullet extends Entity {
   }
 
   public tick() {
-    this.x += this.velX;
-    this.y += this.velY;
+    // toFixed(4) to prevent random float magic
+    this.x = parseFloat((this.x + this.velX).toFixed(4));
+    this.y = parseFloat((this.y + this.velY).toFixed(4));
   }
 }
