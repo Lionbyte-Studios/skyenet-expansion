@@ -14,3 +14,4 @@ export class ServerManager {
 }
 
 export const serverMgr = new ServerManager();
+serverMgr.game.startGameLoop();

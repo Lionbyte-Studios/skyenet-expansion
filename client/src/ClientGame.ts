@@ -12,7 +12,7 @@ import { KeyManager } from "./lib/Keyman";
 import { Debug } from "./lib/Debug";
 import { ClientSettings } from "./lib/settings/ClientSettings";
 import { clientStorage } from "./Main";
-import { calculateNextTickTimeRemaining } from "../../core/src/util/Util";
+import { GameLoopManager } from "../../core/src/GameLoopManager";
 
 export interface ClientGameStats {
   fps: number;
@@ -39,6 +39,7 @@ export class ClientGame extends Game {
   }[] = [];
   public clientSettings: ClientSettings;
   public stats: ClientGameStats;
+  private gameLoopManager: GameLoopManager
 
   constructor(
     gameID: GameID,
@@ -48,6 +49,7 @@ export class ClientGame extends Game {
   ) {
     super(gameID, gameMode);
     this.stats = {fps: 0, tps: 0, lastTickSecondTimestamp: Date.now(), lastFrameSecondTimestamp: Date.now(), ticksThisSecond: 0, framesThisSecond: 0};
+    this.gameLoopManager = new GameLoopManager(() => this.tick(), this.config.tps);
     this.myPlayer = new MyPlayer(
       myPlayerID,
       myEntityID,
@@ -73,12 +75,13 @@ export class ClientGame extends Game {
   }
 
   public override tick() {
-    this.lastTickTimestamp = Date.now();
-    if(this.stats.lastTickSecondTimestamp + 1000 < this.lastTickTimestamp) {
-      this.stats.lastTickSecondTimestamp = this.lastTickTimestamp;
+    const lastTickTimestamp = Date.now();
+    if(this.stats.lastTickSecondTimestamp + 1000 < lastTickTimestamp) {
+      this.stats.lastTickSecondTimestamp = lastTickTimestamp;
       this.stats.tps = this.stats.ticksThisSecond;
       this.stats.ticksThisSecond = 1;
     } else this.stats.ticksThisSecond++;
+    // console.log("Tick! TPS: " + this.stats.tps);
 
     this.entities.forEach(entity => {
       entity.tick();
@@ -87,10 +90,17 @@ export class ClientGame extends Game {
     this.myPlayer.tick();
     this.camera.tick();
     this.debug.tick();
-    setTimeout(() => this.tick(), calculateNextTickTimeRemaining(this.config.tps, this.lastTickTimestamp));
+    // setTimeout(() => this.tick(), calculateNextTickTimeRemaining(this.config.tps, this.lastTickTimestamp));
   }
 
   public saveSettings() {
     this.clientSettings.save();
+  }
+
+  public startGameLoop() {
+    this.gameLoopManager.start();
+  }
+  public stopGameLoop() {
+    this.gameLoopManager.stop();
   }
 }

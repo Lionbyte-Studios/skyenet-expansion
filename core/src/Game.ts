@@ -10,7 +10,6 @@ export class Game {
   public gameMode: GameMode;
   public entities: Entity[];
   public config: Config;
-  protected lastTickTimestamp: number;
 
   constructor(gameID: GameID, gameMode: GameMode) {
     this.gameID = gameID;
@@ -18,7 +17,6 @@ export class Game {
     this.config = new DefaultConfig();
     this.entities = [];
     this.players = [];
-    this.lastTickTimestamp = Date.now();
   }
 
   public addPlayer(player: Player) {
