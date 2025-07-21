@@ -33,7 +33,6 @@ export class WebSocketServerManager {
       ws.on("error", console.error);
 
       ws.on("message", async (data) => {
-        // console.log(`Received websocket message: ${data}`);
         let json;
         try {
           json = JSON.parse(data.toString());
