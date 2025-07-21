@@ -25,7 +25,6 @@ export class WsJoinMessageHandler implements WsMessageHandler {
     data: SocketMessageData,
   ) {
     assert(type === WebSocketMessageType.PlayerJoin);
-    console.log("joining player");
     const player = serverMgr.game.generatePlayer();
     serverMgr.game.addPlayer(player);
     const entitiesAsSchema: z.infer<typeof EntitySchema>[] = [];
@@ -68,7 +67,7 @@ export class WsJoinMessageHandler implements WsMessageHandler {
         ),
       );
     });
-    console.log("===  PLAYER ID " + player.playerID + "  ===");
+    console.log(`Player with id ${player.playerID} joined the game`);
     return player.playerID;
   }
 }
