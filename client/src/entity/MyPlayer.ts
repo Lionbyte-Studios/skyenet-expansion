@@ -5,7 +5,7 @@ import {
   type ShipSprite,
 } from "../../../core/src/types";
 import { ClientGame } from "../ClientGame";
-import { sendBullet, sendMovement } from "../WebSocket.old";
+import { webSocketManager } from "../Main";
 import { ClientPlayer } from "./ClientPlayer";
 
 export class MyPlayer extends ClientPlayer {
@@ -120,7 +120,7 @@ export class MyPlayer extends ClientPlayer {
         velX: this.velX - vertical * 10,
         velY: this.velY - horizontal * 10,
       });*/
-      sendBullet({
+      webSocketManager.sendBullet({
         bullet: {
           type: BulletType.Starter,
           x: this.x,
@@ -137,7 +137,7 @@ export class MyPlayer extends ClientPlayer {
   }
 
   public sendMovement() {
-    sendMovement({
+    webSocketManager.sendMovement({
       playerID: this.playerID,
       x: this.x,
       y: this.y,

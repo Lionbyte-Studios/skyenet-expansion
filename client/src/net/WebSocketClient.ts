@@ -1,8 +1,10 @@
 import type { Entity } from "../../../core/src/entity/Entity";
 import { PlayerJoinMessage } from "../../../core/src/Schemas";
 import type {
+  BulletMessage,
   EntityID,
   GameID,
+  MovementMessage,
   PlayerID,
   ShipEngineSprite,
   ShipSprite,
@@ -14,6 +16,7 @@ import { WsPlayerJoinCallbackMessageHandler } from "./handler/JoinCallbackHandle
 import { WsMovementMessageHandler } from "./handler/MovementHandler";
 import { WsStatusMessageHandler } from "./handler/StatusHandler";
 import { WsUpdatePlayersMessageHandler } from "./handler/UpdatePlayersHandler";
+import * as schemas from "../../../core/src/Schemas";
 
 export interface SocketMessageData<T> {
   client: WebSocketClient;
@@ -104,5 +107,13 @@ export class WebSocketClient {
         }),
       ),
     );
+  }
+
+  public sendBullet(msg: Omit<BulletMessage, "type">) {
+    this.socket.send(JSON.stringify(schemas.BulletMessage.parse(msg)));
+  }
+
+  public sendMovement(msg: Omit<MovementMessage, "type">) {
+    this.socket.send(JSON.stringify(schemas.MovementMessage.parse(msg)));
   }
 }
