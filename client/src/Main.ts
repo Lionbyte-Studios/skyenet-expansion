@@ -134,6 +134,7 @@ function tick() {
           selectedShip.engineSprite,
         );
         renderer = new GameRenderer(ctx, display, game, atlasManager);
+        game.startGameLoop();
       })();
     }
   } else if (gameState === "playing") {
@@ -144,12 +145,7 @@ function tick() {
     //   return;
     // }
 
-    game.keyManager.update();
-    game.myPlayer.tick();
-    game.camera.tick();
-    game.debug.tick();
     renderer.drawGame(game);
-    game.tick();
   }
 }
 

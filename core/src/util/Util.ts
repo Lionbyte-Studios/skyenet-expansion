@@ -32,10 +32,11 @@ export function entitiyToZodEntitySchema(entity: Entity) {
   });
 }
 
-/*
-export const EntitySchema = z.object({
-  entityID: z.string(),
-  entityType: z.enum(EntityType),
-  entityData: z.any(),
-})
-*/
+// Will not return a negative value.
+export function calculateNextTickTimeRemaining(tps: number, lastTick: number) {
+  const timePerTick = 1000 / tps;
+  const delta = Date.now() - lastTick;
+  const remaining = timePerTick - delta;
+  if(remaining < 0) return 0;
+  return remaining;
+}
