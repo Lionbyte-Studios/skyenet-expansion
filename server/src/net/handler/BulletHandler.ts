@@ -9,18 +9,10 @@ import { serverMgr } from "../../Main";
 import { SocketMessageData } from "../WebSocketServer";
 import { WsMessageHandler } from "./Handler";
 
-export class WsBulletMessageHandler implements WsMessageHandler {
-  handledTypes: WebSocketMessageType[];
+export class WsBulletMessageHandler implements WsMessageHandler<BulletMessage> {
+  handledType: WebSocketMessageType = WebSocketMessageType.BulletMessage;
 
-  constructor() {
-    this.handledTypes = [WebSocketMessageType.BulletMessage];
-  }
-
-  public async handleMessage(
-    type: WebSocketMessageType,
-    data: SocketMessageData,
-  ) {
-    assert(type === WebSocketMessageType.BulletMessage);
+  public async handleMessage(data: SocketMessageData<BulletMessage>) {
     const json = JSON.parse(data.message.toString()) as
       | BulletMessage
       | undefined;

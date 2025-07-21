@@ -8,18 +8,12 @@ import { serverMgr } from "../../Main";
 import { SocketMessageData } from "../WebSocketServer";
 import { WsMessageHandler } from "./Handler";
 
-export class WsMovementMessageHandler implements WsMessageHandler {
-  handledTypes: WebSocketMessageType[];
+export class WsMovementMessageHandler
+  implements WsMessageHandler<MovementMessage>
+{
+  handledType: WebSocketMessageType = WebSocketMessageType.Movement;
 
-  constructor() {
-    this.handledTypes = [WebSocketMessageType.Movement];
-  }
-
-  public async handleMessage(
-    type: WebSocketMessageType,
-    data: SocketMessageData,
-  ) {
-    assert(type === WebSocketMessageType.Movement);
+  public async handleMessage(data: SocketMessageData<MovementMessage>) {
     const json = JSON.parse(data.message.toString()) as
       | MovementMessage
       | undefined;

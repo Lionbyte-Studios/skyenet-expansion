@@ -1,10 +1,9 @@
 import { WebSocketMessageType } from "../../../../core/src/types";
 import { SocketMessageData } from "../WebSocketServer";
 
-export interface WsMessageHandler {
-  handledTypes: WebSocketMessageType[];
-  handleMessage: (
-    type: WebSocketMessageType,
-    data: SocketMessageData,
-  ) => Promise<string | void>;
+export abstract class WsMessageHandler<T> {
+  abstract handledType: WebSocketMessageType;
+  public abstract handleMessage(
+    data: SocketMessageData<T>,
+  ): Promise<void | string>;
 }

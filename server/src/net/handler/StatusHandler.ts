@@ -7,18 +7,10 @@ import { SocketMessageData } from "../WebSocketServer";
 import { WsMessageHandler } from "./Handler";
 import * as schemas from "../../../../core/src/Schemas";
 
-export class WsStatusMessageHandler implements WsMessageHandler {
-  handledTypes: WebSocketMessageType[];
+export class WsStatusMessageHandler implements WsMessageHandler<StatusMessage> {
+  handledType: WebSocketMessageType = WebSocketMessageType.Status;
 
-  constructor() {
-    this.handledTypes = [WebSocketMessageType.Status];
-  }
-
-  public async handleMessage(
-    type: WebSocketMessageType,
-    data: SocketMessageData,
-  ) {
-    assert(type === WebSocketMessageType.Status);
+  public async handleMessage(data: SocketMessageData<StatusMessage>) {
     const json = JSON.parse(data.message.toString()) as
       | StatusMessage
       | undefined;

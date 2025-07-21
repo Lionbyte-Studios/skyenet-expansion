@@ -1,4 +1,4 @@
-import { RawData, WebSocket, WebSocketServer } from "ws";
+import { WebSocket, WebSocketServer } from "ws";
 import { ServerError, StatusMessage } from "../../../core/src/Schemas";
 import { WebSocketMessageType } from "../../../core/src/types";
 import { WsMessageHandler } from "./handler/Handler";
@@ -7,17 +7,17 @@ import { WsStatusMessageHandler } from "./handler/StatusHandler";
 import { WsMovementMessageHandler } from "./handler/MovementHandler";
 import { WsBulletMessageHandler } from "./handler/BulletHandler";
 
-export interface SocketMessageData {
+export interface SocketMessageData<T> {
   socket: WebSocket;
   socketData: {
     playerID?: string;
   };
-  message: RawData;
+  message: T;
 }
 
 export class WebSocketServerManager {
   public wss;
-  private handlers: WsMessageHandler[];
+  private handlers: WsMessageHandler<unknown>[];
 
   constructor() {
     this.handlers = [
@@ -58,27 +58,27 @@ export class WebSocketServerManager {
         }
 
         // Call all handlers
-        this.handlers.forEach(async (handler) => {
-          if (!handler.handledTypes.includes(json.type as WebSocketMessageType))
-            return;
-          const registeredPlayerID = await handler.handleMessage(
-            json.type as WebSocketMessageType,
-            {
+        this.handlers
+          .filter(
+            (handler) =>
+              handler.handledType === (json.type as WebSocketMessageType),
+          )
+          .forEach(async (handler) => {
+            const registeredPlayerID = await handler.handleMessage({
               socket: ws,
               socketData: socketData,
               message: data,
-            },
-          );
-          if (typeof registeredPlayerID === "string") {
-            socketData.playerID = registeredPlayerID;
-          }
-        });
+            });
+            if (typeof registeredPlayerID === "string") {
+              socketData.playerID = registeredPlayerID;
+            }
+          });
       });
       ws.send(JSON.stringify(StatusMessage.parse({ status: "connected" })));
     });
   }
 
-  public registerHandler(handler: WsMessageHandler) {
+  public registerHandler<T>(handler: WsMessageHandler<T>) {
     this.handlers.push(handler);
   }
 }

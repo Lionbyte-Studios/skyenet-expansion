@@ -2,6 +2,7 @@ import z from "zod";
 import {
   BulletMessage,
   MovementMessage,
+  PlayerJoinMessage,
   PlayerJoinMessageCallback,
   StatusMessage,
   UpdatePlayersMessage,
@@ -26,6 +27,7 @@ export type PlayerJoinCallbackMessage = z.infer<
 >;
 export type UpdatePlayersMessage = z.infer<typeof UpdatePlayersMessage>;
 export type BulletMessage = z.infer<typeof BulletMessage>;
+export type PlayerJoinMessage = z.infer<typeof PlayerJoinMessage>;
 
 export enum ShipSprite {
   Gray = "gray-ship",
