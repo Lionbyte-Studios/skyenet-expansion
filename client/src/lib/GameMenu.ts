@@ -1,4 +1,4 @@
-import { ShipEngineSprite, ShipSprite } from "../../../core/src/types.d";
+import { ShipEngineSprite, ShipSprite } from "../../../core/src/types";
 import type { AtlasManager } from "./AtlasManager";
 
 export interface Ship {

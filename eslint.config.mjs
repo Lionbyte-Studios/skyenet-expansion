@@ -14,7 +14,10 @@ export default defineConfig([
     languageOptions: { globals: globals.browser },
   },
   {
-    files: ["core/**/*.{js,mjs,cjs,ts,mts,cts}", "server/**/*.{js,mjs,cjs,ts,mts,cts}"],
+    files: [
+      "core/**/*.{js,mjs,cjs,ts,mts,cts}",
+      "server/**/*.{js,mjs,cjs,ts,mts,cts}",
+    ],
     languageOptions: { globals: globals.node },
   },
   tseslint.configs.recommended,

@@ -2,7 +2,7 @@ import { Asteroid } from "../entity/Asteroid";
 import { Bullet } from "../entity/Bullet";
 import { Entity } from "../entity/Entity";
 import { EntitySchema } from "../Schemas";
-import { alphabetForID, EntityType } from "../types.d";
+import { alphabetForID, EntityType } from "../types";
 
 export function genStringID(length: number) {
   let id = "";

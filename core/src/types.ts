@@ -19,15 +19,13 @@ export enum WebSocketMessageType {
   BulletMessage,
 }
 
-declare namespace MessageType {
-  export type MovementMessage = z.infer<typeof MovementMessage>;
-  export type StatusMessage = z.infer<typeof StatusMessage>;
-  export type PlayerJoinCallbackMessage = z.infer<
-    typeof PlayerJoinMessageCallback
-  >;
-  export type UpdatePlayersMessage = z.infer<typeof UpdatePlayersMessage>;
-  export type BulletMessage = z.infer<typeof BulletMessage>;
-}
+export type MovementMessage = z.infer<typeof MovementMessage>;
+export type StatusMessage = z.infer<typeof StatusMessage>;
+export type PlayerJoinCallbackMessage = z.infer<
+  typeof PlayerJoinMessageCallback
+>;
+export type UpdatePlayersMessage = z.infer<typeof UpdatePlayersMessage>;
+export type BulletMessage = z.infer<typeof BulletMessage>;
 
 export enum ShipSprite {
   Gray = "gray-ship",

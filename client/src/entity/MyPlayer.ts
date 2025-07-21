@@ -3,9 +3,9 @@ import type { Game } from "../../../core/src/Game";
 import {
   type ShipEngineSprite,
   type ShipSprite,
-} from "../../../core/src/types.d";
+} from "../../../core/src/types";
 import { ClientGame } from "../ClientGame";
-import { sendBullet, sendMovement } from "../WebSocket";
+import { sendBullet, sendMovement } from "../WebSocket.old";
 import { ClientPlayer } from "./ClientPlayer";
 
 export class MyPlayer extends ClientPlayer {

@@ -1,6 +1,6 @@
 import { RawData, WebSocket, WebSocketServer } from "ws";
 import { ServerError, StatusMessage } from "../../../core/src/Schemas";
-import { WebSocketMessageType } from "../../../core/src/types.d";
+import { WebSocketMessageType } from "../../../core/src/types";
 import { WsMessageHandler } from "./handler/Handler";
 import { WsJoinMessageHandler } from "./handler/JoinHandler";
 import { WsStatusMessageHandler } from "./handler/StatusHandler";
