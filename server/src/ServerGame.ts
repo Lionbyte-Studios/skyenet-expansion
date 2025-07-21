@@ -67,13 +67,9 @@ export class ServerGame extends Game {
       this.stats.tps = this.stats.ticksThisSecond;
       this.stats.ticksThisSecond = 1;
     } else this.stats.ticksThisSecond++;
-    // this.lastTickTimestamp = Date.now();
-    // this.players.forEach(player => player.tick());
     this.entities.forEach((entity) => {
-      // if(entity instanceof Player) return;
       entity.tick();
     });
-    // setTimeout(() => this.tick(), calculateNextTickTimeRemaining(this.config.tps, this.lastTickTimestamp));
   }
 
   public startGameLoop() {

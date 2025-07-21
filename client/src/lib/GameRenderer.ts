@@ -55,68 +55,8 @@ export class GameRenderer {
       );
     }
 
-    // // Update and draw asteroids
-    // game.updateAsteroids();
-
-    // === ASTEROID CODE ===
-    /*if (this.atlasManager.areAllLoaded()) {
-      for (let i = 0; i < game.asteroids.length; i++) {
-        const asteroid = game.asteroids[i];
-
-        // Save context
-        this.ctx.save();
-
-        // Transform to asteroid position
-        this.ctx.translate(
-          asteroid.x + game.camera.x,
-          asteroid.y + game.camera.y,
-        );
-        this.ctx.rotate((asteroid.rotation * Math.PI) / 180);
-        this.ctx.scale(asteroid.size, asteroid.size);
-
-        // Draw asteroid
-        this.atlasManager.drawTexture(
-          "entities",
-          "asteroid",
-          this.ctx,
-          -16, // Center the 32x32 sprite
-          -16,
-        );
-
-        // Restore context
-        this.ctx.restore();
-      }
-    } else {
-      // Fallback: draw simple circles for asteroids
-      this.ctx.fillStyle = "#666666";
-      for (let i = 0; i < game.asteroids.length; i++) {
-        const asteroid = game.asteroids[i];
-        this.ctx.beginPath();
-        this.ctx.arc(
-          asteroid.x + game.camera.x,
-          asteroid.y + game.camera.y,
-          16 * asteroid.size,
-          0,
-          2 * Math.PI,
-        );
-        this.ctx.fill();
-      }
-    }*/
-
     // Draw player ship using texture atlas
     this.ctx.translate(game.camera.x, game.camera.y);
-    // this.ctx.translate(game.myPlayer.x, game.myPlayer.y);
-    // this.ctx.rotate(-((game.myPlayer.rotation * Math.PI) / 180));
-    //       const shipTexture = game.myPlayer.shipSprite;
-
-    //       this.atlasManager.drawTexture(
-    //         "entities",
-    //         shipTexture,
-    //         this.ctx,
-    //         -16, // Center the 32x32 sprite
-    //         -16,
-    //       );
-    // console.log(game.players)
     this.ctx.font = "48px serif";
     this.ctx.textAlign = "center";
     this.ctx.fillText(`${game.players.length} person is connected`, 0, -100);
@@ -153,11 +93,6 @@ export class GameRenderer {
         this.ctx.translate(-bullets[a].x, -bullets[a].y);
       }
 
-      // // Choose texture based on engine state and selected ship
-      // const shipTexture = game.myPlayer.engineActive
-      //   ? game.myPlayer.shipEngineSprite
-      //   : game.myPlayer.shipSprite;
-      // this.ctx.translate(game.camera.x, game.camera.y);
       this.ctx.translate(game.players[i].x, game.players[i].y);
       this.ctx.fillStyle = `#aaaaaa77`;
       this.ctx.fillRect(-52, -52, 104, 14);
@@ -175,10 +110,6 @@ export class GameRenderer {
 
       // Check if atlas is loaded before drawing
       if (this.atlasManager.areAllLoaded()) {
-        // Choose texture based on engine state and selected ship
-        // const shipTexture = game.players[i].engineActive
-        //   ? game.players[i].shipEngineSprite
-        //   : game.players[i].shipSprite;
         const shipTexture = game.players[i].shipSprite;
 
         this.atlasManager.drawTexture(
@@ -199,12 +130,6 @@ export class GameRenderer {
       this.ctx.scale(1 / 3, 1 / 3);
       this.ctx.rotate((game.players[i].rotation * Math.PI) / 180);
       this.ctx.translate(-game.players[i].x, -game.players[i].y);
-
-      // Reset scale after drawing
-      // this.ctx.scale(0.5, 0.5);
-
-      // this.ctx.rotate((game.myPlayer.rotation * Math.PI) / 180);
-      // this.ctx.translate(-game.myPlayer.x, -game.myPlayer.y);
     }
     this.ctx.translate(-game.camera.x, -game.camera.y);
 
@@ -233,10 +158,6 @@ export class GameRenderer {
         this.ctx.fillText(`${debugList[i]}`, 0, (i + 1) * fontSize);
       }
     }
-    // this.ctx.scale(
-    //   .7,.7
-    // );
-    // this.ctx.translate(1280/2, 720/2);
   }
 
   private resize() {

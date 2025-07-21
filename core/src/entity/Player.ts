@@ -22,12 +22,6 @@ export class Player extends Entity {
     size?: number;
     rotation?: number;
   }[] = [];
-  /*Bullets: {
-    x: number;
-    y: number;
-    velX?: number;
-    velY?: number;
-  }[] = [];*/
 
   constructor(
     playerID: PlayerID,
@@ -74,19 +68,6 @@ export class Player extends Entity {
         i--;
       }
     }
-    /*
-    for (let i = 0; i < this.Bullets.length; i++) {
-      this.Bullets[i].x += this.Bullets[i].velX!;
-      this.Bullets[i].y += this.Bullets[i].velY!;
-      // this.flames[i].velY! *= 0.99; // Reduced friction to keep player moving longer
-      // this.flames[i].velX! *= 0.99; // Reduced friction to keep player moving longer
-      // this.flames[i].size! -= this.flames[i].z!;
-      // if (this.flames[i].size! <= 0) {
-      //   this.flames.splice(i, 1);
-      //   i--;
-      // }
-    }
-    */
   }
   public override tick<T extends Game>(game?: T) {
     if (game === undefined) return;

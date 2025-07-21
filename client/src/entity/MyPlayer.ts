@@ -52,28 +52,6 @@ export class MyPlayer extends ClientPlayer {
       this.velX -= vertical;
     }
     if (game.keyManager.isKeyPressed("KeyS")) {
-      // S key reduces velocity until it reaches 0
-      // const decelerationRate = 0.09; // Adjust this value to control how fast it slows down
-
-      // // Reduce velocity towards 0
-      // if (Math.abs(this.velX) > decelerationRate) {
-      //   this.velX -= Math.sign(this.velX) * decelerationRate;
-      // } else {
-      //   this.velX = 0;
-      // }
-
-      // if (Math.abs(this.velY) > decelerationRate) {
-      //   this.velY -= Math.sign(this.velY) * decelerationRate;
-      // } else {
-      //   this.velY = 0;
-      // }
-
-      // if (Math.abs(this.velR) > decelerationRate) {
-      //   this.velR -= Math.sign(this.velR) * decelerationRate;
-      // } else {
-      //   this.velR = 0;
-      // }
-
       for (let i = 0; i < 2; i++) {
         this.makeFlame(horizontal, vertical, 70, 20, -3);
       }
@@ -85,9 +63,6 @@ export class MyPlayer extends ClientPlayer {
     }
     if (game.keyManager.isKeyPressed("KeyA")) {
       this.velR += 0.1;
-      // if(this.cameraDist>-10){
-      //   this.cameraDist=((this.cameraDist*99)-10)/100
-      // }
       for (let i = 0; i < 2; i++) {
         this.makeFlame(horizontal, vertical, 70, 30, 5);
       }
@@ -103,9 +78,6 @@ export class MyPlayer extends ClientPlayer {
       for (let i = 0; i < 2; i++) {
         this.makeFlame(horizontal, vertical, -70, 30, 5);
       }
-      // if(this.cameraDist>-10){
-      //   this.cameraDist=((this.cameraDist*99)-10)/100
-      // }
     }
     if (game.keyManager.wasKeyJustPressed("KeyO")) {
       this.HP++;
@@ -114,12 +86,6 @@ export class MyPlayer extends ClientPlayer {
       this.HP--;
     }
     if (game.keyManager.wasKeyJustPressed("Space")) {
-      /*this.Bullets.push({
-        x: this.x,
-        y: this.y,
-        velX: this.velX - vertical * 10,
-        velY: this.velY - horizontal * 10,
-      });*/
       webSocketManager.sendBullet({
         bullet: {
           type: BulletType.Starter,
@@ -131,9 +97,6 @@ export class MyPlayer extends ClientPlayer {
         playerID: this.playerID,
       });
     }
-    // if(this.cameraDist<1){
-    //   this.cameraDist=((this.cameraDist*49)+1)/50
-    // }
   }
 
   public sendMovement() {

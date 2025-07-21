@@ -91,7 +91,6 @@ export class ClientGame extends Game {
       this.stats.tps = this.stats.ticksThisSecond;
       this.stats.ticksThisSecond = 1;
     } else this.stats.ticksThisSecond++;
-    // console.log("Tick! TPS: " + this.stats.tps);
 
     this.entities.forEach((entity) => {
       entity.tick(this);
@@ -100,7 +99,6 @@ export class ClientGame extends Game {
     this.myPlayer.tick(this);
     this.camera.tick();
     this.debug.tick();
-    // setTimeout(() => this.tick(), calculateNextTickTimeRemaining(this.config.tps, this.lastTickTimestamp));
   }
 
   public saveSettings() {

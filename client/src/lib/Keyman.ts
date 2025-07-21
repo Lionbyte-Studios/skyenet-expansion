@@ -4,8 +4,6 @@ export class KeyManager {
   keysPressedLastFrame: boolean[];
 
   constructor() {
-    //
-
     this.keyBuffer = [];
     this.keysCurrentlyPressed = [];
     this.keysPressedLastFrame = [];
@@ -338,7 +336,6 @@ export class KeyManager {
     for (let i = 0; i < this.keyBuffer.length; i++) {
       this.keysPressedLastFrame[i] = this.keysCurrentlyPressed[i];
       this.keysCurrentlyPressed[i] = this.keyBuffer[i];
-      // this.keyBuffer[i] = false;
     }
   }
 }
