@@ -2,7 +2,7 @@ import { Player } from "../../core/src/entity/Player";
 import { Game } from "../../core/src/Game";
 import { GameLoopManager } from "../../core/src/GameLoopManager";
 import { GameID, GameMode, MessageType } from "../../core/src/types.d";
-import { genStringID } from "../../core/src/util/Util";
+import { genStringID, goBackChar } from "../../core/src/util/Util";
 
 export interface ServerGameStats {
   tps: number;
@@ -29,7 +29,7 @@ export class ServerGame extends Game {
   }
 
   private logStats() {
-    console.log(`TPS: ${this.stats.tps}`);
+    console.log(`TPS: ${this.stats.tps}${goBackChar}`);
   }
 
   public handleMovementMessage(message: MessageType.MovementMessage) {

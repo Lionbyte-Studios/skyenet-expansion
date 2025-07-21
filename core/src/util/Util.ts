@@ -40,3 +40,6 @@ export function calculateNextTickTimeRemaining(tps: number, lastTick: number) {
   if (remaining < 0) return 0;
   return remaining;
 }
+
+// \033[F
+export const goBackChar = "\x1b[F";
