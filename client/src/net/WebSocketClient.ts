@@ -35,7 +35,7 @@ export type JoinCallbackData = {
 export class WebSocketClient {
   public joinCallbackData: Promise<JoinCallbackData>;
   private joinCallbackDataResolve: (data: JoinCallbackData) => void;
-  public readonly socket;
+  private readonly socket;
   private handlers: WsMessageHandler<unknown>[];
 
   constructor(addr: string) {
