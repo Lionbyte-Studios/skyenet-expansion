@@ -37,6 +37,6 @@ export function calculateNextTickTimeRemaining(tps: number, lastTick: number) {
   const timePerTick = 1000 / tps;
   const delta = Date.now() - lastTick;
   const remaining = timePerTick - delta;
-  if(remaining < 0) return 0;
+  if (remaining < 0) return 0;
   return remaining;
 }

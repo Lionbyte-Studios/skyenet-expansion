@@ -1,3 +1,4 @@
+import { Game } from "../Game";
 import { EntityID, PlayerID, ShipEngineSprite, ShipSprite } from "../types.d";
 import { Entity } from "./Entity";
 
@@ -44,13 +45,18 @@ export class Player extends Entity {
     this.shipEngineSprite = shipEngineSprite;
   }
 
-  private move() {
+  protected move<T extends Game>(game: T) {
     this.y += this.velY;
     this.x += this.velX;
     this.rotation += this.velR;
     this.velY *= 0.997; // Reduced friction to keep player moving longer
     this.velX *= 0.997; // Reduced friction to keep player moving longer
     this.velR *= 0.99; // Keep rotation friction the same
+
+    if (Math.abs(this.velX) < game.config.velocityCap.velX) this.velX = 0;
+    if (Math.abs(this.velY) < game.config.velocityCap.velY) this.velY = 0;
+    if (Math.abs(this.velR) < game.config.velocityCap.velR) this.velR = 0;
+
     if (this.rotation >= 360) {
       this.rotation -= 360;
     }
@@ -82,7 +88,8 @@ export class Player extends Entity {
     }
     */
   }
-  public override tick() {
-    this.move();
+  public override tick<T extends Game>(game?: T) {
+    if (game === undefined) return;
+    this.move(game);
   }
 }

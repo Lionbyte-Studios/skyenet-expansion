@@ -22,7 +22,7 @@ export class GameRenderer {
 
   public drawGame(game: ClientGame) {
     const currentTimestamp = Date.now();
-    if(game.stats.lastFrameSecondTimestamp + 1000 < currentTimestamp) {
+    if (game.stats.lastFrameSecondTimestamp + 1000 < currentTimestamp) {
       game.stats.lastFrameSecondTimestamp = currentTimestamp;
       game.stats.fps = game.stats.framesThisSecond;
       game.stats.framesThisSecond = 1;
@@ -215,16 +215,19 @@ export class GameRenderer {
       this.ctx.fillStyle = "#fff9";
       const debugList = [];
 
+      const digits = 2;
       debugList.push(`FPS:${game.stats.fps} `);
       debugList.push(`TPS:${game.stats.tps} (client) `);
-      debugList.push(`X:${Math.round(game.myPlayer.x)} `);
-      debugList.push(`Y:${Math.round(game.myPlayer.y)} `);
-      debugList.push(`R:${Math.round(game.myPlayer.rotation)} `);
-      debugList.push(`VelX:${Math.round(game.myPlayer.velX)} `);
-      debugList.push(`VelY:${Math.round(game.myPlayer.velY)} `);
-      debugList.push(`VelR:${Math.round(game.myPlayer.velR)} `);
+      debugList.push(`X:${game.myPlayer.x.toFixed(digits)} `);
+      debugList.push(`Y:${game.myPlayer.y.toFixed(digits)} `);
+      debugList.push(`R:${game.myPlayer.rotation.toFixed(digits)} `);
+      debugList.push(`VelX:${game.myPlayer.velX.toFixed(digits)} `);
+      debugList.push(`VelY:${game.myPlayer.velY.toFixed(digits)} `);
+      debugList.push(`VelR:${game.myPlayer.velR.toFixed(digits)} `);
       debugList.push(`HP:${game.myPlayer.HP} / ${game.myPlayer.MaxHP} `);
-      debugList.push(`${game.players.length} person is connected`);
+      debugList.push(
+        `${game.players.length} ${game.players.length === 1 ? "player is" : "players are"} connected`,
+      );
 
       for (let i = 0; i < debugList.length; i++) {
         this.ctx.fillText(`${debugList[i]}`, 0, (i + 1) * fontSize);

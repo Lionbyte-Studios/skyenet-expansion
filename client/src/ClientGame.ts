@@ -39,7 +39,7 @@ export class ClientGame extends Game {
   }[] = [];
   public clientSettings: ClientSettings;
   public stats: ClientGameStats;
-  private gameLoopManager: GameLoopManager
+  private gameLoopManager: GameLoopManager;
 
   constructor(
     gameID: GameID,
@@ -48,8 +48,18 @@ export class ClientGame extends Game {
     myEntityID: EntityID,
   ) {
     super(gameID, gameMode);
-    this.stats = {fps: 0, tps: 0, lastTickSecondTimestamp: Date.now(), lastFrameSecondTimestamp: Date.now(), ticksThisSecond: 0, framesThisSecond: 0};
-    this.gameLoopManager = new GameLoopManager(() => this.tick(), this.config.tps);
+    this.stats = {
+      fps: 0,
+      tps: 0,
+      lastTickSecondTimestamp: Date.now(),
+      lastFrameSecondTimestamp: Date.now(),
+      ticksThisSecond: 0,
+      framesThisSecond: 0,
+    };
+    this.gameLoopManager = new GameLoopManager(
+      () => this.tick(),
+      this.config.tps,
+    );
     this.myPlayer = new MyPlayer(
       myPlayerID,
       myEntityID,
@@ -76,18 +86,18 @@ export class ClientGame extends Game {
 
   public override tick() {
     const lastTickTimestamp = Date.now();
-    if(this.stats.lastTickSecondTimestamp + 1000 < lastTickTimestamp) {
+    if (this.stats.lastTickSecondTimestamp + 1000 < lastTickTimestamp) {
       this.stats.lastTickSecondTimestamp = lastTickTimestamp;
       this.stats.tps = this.stats.ticksThisSecond;
       this.stats.ticksThisSecond = 1;
     } else this.stats.ticksThisSecond++;
     // console.log("Tick! TPS: " + this.stats.tps);
 
-    this.entities.forEach(entity => {
-      entity.tick();
+    this.entities.forEach((entity) => {
+      entity.tick(this);
     });
     this.keyManager.update();
-    this.myPlayer.tick();
+    this.myPlayer.tick(this);
     this.camera.tick();
     this.debug.tick();
     // setTimeout(() => this.tick(), calculateNextTickTimeRemaining(this.config.tps, this.lastTickTimestamp));

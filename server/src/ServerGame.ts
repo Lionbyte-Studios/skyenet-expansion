@@ -16,8 +16,15 @@ export class ServerGame extends Game {
 
   constructor(gameID: GameID, gameMode: GameMode) {
     super(gameID, gameMode);
-    this.gameLoopManager = new GameLoopManager(() => this.tick(), this.config.tps);
-    this.stats = {tps: 0, lastTickSecondTimestamp: Date.now(), ticksThisSecond: 0};
+    this.gameLoopManager = new GameLoopManager(
+      () => this.tick(),
+      this.config.tps,
+    );
+    this.stats = {
+      tps: 0,
+      lastTickSecondTimestamp: Date.now(),
+      ticksThisSecond: 0,
+    };
     setInterval(() => this.logStats(), 1000);
   }
 
@@ -50,14 +57,14 @@ export class ServerGame extends Game {
 
   public override tick() {
     const lastTickTimestamp = Date.now();
-    if(this.stats.lastTickSecondTimestamp + 1000 < lastTickTimestamp) {
+    if (this.stats.lastTickSecondTimestamp + 1000 < lastTickTimestamp) {
       this.stats.lastTickSecondTimestamp = lastTickTimestamp;
       this.stats.tps = this.stats.ticksThisSecond;
       this.stats.ticksThisSecond = 1;
     } else this.stats.ticksThisSecond++;
     // this.lastTickTimestamp = Date.now();
     // this.players.forEach(player => player.tick());
-    this.entities.forEach(entity => {
+    this.entities.forEach((entity) => {
       // if(entity instanceof Player) return;
       entity.tick();
     });

@@ -1,3 +1,4 @@
+import { Game } from "../Game";
 import { alphabetForID, EntityID } from "../types.d";
 
 // Making the function here without importing from Util.ts to prevent circular dependencies breaking everything
@@ -25,5 +26,6 @@ export class Entity {
   public generateID(): EntityID {
     return genStringID(8);
   }
-  public tick() {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public tick<T extends Game>(game?: T) {}
 }

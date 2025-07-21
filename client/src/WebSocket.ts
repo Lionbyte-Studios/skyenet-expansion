@@ -96,9 +96,7 @@ export function initWebSocket() {
   };
 }
 
-function handleStatusMessage(
-  msg: MessageType.StatusMessage,
-) {
+function handleStatusMessage(msg: MessageType.StatusMessage) {
   if (msg.status === "connected") {
     console.log("Connected to Server!");
   }

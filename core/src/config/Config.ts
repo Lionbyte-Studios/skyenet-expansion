@@ -5,4 +5,5 @@ export interface Config {
   defaultShipEngineSprite: ShipEngineSprite;
   defaultSpawnCoords: { x: number; y: number };
   tps: number;
+  velocityCap: { velX: number; velY: number; velR: number };
 }

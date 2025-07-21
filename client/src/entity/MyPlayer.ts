@@ -1,18 +1,21 @@
 import { BulletType } from "../../../core/src/entity/Bullet";
+import type { Game } from "../../../core/src/Game";
 import {
   type ShipEngineSprite,
   type ShipSprite,
 } from "../../../core/src/types.d";
-import type { ClientGame } from "../ClientGame";
-import { game } from "../Main";
+import { ClientGame } from "../ClientGame";
 import { sendBullet, sendMovement } from "../WebSocket";
 import { ClientPlayer } from "./ClientPlayer";
 
 export class MyPlayer extends ClientPlayer {
   cameraDist: number = 0; // make this modifyable by player in settings
-  public tick() {
+  public override tick<T extends Game>(game?: T) {
+    if (game === undefined) return;
+    if (!(game instanceof ClientGame)) return;
+
     this.velocityChange(game);
-    this.move();
+    this.move(game);
     this.sendMovement();
   }
   private makeFlame(
