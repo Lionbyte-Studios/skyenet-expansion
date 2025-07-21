@@ -1,4 +1,4 @@
-import { GameMode } from "../../core/src/types.d";
+import { GameMode } from "../../core/src/types";
 import { ServerGame } from "./ServerGame";
 import { genStringID } from "../../core/src/util/Util";
 import { WebSocketServerManager } from "./net/WebSocketServer";

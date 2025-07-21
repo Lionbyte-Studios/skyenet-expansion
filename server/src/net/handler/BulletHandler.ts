@@ -1,28 +1,20 @@
-import { BulletMessage } from "../../../../core/src/Schemas";
+import * as schemas from "../../../../core/src/Schemas";
 import {
-  MessageType,
+  BulletMessage,
   WebSocketMessageType,
-} from "../../../../core/src/types.d";
+} from "../../../../core/src/types";
 import { assert } from "../../../../core/src/util/Util";
 import { ServerBullet } from "../../entity/ServerBullet";
 import { serverMgr } from "../../Main";
 import { SocketMessageData } from "../WebSocketServer";
 import { WsMessageHandler } from "./Handler";
 
-export class WsBulletMessageHandler implements WsMessageHandler {
-  handledTypes: WebSocketMessageType[];
+export class WsBulletMessageHandler implements WsMessageHandler<BulletMessage> {
+  handledType: WebSocketMessageType = WebSocketMessageType.BulletMessage;
 
-  constructor() {
-    this.handledTypes = [WebSocketMessageType.BulletMessage];
-  }
-
-  public async handleMessage(
-    type: WebSocketMessageType,
-    data: SocketMessageData,
-  ) {
-    assert(type === WebSocketMessageType.BulletMessage);
+  public async handleMessage(data: SocketMessageData<BulletMessage>) {
     const json = JSON.parse(data.message.toString()) as
-      | MessageType.BulletMessage
+      | BulletMessage
       | undefined;
     assert(typeof json !== "undefined" && json !== undefined);
     serverMgr.game.entities.push(
@@ -35,7 +27,7 @@ export class WsBulletMessageHandler implements WsMessageHandler {
       ),
     );
     serverMgr.wsMgr.wss.clients.forEach((client) => {
-      client.send(JSON.stringify(BulletMessage.parse(json)));
+      client.send(JSON.stringify(schemas.BulletMessage.parse(json)));
     });
   }
 }

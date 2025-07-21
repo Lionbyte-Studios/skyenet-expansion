@@ -1,7 +1,12 @@
 import { Player } from "../../core/src/entity/Player";
 import { Game } from "../../core/src/Game";
 import { GameLoopManager } from "../../core/src/GameLoopManager";
-import { GameID, GameMode, MessageType } from "../../core/src/types.d";
+import {
+  GameID,
+  GameMode,
+  MovementMessage,
+  StatusMessage,
+} from "../../core/src/types";
 import { genStringID, goBackChar } from "../../core/src/util/Util";
 
 export interface ServerGameStats {
@@ -32,10 +37,10 @@ export class ServerGame extends Game {
     console.log(`TPS: ${this.stats.tps}${goBackChar}`);
   }
 
-  public handleMovementMessage(message: MessageType.MovementMessage) {
+  public handleMovementMessage(message: MovementMessage) {
     console.log(message);
   }
-  public handleStatusMessage(message: MessageType.StatusMessage) {
+  public handleStatusMessage(message: StatusMessage) {
     console.log(message);
   }
   public static generateRandomPlayerID() {

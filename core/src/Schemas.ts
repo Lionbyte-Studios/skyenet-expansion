@@ -4,7 +4,7 @@ import {
   ShipEngineSprite,
   ShipSprite,
   WebSocketMessageType,
-} from "./types.d";
+} from "./types";
 import { BulletType } from "./entity/Bullet";
 
 function lt(type: WebSocketMessageType) {
@@ -83,18 +83,6 @@ export const MovementMessage = BaseWebSocketMessageSchema.extend({
   ignoreOwnPlayer: z.boolean().optional(),
 });
 
-/*
-export const AuthenticationMessage = z.object({
-  type: lt(WebSocketMessageType.Authentication),
-});
-
-export const AuthenticationMessageCallback = z.object({
-  type: lt(WebSocketMessageType.AuthenticationCallback),
-  playerID: z.string(),
-  entityID: z.string(),
-  gameID: z.string(),
-});
-*/
 export const PlayerJoinMessage = z.object({
   type: lt(WebSocketMessageType.PlayerJoin),
   shipSprite: z.enum(ShipSprite),

@@ -1,27 +1,21 @@
-import { MovementMessage } from "../../../../core/src/Schemas";
+import * as schemas from "../../../../core/src/Schemas";
 import {
-  MessageType,
+  MovementMessage,
   WebSocketMessageType,
-} from "../../../../core/src/types.d";
+} from "../../../../core/src/types";
 import { assert } from "../../../../core/src/util/Util";
 import { serverMgr } from "../../Main";
 import { SocketMessageData } from "../WebSocketServer";
 import { WsMessageHandler } from "./Handler";
 
-export class WsMovementMessageHandler implements WsMessageHandler {
-  handledTypes: WebSocketMessageType[];
+export class WsMovementMessageHandler
+  implements WsMessageHandler<MovementMessage>
+{
+  handledType: WebSocketMessageType = WebSocketMessageType.Movement;
 
-  constructor() {
-    this.handledTypes = [WebSocketMessageType.Movement];
-  }
-
-  public async handleMessage(
-    type: WebSocketMessageType,
-    data: SocketMessageData,
-  ) {
-    assert(type === WebSocketMessageType.Movement);
+  public async handleMessage(data: SocketMessageData<MovementMessage>) {
     const json = JSON.parse(data.message.toString()) as
-      | MessageType.MovementMessage
+      | MovementMessage
       | undefined;
     assert(typeof json !== "undefined" && json !== undefined);
     if (json!.playerID !== data.socketData.playerID) {
@@ -50,7 +44,7 @@ export class WsMovementMessageHandler implements WsMessageHandler {
 
     // Send movement to all clients
     serverMgr.wsMgr.wss.clients.forEach((client) => {
-      client.send(JSON.stringify(MovementMessage.parse(json)));
+      client.send(JSON.stringify(schemas.MovementMessage.parse(json)));
     });
   }
 }

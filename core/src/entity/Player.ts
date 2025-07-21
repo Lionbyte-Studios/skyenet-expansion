@@ -1,5 +1,5 @@
 import { Game } from "../Game";
-import { EntityID, PlayerID, ShipEngineSprite, ShipSprite } from "../types.d";
+import { EntityID, PlayerID, ShipEngineSprite, ShipSprite } from "../types";
 import { Entity } from "./Entity";
 
 export class Player extends Entity {

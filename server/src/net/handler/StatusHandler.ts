@@ -1,32 +1,24 @@
 import { assert } from "../../../../core/src/util/Util";
 import {
-  MessageType,
+  StatusMessage,
   WebSocketMessageType,
-} from "../../../../core/src/types.d";
+} from "../../../../core/src/types";
 import { SocketMessageData } from "../WebSocketServer";
 import { WsMessageHandler } from "./Handler";
-import { StatusMessage } from "../../../../core/src/Schemas";
+import * as schemas from "../../../../core/src/Schemas";
 
-export class WsStatusMessageHandler implements WsMessageHandler {
-  handledTypes: WebSocketMessageType[];
+export class WsStatusMessageHandler implements WsMessageHandler<StatusMessage> {
+  handledType: WebSocketMessageType = WebSocketMessageType.Status;
 
-  constructor() {
-    this.handledTypes = [WebSocketMessageType.Status];
-  }
-
-  public async handleMessage(
-    type: WebSocketMessageType,
-    data: SocketMessageData,
-  ) {
-    assert(type === WebSocketMessageType.Status);
+  public async handleMessage(data: SocketMessageData<StatusMessage>) {
     const json = JSON.parse(data.message.toString()) as
-      | MessageType.StatusMessage
+      | StatusMessage
       | undefined;
     assert(typeof json !== "undefined" && json !== undefined);
     if (json!.status === "ping") {
       data.socket.send(
         JSON.stringify(
-          StatusMessage.parse({
+          schemas.StatusMessage.parse({
             status: "pong",
           }),
         ),

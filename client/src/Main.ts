@@ -2,7 +2,7 @@ import { ClientGame } from "./ClientGame.js";
 import { GameRenderer } from "./lib/GameRenderer.js";
 import { GameMenu } from "./lib/GameMenu.js";
 import { AtlasManager } from "./lib/AtlasManager.js";
-import {
+/*import {
   entitiesFromJoin,
   getEntityID,
   getGameID,
@@ -10,14 +10,10 @@ import {
   initWebSocket,
   joinGame,
   playersFromJoin,
-} from "./WebSocket.js";
-import {
-  GameMode,
-  type EntityID,
-  type GameID,
-  type PlayerID,
-} from "../../core/src/types.d.js";
+} from "./WebSocket.old.js";*/
+import { GameMode } from "../../core/src/types.js";
 import { ClientStorage } from "./lib/settings/ClientStorage.js";
+import { WebSocketClient } from "./net/WebSocketClient.js";
 
 export let game: ClientGame;
 let renderer: GameRenderer;
@@ -25,6 +21,7 @@ let menu: GameMenu;
 export let atlasManager: AtlasManager;
 let gameState: "menu" | "playing" = "menu";
 export const clientStorage = new ClientStorage();
+export let webSocketManager: WebSocketClient;
 
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   <div>
@@ -103,16 +100,11 @@ function tick() {
       gameStartRequested = true;
       (async () => {
         const selectedShip = menu.getSelectedShip();
-        joinGame(selectedShip.sprite, selectedShip.engineSprite);
-        const loginInfo: {
-          playerID: PlayerID;
-          gameID: GameID;
-          entityID: EntityID;
-        } = {
-          playerID: await getPlayerID(),
-          gameID: await getGameID(),
-          entityID: await getEntityID(),
-        };
+        webSocketManager.joinGame(
+          selectedShip.sprite,
+          selectedShip.engineSprite,
+        );
+        const loginInfo = await webSocketManager.joinCallbackData;
         console.log(loginInfo);
         game = new ClientGame(
           loginInfo.gameID,
@@ -120,12 +112,13 @@ function tick() {
           loginInfo.playerID,
           loginInfo.entityID,
         );
-        playersFromJoin.forEach((player) => {
-          if (player.playerID === loginInfo.playerID) return;
-          game.players.push(player);
-        });
-        game.entities.push(...entitiesFromJoin);
-        console.log(entitiesFromJoin);
+        game.players.push(
+          ...loginInfo.players.filter(
+            (player) => player.playerID !== loginInfo.playerID,
+          ),
+        );
+        game.entities.push(...loginInfo.entities);
+        console.log(loginInfo.players);
         gameState = "playing";
         menu.setGameRunning(true);
         // Update player's selected ship
@@ -151,7 +144,7 @@ function tick() {
 
 async function initMenu() {
   console.log("Starting game initialization...");
-  initWebSocket();
+  webSocketManager = new WebSocketClient("ws://localhost:8081");
 
   // Initialize atlas manager
   atlasManager = new AtlasManager();

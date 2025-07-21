@@ -3,28 +3,22 @@ import {
   PlayerJoinMessageCallback,
   UpdatePlayersMessage,
 } from "../../../../core/src/Schemas";
-import { WebSocketMessageType } from "../../../../core/src/types.d";
 import {
-  assert,
-  entitiyToZodEntitySchema,
-} from "../../../../core/src/util/Util";
+  PlayerJoinMessage,
+  WebSocketMessageType,
+} from "../../../../core/src/types";
+import { entitiyToZodEntitySchema } from "../../../../core/src/util/Util";
 import { serverMgr } from "../../Main";
 import { SocketMessageData } from "../WebSocketServer";
 import { WsMessageHandler } from "./Handler";
 import { EntitySchema } from "../../../../core/src/Schemas";
 
-export class WsJoinMessageHandler implements WsMessageHandler {
-  handledTypes: WebSocketMessageType[];
+export class WsJoinMessageHandler
+  implements WsMessageHandler<PlayerJoinMessage>
+{
+  handledType: WebSocketMessageType = WebSocketMessageType.PlayerJoin;
 
-  constructor() {
-    this.handledTypes = [WebSocketMessageType.PlayerJoin];
-  }
-
-  public async handleMessage(
-    type: WebSocketMessageType,
-    data: SocketMessageData,
-  ) {
-    assert(type === WebSocketMessageType.PlayerJoin);
+  public async handleMessage(data: SocketMessageData<PlayerJoinMessage>) {
     const player = serverMgr.game.generatePlayer();
     serverMgr.game.addPlayer(player);
     const entitiesAsSchema: z.infer<typeof EntitySchema>[] = [];

@@ -1,5 +1,5 @@
 import { Game } from "../Game";
-import { alphabetForID, EntityID } from "../types.d";
+import { alphabetForID, EntityID } from "../types";
 
 // Making the function here without importing from Util.ts to prevent circular dependencies breaking everything
 function genStringID(length: number) {
