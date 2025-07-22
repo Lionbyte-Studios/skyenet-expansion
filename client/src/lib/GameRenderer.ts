@@ -19,7 +19,7 @@ export class GameRenderer {
     this.display = display;
     this.stars = game.stars;
     this.atlasManager = atlasManager;
-    this.starLastCamPos={x:0,y:0};
+    this.starLastCamPos = { x: 0, y: 0 };
   }
 
   public drawGame(game: ClientGame) {
@@ -36,7 +36,9 @@ export class GameRenderer {
     this.ctx.fillRect(0, 0, 10000, 10000);
 
     this.ctx.fillStyle = "#fff";
-    console.log(this.starLastCamPos.x + " : " + (game.camera.x-this.starLastCamPos.x))
+    console.log(
+      this.starLastCamPos.x + " : " + (game.camera.x - this.starLastCamPos.x),
+    );
     for (let i = 0; i < this.stars.length; i++) {
       if (this.stars[i].x + game.camera.x / this.stars[i].z! > 1300) {
         this.stars[i].x -= 1330;
@@ -57,10 +59,20 @@ export class GameRenderer {
       //   7 - this.stars[i].z! / 2,
       // );
       this.ctx.beginPath();
-      this.ctx.moveTo(this.stars[i].x + game.camera.x / this.stars[i].z!, this.stars[i].y + game.camera.y / this.stars[i].z!);
-      this.ctx.lineTo((this.stars[i].x + game.camera.x/ this.stars[i].z!)+((game.camera.velX/10)) , (this.stars[i].y + game.camera.y / this.stars[i].z!)+((game.camera.velY/10)));
-      this.ctx.strokeStyle="#fff"
-      this.ctx.lineWidth=(7 - this.stars[i].z! / 2)/5
+      this.ctx.moveTo(
+        this.stars[i].x + game.camera.x / this.stars[i].z!,
+        this.stars[i].y + game.camera.y / this.stars[i].z!,
+      );
+      this.ctx.lineTo(
+        this.stars[i].x +
+          game.camera.x / this.stars[i].z! +
+          game.camera.velX / 10,
+        this.stars[i].y +
+          game.camera.y / this.stars[i].z! +
+          game.camera.velY / 10,
+      );
+      this.ctx.strokeStyle = "#fff";
+      this.ctx.lineWidth = (7 - this.stars[i].z! / 2) / 5;
       this.ctx.stroke();
       this.ctx.closePath();
     }
