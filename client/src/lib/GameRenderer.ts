@@ -1,5 +1,7 @@
 import { Bullet } from "../../../core/src/entity/Bullet";
 import type { ClientGame } from "../ClientGame";
+import type { CanvasElement } from "../elems/CanvasElement";
+import { ChatInputElement } from "../elems/ChatInputElement";
 import { AtlasManager } from "./AtlasManager";
 
 export class GameRenderer {
@@ -8,6 +10,7 @@ export class GameRenderer {
   private stars;
   private starLastCamPos;
   private atlasManager: AtlasManager;
+  private canvasElements: CanvasElement[];
 
   constructor(
     ctx: CanvasRenderingContext2D,
@@ -20,6 +23,9 @@ export class GameRenderer {
     this.stars = game.stars;
     this.atlasManager = atlasManager;
     this.starLastCamPos = { x: 0, y: 0 };
+    this.canvasElements = [
+      new ChatInputElement(this.ctx, "Type smth :3", 50, 50, 50, 20),
+    ];
   }
 
   public drawGame(game: ClientGame) {
@@ -35,10 +41,12 @@ export class GameRenderer {
     this.ctx.fillStyle = "#03050cff";
     this.ctx.fillRect(0, 0, 10000, 10000);
 
+    this.canvasElements.forEach((elem) => elem.render());
+
     this.ctx.fillStyle = "#fff";
-    console.log(
-      this.starLastCamPos.x + " : " + (game.camera.x - this.starLastCamPos.x),
-    );
+    // console.log(
+    //   this.starLastCamPos.x + " : " + (game.camera.x - this.starLastCamPos.x),
+    // );
     for (let i = 0; i < this.stars.length; i++) {
       if (this.stars[i].x + game.camera.x / this.stars[i].z! > 1300) {
         this.stars[i].x -= 1330;
