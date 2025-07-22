@@ -23,8 +23,18 @@ export class GameRenderer {
     this.stars = game.stars;
     this.atlasManager = atlasManager;
     this.starLastCamPos = { x: 0, y: 0 };
+    // call resize() to get the correct this.display values
+    this.resize();
     this.canvasElements = [
-      new ChatInputElement(this.ctx, "Type smth :3", 50, 50, 50, 20),
+      new ChatInputElement(
+        this.ctx,
+        this.display,
+        "Type smth :3",
+        50,
+        50,
+        50,
+        20,
+      ),
     ];
   }
 

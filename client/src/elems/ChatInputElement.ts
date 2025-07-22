@@ -10,9 +10,15 @@ export class ChatInputElement extends CanvasElement {
   override height: number;
   private autoDetectSelection: boolean;
   public active: boolean = false;
+  public rendererDisplay: {
+    startWidth: number;
+    aspectRatio: number[];
+    scale: number;
+  };
 
   constructor(
     ctx: CanvasRenderingContext2D,
+    display: { startWidth: number; aspectRatio: number[]; scale: number },
     placeholder: string,
     x: number,
     y: number,
@@ -27,6 +33,7 @@ export class ChatInputElement extends CanvasElement {
     if (autoDetectSelection === undefined || autoDetectSelection === true)
       this.autoDetectSelection = true;
     else this.autoDetectSelection = false;
+    this.rendererDisplay = display;
 
     this.registerEventListeners();
   }
@@ -51,8 +58,8 @@ export class ChatInputElement extends CanvasElement {
       this.ctx.canvas.addEventListener("click", (event) => {
         const rect = this.ctx.canvas.getBoundingClientRect();
         const mouseRelativeCoords = {
-          x: event.clientX - rect.left,
-          y: event.clientY - rect.top,
+          x: (event.clientX - rect.left) / this.rendererDisplay.scale,
+          y: (event.clientY - rect.top) / this.rendererDisplay.scale,
         };
         console.log(
           `Click at ${mouseRelativeCoords.x} ${mouseRelativeCoords.y}`,
