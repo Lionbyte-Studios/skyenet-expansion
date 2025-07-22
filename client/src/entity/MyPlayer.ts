@@ -27,7 +27,7 @@ export class MyPlayer extends ClientPlayer {
   ) {
     const x = horizontal * XOffset + vertical * YOffset;
     const y = -vertical * XOffset + horizontal * YOffset;
-    this.flames[this.flames.length] = {
+    this.flames.push({
       x: this.x + x,
       y: this.y + y,
       z: Math.random() / 4 + 0.3,
@@ -35,7 +35,7 @@ export class MyPlayer extends ClientPlayer {
       velY: this.velY + horizontal * speed + (Math.random() - 0.5) * 2,
       size: 10,
       rotation: this.rotation,
-    };
+    });
   }
   private velocityChange(game: ClientGame) {
     // Reset engine state each frame
