@@ -4,7 +4,7 @@ export class ChatInputElement extends CanvasElement {
   private placeholder: string;
   public borderStyle: string = "green";
   public activeBorderStyle: string = "white";
-  public placeHolderStyle: string = "dark-gray";
+  public placeHolderStyle: string = "#555";
   public placeHolderFont: string = "20px serif";
   override width: number;
   override height: number;
@@ -45,7 +45,7 @@ export class ChatInputElement extends CanvasElement {
     this.ctx.strokeRect(this.x, this.y, this.width, this.height);
     this.ctx.fillStyle = this.placeHolderStyle;
     this.ctx.font = this.placeHolderFont;
-    this.ctx.fillText(this.placeholder, this.x, this.y, this.width);
+    this.ctx.fillText(this.placeholder, this.x+5, this.y+20, this.width);
   }
 
   private registerEventListeners() {

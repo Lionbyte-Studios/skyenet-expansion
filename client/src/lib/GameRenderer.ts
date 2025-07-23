@@ -31,9 +31,9 @@ export class GameRenderer {
         this.display,
         "Type smth :3",
         50,
-        50,
-        50,
-        20,
+        650,
+        1180,
+        25,
       ),
     ];
   }
@@ -47,11 +47,13 @@ export class GameRenderer {
     } else game.stats.framesThisSecond++;
 
     this.resize();
-    this.ctx.imageSmoothingEnabled = false;
+    // this.ctx.imageSmoothingEnabled = false;
     this.ctx.fillStyle = "#03050cff";
     this.ctx.fillRect(0, 0, 10000, 10000);
 
-    this.canvasElements.forEach((elem) => elem.render());
+    if(game.debug.terminal){
+      this.canvasElements.forEach((elem) => elem.render());
+    }
 
     this.ctx.fillStyle = "#fff";
     // console.log(
@@ -70,12 +72,13 @@ export class GameRenderer {
       if (this.stars[i].y + game.camera.y / this.stars[i].z! < -30) {
         this.stars[i].y += 770;
       }
-      // this.ctx.fillRect(
-      //   this.stars[i].x + game.camera.x / this.stars[i].z!,
-      //   this.stars[i].y + game.camera.y / this.stars[i].z!,
-      //   7 - this.stars[i].z! / 2,
-      //   7 - this.stars[i].z! / 2,
-      // );
+      let size = (7 - this.stars[i].z! / 2) / 3
+      this.ctx.fillRect(
+        this.stars[i].x - (size/2) + game.camera.x / this.stars[i].z!,
+        this.stars[i].y - (size/2) + game.camera.y / this.stars[i].z!,
+        size,
+        size,
+      );
       this.ctx.beginPath();
       this.ctx.moveTo(
         this.stars[i].x + game.camera.x / this.stars[i].z!,
@@ -84,13 +87,15 @@ export class GameRenderer {
       this.ctx.lineTo(
         this.stars[i].x +
           game.camera.x / this.stars[i].z! +
-          game.camera.velX / 10,
+          game.camera.velX / 2
+          /this.stars[i].z!,
         this.stars[i].y +
           game.camera.y / this.stars[i].z! +
-          game.camera.velY / 10,
+          game.camera.velY / 2
+          /this.stars[i].z!,
       );
       this.ctx.strokeStyle = "#fff";
-      this.ctx.lineWidth = (7 - this.stars[i].z! / 2) / 5;
+      this.ctx.lineWidth = size;
       this.ctx.stroke();
       this.ctx.closePath();
     }
@@ -146,6 +151,7 @@ export class GameRenderer {
       this.ctx.rotate(-((game.players[i].rotation * Math.PI) / 180));
 
       // Apply 3  x scale for player ship
+    this.ctx.imageSmoothingEnabled = false;
       this.ctx.scale(3, 3);
 
       // Check if atlas is loaded before drawing
@@ -168,6 +174,7 @@ export class GameRenderer {
 
       // Reset scale after drawing
       this.ctx.scale(1 / 3, 1 / 3);
+    this.ctx.imageSmoothingEnabled = true;
       this.ctx.rotate((game.players[i].rotation * Math.PI) / 180);
       this.ctx.translate(-game.players[i].x, -game.players[i].y);
     }
