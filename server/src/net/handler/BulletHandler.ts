@@ -3,7 +3,6 @@ import {
   BulletMessage,
   WebSocketMessageType,
 } from "../../../../core/src/types";
-import { assert } from "../../../../core/src/util/Util";
 import { ServerBullet } from "../../entity/ServerBullet";
 import { serverMgr } from "../../Main";
 import { SocketMessageData } from "../WebSocketServer";
@@ -16,14 +15,14 @@ export class WsBulletMessageHandler implements WsMessageHandler<BulletMessage> {
     const json = JSON.parse(data.message.toString()) as
       | BulletMessage
       | undefined;
-    assert(typeof json !== "undefined" && json !== undefined);
+    if (typeof json === "undefined" || json === undefined) return;
     serverMgr.game.entities.push(
       new ServerBullet(
-        json!.bullet.x,
-        json!.bullet.y,
-        json!.bullet.velX,
-        json!.bullet.velY,
-        json!.playerID,
+        json.bullet.x,
+        json.bullet.y,
+        json.bullet.velX,
+        json.bullet.velY,
+        json.playerID,
       ),
     );
     serverMgr.wsMgr.wss.clients.forEach((client) => {

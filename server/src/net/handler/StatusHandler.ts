@@ -1,4 +1,3 @@
-import { assert } from "../../../../core/src/util/Util";
 import {
   StatusMessage,
   WebSocketMessageType,
@@ -14,8 +13,8 @@ export class WsStatusMessageHandler implements WsMessageHandler<StatusMessage> {
     const json = JSON.parse(data.message.toString()) as
       | StatusMessage
       | undefined;
-    assert(typeof json !== "undefined" && json !== undefined);
-    if (json!.status === "ping") {
+    if (typeof json === "undefined" || json === undefined) return;
+    if (json.status === "ping") {
       data.socket.send(
         JSON.stringify(
           schemas.StatusMessage.parse({
