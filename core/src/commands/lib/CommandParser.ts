@@ -1,3 +1,35 @@
+import { Game } from "../../Game";
+
+export type CommandResult = number;
+
+export interface CommandExecutionContext {
+    game: Game;
+    command: string;
+    args: CommandArgumentManager;
+}
+
+export class CommandArgumentManager {
+    private arguments: ChatCommandArgument[] = [];
+
+    public static from(args: ChatCommandArgument[]): CommandArgumentManager {
+        const mgr = new CommandArgumentManager();
+        args.forEach(arg => mgr.addArgument(arg));
+        return mgr;
+    }
+
+    public addArgument(arg: ChatCommandArgument) {
+        this.arguments.push(arg);
+    }
+
+    public get(argumentName: string): ChatCommandArgument | null {
+        const filter = this.arguments.filter(arg => arg.name === argumentName);
+        if(filter.length === 0) {
+            return null;
+        }
+        return this.arguments.filter(arg => arg.name === argumentName)[0];
+    }
+}
+
 export class ChatCommandValidationError {
     private _message: string;
     private _cursor: number;
@@ -100,6 +132,7 @@ export class ChatCommandArgument {
 }
 
 export abstract class ChatCommandArgumentType {
+    public executorFn?: (context: CommandExecutionContext) => CommandResult;
     constructor() {}
     /**
      * @param command The entire command string
@@ -137,6 +170,12 @@ export abstract class ChatCommandArgumentType {
         }
         return i;
     }
+
+    /**
+     * Define what happens when this argument is the last argument and the command will be executed.
+     * @param fn Function that will be run when this is the last argument.
+     */
+    public abstract execute(fn: (context: CommandExecutionContext) => CommandResult): ChatCommandArgumentType;
 }
 
 export class StringArgumentType extends ChatCommandArgumentType {
@@ -147,6 +186,10 @@ export class StringArgumentType extends ChatCommandArgumentType {
     }
     public getArgumentEnd(command: string, cursor: number): number {
         return this.getSpacePos(command, cursor);
+    }
+    public execute(fn: (context: CommandExecutionContext) => CommandResult): ChatCommandArgumentType {
+        this.executorFn = fn;
+        return this;
     }
 }
 
@@ -162,6 +205,10 @@ export class IntegerArgumentType extends ChatCommandArgumentType {
     public getArgumentEnd(command: string, cursor: number): number {
         return this.getSpacePos(command, cursor);
     }
+    public execute(fn: (context: CommandExecutionContext) => CommandResult): ChatCommandArgumentType {
+        this.executorFn = fn;
+        return this;
+    }
 }
 
 export class FloatArgumentType extends ChatCommandArgumentType {
@@ -175,6 +222,10 @@ export class FloatArgumentType extends ChatCommandArgumentType {
     }
     public getArgumentEnd(command: string, cursor: number): number {
         return this.getSpacePos(command, cursor);
+    }
+    public execute(fn: (context: CommandExecutionContext) => CommandResult): ChatCommandArgumentType {
+        this.executorFn = fn;
+        return this;
     }
 }
 
@@ -190,5 +241,9 @@ export class GreedyStringArgumentType extends ChatCommandArgumentType {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public getArgumentEnd(command: string, cursor: number): number {
         return command.length - 1;
+    }
+    public execute(fn: (context: CommandExecutionContext) => CommandResult): ChatCommandArgumentType {
+        this.executorFn = fn;
+        return this;
     }
 }
