@@ -37,7 +37,7 @@ export class ApiManager {
         return;
       }
       if(await database.userWithUsernameExists(username)) {
-        res.status(400).json({error: ErrorType.UsernameAlreadyExists});
+        res.status(400).json({error: ErrorType.UsernameTaken});
         return;
       }
 

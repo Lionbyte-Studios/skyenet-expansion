@@ -28,5 +28,5 @@ export enum ErrorType {
     EmailIsNotString,
     PasswordIsNotString,
     UsernameTooShort,
-    UsernameAlreadyExists,
+    UsernameTaken,
 }
