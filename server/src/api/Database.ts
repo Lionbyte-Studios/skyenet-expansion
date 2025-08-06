@@ -10,6 +10,6 @@ const database = client.db("skyenet-expansion");
 const users = database.collection<User>("users");
 
 export async function createUser(user: User): Promise<DatabaseOperationResult> {
-  // TODO
-  return true;
+  const res = await users.insertOne(user);
+  return res.acknowledged;
 }
