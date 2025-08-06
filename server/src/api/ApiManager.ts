@@ -51,7 +51,7 @@ export class ApiManager {
       }
     });
 
-    this.app.listen(port, () => {
+    this.app.listen(this.port, () => {
       console.log(`Express listening on port ${port}`);
     });
   }
