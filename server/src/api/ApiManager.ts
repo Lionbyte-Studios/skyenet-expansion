@@ -1,4 +1,4 @@
-import * as express from "express";
+import express from "express";
 import { User } from "./DatabaseSchemas";
 import { generateUserID, hashPassword, removePasswordFromUser } from "./Util";
 import * as database from "./Database";
