@@ -16,6 +16,7 @@
     "dev": "concurrently --kill-others \"pnpm run dev:client\" \"pnpm run dev:server\""
   },
   "dependencies": {
+    "@types/express": "^5.0.3",
     "@types/ws": "^8.18.1",
     "concurrently": "^9.2.0",
     "express": "^5.1.0",
