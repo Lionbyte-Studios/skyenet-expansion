@@ -14,6 +14,7 @@ server/node_modules
 dist
 dist-ssr
 *.local
+config.json
 
 # Editor directories and files
 .vscode/*
