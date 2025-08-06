@@ -65,4 +65,5 @@ export enum ApiErrorType {
   PasswordIsNotString,
   InvalidUsername,
   UsernameTaken,
+  InvalidEmail,
 }

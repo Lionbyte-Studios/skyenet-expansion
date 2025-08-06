@@ -3,6 +3,7 @@ import { User } from "../../../core/src/DatabaseSchemas";
 import {
   generateUserID,
   hashPassword,
+  isValidEmail,
   isValidUsername,
   removePasswordFromUser,
 } from "./Util";
@@ -40,6 +41,10 @@ export class ApiManager {
       }
       if (!isValidUsername(username)) {
         res.status(400).json({ error: ApiErrorType.InvalidUsername });
+        return;
+      }
+      if (!isValidEmail(body.email)) {
+        res.status(400).json({ error: ApiErrorType.InvalidEmail });
         return;
       }
       if (await database.userWithUsernameExists(username)) {

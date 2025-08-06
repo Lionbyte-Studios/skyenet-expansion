@@ -33,3 +33,10 @@ export function isValidUsername(username: string): boolean {
   }
   return true;
 }
+
+// NOTE: Only validates email length
+export function isValidEmail(email: string): boolean {
+  if (email.length < 3) return false;
+  if (email.length > 64) return false;
+  return true;
+}
