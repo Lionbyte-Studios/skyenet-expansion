@@ -4,7 +4,8 @@ a goofy space game >:3
 
 ## Dev
 
-Make sure port `5173` and `8081` are not used by any other applications.
+Make sure port `5173`, `8081` and `8082` are not used by any other applications.
+For the API to work, you need to install and run MongoDB. Copy the `config.example.json` to `config.json` and modify the `mongo_uri` according to your MongoDB setup.
 
 `pnpm run dev` - start the dev server & client
 
