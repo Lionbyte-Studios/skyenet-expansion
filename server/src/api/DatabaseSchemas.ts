@@ -22,11 +22,3 @@ export interface Achievement {
   name: string;
   description: string;
 }
-
-export enum ErrorType {
-    UsernameIsNotString,
-    EmailIsNotString,
-    PasswordIsNotString,
-    UsernameTooShort,
-    UsernameTaken,
-}

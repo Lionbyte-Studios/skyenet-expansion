@@ -1,7 +1,8 @@
 import express from "express";
-import { ErrorType, User } from "./DatabaseSchemas";
+import { User } from "./DatabaseSchemas";
 import { generateUserID, hashPassword, removePasswordFromUser } from "./Util";
 import * as database from "./Database";
+import { ApiErrorType } from "../../../core/src/types";
 
 export class ApiManager {
   private app: express.Express;
@@ -20,24 +21,24 @@ export class ApiManager {
       const body: { username: string; email: string; password: string } =
         req.body;
       if (!(typeof body.username === "string")) {
-        res.status(400).json({ error: ErrorType.UsernameIsNotString });
+        res.status(400).json({ error: ApiErrorType.UsernameIsNotString });
         return;
       }
       if (!(typeof body.email === "string")) {
-        res.status(400).json({ error: ErrorType.EmailIsNotString });
+        res.status(400).json({ error: ApiErrorType.EmailIsNotString });
         return;
       }
       if (!(typeof body.password === "string")) {
-        res.status(400).json({ error: ErrorType.PasswordIsNotString });
+        res.status(400).json({ error: ApiErrorType.PasswordIsNotString });
         return;
       }
       const username = body.username.trim();
       if(username.length < 3) {
-        res.status(400).json({error: ErrorType.UsernameTooShort});
+        res.status(400).json({error: ApiErrorType.UsernameTooShort});
         return;
       }
       if(await database.userWithUsernameExists(username)) {
-        res.status(400).json({error: ErrorType.UsernameTaken});
+        res.status(400).json({error: ApiErrorType.UsernameTaken});
         return;
       }
 

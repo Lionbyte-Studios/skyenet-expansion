@@ -56,3 +56,11 @@ export enum EntityType {
   Bullet,
   Asteroid,
 }
+
+export enum ApiErrorType {
+    UsernameIsNotString,
+    EmailIsNotString,
+    PasswordIsNotString,
+    UsernameTooShort,
+    UsernameTaken,
+}
