@@ -5,6 +5,7 @@ import {
   UserWithOptionalPassword,
   UserWithoutPassword,
 } from "../../../core/src/DatabaseSchemas";
+import { usernameRegexes } from "../../../core/src/types";
 
 export function generateUserID(): string {
   return uuidv4();
@@ -22,4 +23,12 @@ export function removePasswordFromUser(user: User): UserWithoutPassword {
   delete optional.password;
   const without: UserWithoutPassword = optional;
   return without;
+}
+
+export function isValidUsername(username: string): boolean {
+  if (username.trim().length < 3) return false;
+  for (const regex in usernameRegexes) {
+    if (regex.match(username) === null) return false;
+  }
+  return true;
 }
