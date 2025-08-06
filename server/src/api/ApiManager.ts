@@ -1,5 +1,5 @@
 import express from "express";
-import { User } from "./DatabaseSchemas";
+import { ErrorType, User } from "./DatabaseSchemas";
 import { generateUserID, hashPassword, removePasswordFromUser } from "./Util";
 import * as database from "./Database";
 
@@ -20,20 +20,30 @@ export class ApiManager {
       const body: { username: string; email: string; password: string } =
         req.body;
       if (!(typeof body.username === "string")) {
-        res.status(400).json({ error: "username is not of type 'string'" });
+        res.status(400).json({ error: ErrorType.UsernameIsNotString });
         return;
       }
       if (!(typeof body.email === "string")) {
-        res.status(400).json({ error: "email is not of type 'string'" });
+        res.status(400).json({ error: ErrorType.EmailIsNotString });
         return;
       }
       if (!(typeof body.password === "string")) {
-        res.status(400).json({ error: "password is not of type 'string'" });
+        res.status(400).json({ error: ErrorType.PasswordIsNotString });
         return;
       }
+      const username = body.username.trim();
+      if(username.length < 3) {
+        res.status(400).json({error: ErrorType.UsernameTooShort});
+        return;
+      }
+      if(await database.userWithUsernameExists(username)) {
+        res.status(400).json({error: ErrorType.UsernameAlreadyExists});
+        return;
+      }
+
       const user_id = generateUserID();
       const user: User = {
-        username: body.username,
+        username: username,
         email: body.email,
         user_id: user_id,
         password: hashPassword(body.password, user_id),
