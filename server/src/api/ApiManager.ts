@@ -23,7 +23,7 @@ export class ApiManager {
       res.status(200).json({ ok: true });
     });
 
-    this.app.post("/user/create", async (req, res) => {
+    this.app.post("/user", async (req, res) => {
       const body: { username: string; email: string; password: string } =
         req.body;
       const username = body.username.trim();
@@ -70,6 +70,16 @@ export class ApiManager {
         res.status(500).json({ ok: false });
         return;
       }
+    });
+
+    this.app.get("/user/:user_id", async (req, res) => {
+      const user_id = req.params.user_id;
+      const user = await database.getUserByID(user_id);
+      if (user === undefined) {
+        res.status(404).json({ error: ApiErrorType.UserNotFound });
+        return;
+      }
+      res.status(200).json(user);
     });
 
     this.app.listen(this.port, () => {

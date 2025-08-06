@@ -66,4 +66,5 @@ export enum ApiErrorType {
   InvalidUsername,
   UsernameTaken,
   InvalidEmail,
+  UserNotFound,
 }
