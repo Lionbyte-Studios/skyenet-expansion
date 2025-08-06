@@ -1,5 +1,5 @@
 import express from "express";
-import { User } from "./DatabaseSchemas";
+import { User } from "../../../core/src/DatabaseSchemas";
 import { generateUserID, hashPassword, removePasswordFromUser } from "./Util";
 import * as database from "./Database";
 import { ApiErrorType } from "../../../core/src/types";

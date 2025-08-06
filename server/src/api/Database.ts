@@ -1,4 +1,4 @@
-import { User } from "./DatabaseSchemas";
+import { User } from "../../../core/src/DatabaseSchemas";
 import { mongo_uri } from "../../../config.json";
 import { MongoClient } from "mongodb";
 

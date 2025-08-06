@@ -4,7 +4,7 @@ import {
   User,
   UserWithOptionalPassword,
   UserWithoutPassword,
-} from "./DatabaseSchemas";
+} from "../../../core/src/DatabaseSchemas";
 
 export function generateUserID(): string {
   return uuidv4();
