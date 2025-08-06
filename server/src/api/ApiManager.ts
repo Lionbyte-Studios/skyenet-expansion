@@ -33,12 +33,12 @@ export class ApiManager {
         return;
       }
       const username = body.username.trim();
-      if(username.length < 3) {
-        res.status(400).json({error: ApiErrorType.UsernameTooShort});
+      if (username.length < 3) {
+        res.status(400).json({ error: ApiErrorType.UsernameTooShort });
         return;
       }
-      if(await database.userWithUsernameExists(username)) {
-        res.status(400).json({error: ApiErrorType.UsernameTaken});
+      if (await database.userWithUsernameExists(username)) {
+        res.status(400).json({ error: ApiErrorType.UsernameTaken });
         return;
       }
 

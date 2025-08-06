@@ -58,9 +58,9 @@ export enum EntityType {
 }
 
 export enum ApiErrorType {
-    UsernameIsNotString,
-    EmailIsNotString,
-    PasswordIsNotString,
-    UsernameTooShort,
-    UsernameTaken,
+  UsernameIsNotString,
+  EmailIsNotString,
+  PasswordIsNotString,
+  UsernameTooShort,
+  UsernameTaken,
 }

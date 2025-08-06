@@ -14,8 +14,10 @@ export async function createUser(user: User): Promise<DatabaseOperationResult> {
   return res.acknowledged;
 }
 
-export async function userWithUsernameExists(username: string): Promise<boolean> {
-    const findRes = await users.findOne({username: username});
-    if(findRes === null) return false;
-    return true;
+export async function userWithUsernameExists(
+  username: string,
+): Promise<boolean> {
+  const findRes = await users.findOne({ username: username });
+  if (findRes === null) return false;
+  return true;
 }
