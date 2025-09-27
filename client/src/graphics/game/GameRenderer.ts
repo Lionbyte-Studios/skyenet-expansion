@@ -7,7 +7,6 @@ export class GameRenderer {
   private ctx;
   private display;
   private stars;
-  private starLastCamPos;
   private atlasManager: AtlasManager;
 
   constructor(
@@ -20,7 +19,6 @@ export class GameRenderer {
     this.display = display;
     this.stars = game.stars;
     this.atlasManager = atlasManager;
-    this.starLastCamPos = { x: 0, y: 0 };
   }
 
   public drawGame(game: ClientGame) {
@@ -37,9 +35,6 @@ export class GameRenderer {
     this.ctx.fillRect(0, 0, 10000, 10000);
 
     this.ctx.fillStyle = "#fff";
-    /*console.log(
-      this.starLastCamPos.x + " : " + (game.camera.x - this.starLastCamPos.x),
-    );*/
     for (let i = 0; i < this.stars.length; i++) {
       if (this.stars[i].x + game.camera.x / this.stars[i].z! > 1300) {
         this.stars[i].x -= 1330;
