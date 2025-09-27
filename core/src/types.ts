@@ -68,4 +68,5 @@ export enum ApiErrorType {
   InvalidEmail,
   UserNotFound,
   InvalidPassword,
+  InternalServerError,
 }

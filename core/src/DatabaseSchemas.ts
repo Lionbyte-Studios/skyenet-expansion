@@ -22,3 +22,13 @@ export interface Achievement {
   name: string;
   description: string;
 }
+
+export interface Session {
+  session_id: number;
+  token: string;
+  user_id: string;
+  // Timestamp
+  created_at: number;
+  // Timestamp
+  expires: number;
+}
