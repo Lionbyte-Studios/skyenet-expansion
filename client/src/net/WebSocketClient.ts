@@ -17,6 +17,7 @@ import { WsMovementMessageHandler } from "./handler/MovementHandler";
 import { WsStatusMessageHandler } from "./handler/StatusHandler";
 import { WsUpdatePlayersMessageHandler } from "./handler/UpdatePlayersHandler";
 import * as schemas from "../../../core/src/Schemas";
+import { WsTextDisplayMessageHandler } from "./handler/TextDisplayHandler";
 
 export interface SocketMessageData<T> {
   client: WebSocketClient;
@@ -49,6 +50,7 @@ export class WebSocketClient {
       new WsMovementMessageHandler(),
       new WsStatusMessageHandler(),
       new WsUpdatePlayersMessageHandler(),
+      new WsTextDisplayMessageHandler(),
     ];
 
     this.joinCallbackDataResolve = () => {

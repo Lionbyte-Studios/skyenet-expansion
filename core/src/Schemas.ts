@@ -113,3 +113,12 @@ export const BulletMessage = BaseWebSocketMessageSchema.extend({
     velY: z.number(),
   }),
 });
+
+export const TextDisplayMessage = z.object({
+  type: lt(WebSocketMessageType.TextDisplayMessage),
+  textDisplay: z.object({
+    text: z.string(),
+    x: z.number(),
+    y: z.number(),
+  }),
+});

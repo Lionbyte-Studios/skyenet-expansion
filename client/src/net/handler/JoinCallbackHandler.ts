@@ -7,6 +7,7 @@ import {
 import { ClientAsteroid } from "../../entity/ClientAsteroid";
 import { ClientBullet } from "../../entity/ClientBullet";
 import { ClientPlayer } from "../../entity/ClientPlayer";
+import { ClientTextDisplay } from "../../entity/ClientTextDisplay";
 import type { JoinCallbackData, SocketMessageData } from "../WebSocketClient";
 import { WsMessageHandler } from "./Handler";
 
@@ -56,6 +57,13 @@ export class WsPlayerJoinCallbackMessageHandler extends WsMessageHandler<PlayerJ
             entity.entityData.y,
             entity.entityData.rotation,
             entity.entityData.size,
+          );
+          break;
+        case EntityType.TextDisplay:
+          newEntity = new ClientTextDisplay(
+            entity.entityData.text,
+            entity.entityData.x,
+            entity.entityData.y
           );
           break;
         default:

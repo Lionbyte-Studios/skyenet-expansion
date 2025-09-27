@@ -1,6 +1,7 @@
 import { Asteroid } from "../entity/Asteroid";
 import { Bullet } from "../entity/Bullet";
 import { Entity } from "../entity/Entity";
+import { TextDisplay } from "../entity/TextDisplay";
 import { EntitySchema } from "../Schemas";
 import { alphabetForID, EntityType } from "../types";
 
@@ -17,6 +18,7 @@ export function entitiyToZodEntitySchema(entity: Entity) {
 
   if (entity instanceof Bullet) type = EntityType.Bullet;
   else if (entity instanceof Asteroid) type = EntityType.Asteroid;
+  else if (entity instanceof TextDisplay) type = EntityType.TextDisplay;
   else throw new Error(`Entity instanceof checks failed :(`);
 
   return EntitySchema.parse({

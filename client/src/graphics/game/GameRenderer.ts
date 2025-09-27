@@ -1,5 +1,6 @@
 import type { Entity } from "../../../../core/src/entity/Entity";
 import type { ClientGame } from "../../ClientGame";
+import type { RenderInfo } from "../../entity/RenderableEntity";
 import { AtlasManager } from "../AtlasManager";
 
 export class GameRenderer {
@@ -88,12 +89,12 @@ export class GameRenderer {
     );
 
     const renderableEntities: (Entity & {
-      render: (ctx: CanvasRenderingContext2D, game: ClientGame) => void;
+      render: (info: RenderInfo) => void;
     })[] = game.entities.filter(
       (entity) => "render" in entity && typeof entity.render === "function",
-    ) as (Entity & { render: (ctx: CanvasRenderingContext2D) => void })[];
+    ) as (Entity & { render: (info: RenderInfo) => void })[];
     renderableEntities.forEach((entity) => {
-      entity.render(this.ctx, game);
+      entity.render({ ctx: this.ctx, game: game});
     });
 
     for (let i = game.players.length - 1; i >= 0; i--) {

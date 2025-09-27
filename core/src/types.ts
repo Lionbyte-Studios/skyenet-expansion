@@ -5,6 +5,7 @@ import {
   PlayerJoinMessage,
   PlayerJoinMessageCallback,
   StatusMessage,
+  TextDisplayMessage,
   UpdatePlayersMessage,
 } from "./Schemas";
 
@@ -18,6 +19,7 @@ export enum WebSocketMessageType {
   PlayerJoinCallback,
   UpdatePlayers,
   BulletMessage,
+  TextDisplayMessage,
 }
 
 export type MovementMessage = z.infer<typeof MovementMessage>;
@@ -28,6 +30,7 @@ export type PlayerJoinCallbackMessage = z.infer<
 export type UpdatePlayersMessage = z.infer<typeof UpdatePlayersMessage>;
 export type BulletMessage = z.infer<typeof BulletMessage>;
 export type PlayerJoinMessage = z.infer<typeof PlayerJoinMessage>;
+export type TextDisplayMessage = z.infer<typeof TextDisplayMessage>;
 
 export enum ShipSprite {
   Gray = "gray-ship",
@@ -55,4 +58,5 @@ export const alphabetForID =
 export enum EntityType {
   Bullet,
   Asteroid,
+  TextDisplay,
 }
