@@ -9,7 +9,7 @@ export class WsModifyEntitiesMessageHandler extends WsMessageHandler<ModifyEntit
         data.message.modifications.forEach(modification => {
             const index = game.entities.findIndex(entity => entity.entityID = modification.entityID);
             if(index === -1) {
-                console.error("No entity with ID {} found!", modification.entityID);
+                console.error(`No entity with ID ${modification.entityID} found!`);
                 return;
             }
             for (const key in modification.modified_data) {

@@ -9,7 +9,7 @@ export class WsKillEntitiesMessageHandler extends WsMessageHandler<KillEntitiesM
         data.message.entities.forEach(entityID => {
             const index = game.entities.findIndex(entity => entity.entityID = entityID);
             if(index === -1) {
-                console.warn("Entity with ID {} that should have been killed was not found.", entityID);
+                console.warn(`Entity with ID ${entityID} that should have been killed was not found.`);
                 return;
             }
             game.entities.splice(index, 1);

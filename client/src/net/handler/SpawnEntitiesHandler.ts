@@ -24,7 +24,7 @@ export class WsSpawnEntitiesMessageHandler extends WsMessageHandler<SpawnEntitie
                     newEntity = new ClientTextDisplay(entity.data.text, entity.data.x, entity.data.y, entity.data.entityID);
                     break;
                 default:
-                    console.error("Unknown entity type: {}\nData: {}", entity.type, entity.data);
+                    console.error(`Unknown entity type: ${entity.type}\nData: ${entity.data}`);
                     return;
             }
             game.entities.push(newEntity);
