@@ -1,6 +1,8 @@
-import { Bullet } from "../../../core/src/entity/Bullet";
-import type { ClientGame } from "../ClientGame";
-import { AtlasManager } from "./AtlasManager";
+import { Bullet } from "../../../../core/src/entity/Bullet";
+import type { Entity } from "../../../../core/src/entity/Entity";
+import type { ClientGame } from "../../ClientGame";
+import { ClientBullet } from "../../entity/ClientBullet";
+import { AtlasManager } from "../AtlasManager";
 
 export class GameRenderer {
   private ctx;
@@ -83,6 +85,11 @@ export class GameRenderer {
     this.ctx.textAlign = "center";
     this.ctx.fillText(`${game.players.length} ${game.players.length === 1 ? "player is" : "players are"} connected`, 0, -100);
 
+    const renderableEntities: (Entity & {render: (ctx: CanvasRenderingContext2D, game: ClientGame) => void})[] = game.entities.filter((entity) => "render" in entity && typeof entity.render === "function") as (Entity & {render: (ctx: CanvasRenderingContext2D) => void})[];
+    renderableEntities.forEach(entity => {
+      entity.render(this.ctx, game);
+    });
+
     for (let i = game.players.length - 1; i >= 0; i--) {
       for (let a = 0; a < game.players[i].flames.length; a++) {
         this.ctx.translate(
@@ -105,15 +112,16 @@ export class GameRenderer {
           -game.players[i].flames[a].y,
         );
       }
-      const bullets = game.entities.filter(
-        (entity) => entity instanceof Bullet,
+      /*const bullets = game.entities.filter(
+        (entity) => entity instanceof ClientBullet,
       );
-      for (let a = 0; a < bullets.length; a++) {
-        this.ctx.translate(bullets[a].x, bullets[a].y);
+      for (let a = 0; a < bullets.length; a++) {*/
+        /*this.ctx.translate(bullets[a].x, bullets[a].y);
         this.ctx.fillStyle = `#ffffaa`;
         this.ctx.fillRect(-5, -5, 10, 10);
-        this.ctx.translate(-bullets[a].x, -bullets[a].y);
-      }
+        this.ctx.translate(-bullets[a].x, -bullets[a].y);*/
+      /*  bullets[a].render(this.ctx);
+      }*/
 
       this.ctx.translate(game.players[i].x, game.players[i].y);
       this.ctx.fillStyle = `#aaaaaa77`;

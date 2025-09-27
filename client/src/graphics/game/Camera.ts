@@ -1,4 +1,4 @@
-import type { ClientGame } from "../ClientGame";
+import type { ClientGame } from "../../ClientGame";
 
 export class Camera {
   x = 0;
