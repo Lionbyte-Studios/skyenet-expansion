@@ -7,7 +7,7 @@ import type {
 } from "../../core/src/types";
 import type { ClientPlayer } from "./entity/ClientPlayer";
 import { MyPlayer } from "./entity/MyPlayer";
-import { Camera } from "./lib/Camera";
+import { Camera } from "./graphics/game/Camera";
 import { KeyManager } from "./lib/Keyman";
 import { Debug } from "./lib/Debug";
 import { ClientSettings } from "./lib/settings/ClientSettings";

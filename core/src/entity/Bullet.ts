@@ -17,8 +17,9 @@ export class Bullet extends Entity {
     velX: number,
     velY: number,
     owner: PlayerID,
+    entityID?: string,
   ) {
-    super(x, y);
+    super(x, y, entityID);
     this.velX = velX;
     this.velY = velY;
     this.owner = owner;

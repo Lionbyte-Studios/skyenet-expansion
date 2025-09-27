@@ -1,12 +1,12 @@
-import { Bullet } from "../../../core/src/entity/Bullet";
-import type { ClientGame } from "../ClientGame";
-import { AtlasManager } from "./AtlasManager";
+import type { Entity } from "../../../../core/src/entity/Entity";
+import type { ClientGame } from "../../ClientGame";
+import type { RenderInfo } from "../../entity/RenderableEntity";
+import { AtlasManager } from "../AtlasManager";
 
 export class GameRenderer {
   private ctx;
   private display;
   private stars;
-  private starLastCamPos;
   private atlasManager: AtlasManager;
 
   constructor(
@@ -19,7 +19,6 @@ export class GameRenderer {
     this.display = display;
     this.stars = game.stars;
     this.atlasManager = atlasManager;
-    this.starLastCamPos = { x: 0, y: 0 };
   }
 
   public drawGame(game: ClientGame) {
@@ -36,9 +35,6 @@ export class GameRenderer {
     this.ctx.fillRect(0, 0, 10000, 10000);
 
     this.ctx.fillStyle = "#fff";
-    /*console.log(
-      this.starLastCamPos.x + " : " + (game.camera.x - this.starLastCamPos.x),
-    );*/
     for (let i = 0; i < this.stars.length; i++) {
       if (this.stars[i].x + game.camera.x / this.stars[i].z! > 1300) {
         this.stars[i].x -= 1330;
@@ -81,7 +77,20 @@ export class GameRenderer {
     this.ctx.translate(game.camera.x, game.camera.y);
     this.ctx.font = "48px serif";
     this.ctx.textAlign = "center";
-    this.ctx.fillText(`${game.players.length} person is connected`, 0, -100);
+    this.ctx.fillText(
+      `${game.players.length} ${game.players.length === 1 ? "player is" : "players are"} connected`,
+      0,
+      -100,
+    );
+
+    const renderableEntities: (Entity & {
+      render: (info: RenderInfo) => void;
+    })[] = game.entities.filter(
+      (entity) => "render" in entity && typeof entity.render === "function",
+    ) as (Entity & { render: (info: RenderInfo) => void })[];
+    renderableEntities.forEach((entity) => {
+      entity.render({ ctx: this.ctx, game: game });
+    });
 
     for (let i = game.players.length - 1; i >= 0; i--) {
       for (let a = 0; a < game.players[i].flames.length; a++) {
@@ -105,15 +114,16 @@ export class GameRenderer {
           -game.players[i].flames[a].y,
         );
       }
-      const bullets = game.entities.filter(
-        (entity) => entity instanceof Bullet,
+      /*const bullets = game.entities.filter(
+        (entity) => entity instanceof ClientBullet,
       );
-      for (let a = 0; a < bullets.length; a++) {
-        this.ctx.translate(bullets[a].x, bullets[a].y);
+      for (let a = 0; a < bullets.length; a++) {*/
+      /*this.ctx.translate(bullets[a].x, bullets[a].y);
         this.ctx.fillStyle = `#ffffaa`;
         this.ctx.fillRect(-5, -5, 10, 10);
-        this.ctx.translate(-bullets[a].x, -bullets[a].y);
-      }
+        this.ctx.translate(-bullets[a].x, -bullets[a].y);*/
+      /*  bullets[a].render(this.ctx);
+      }*/
 
       this.ctx.translate(game.players[i].x, game.players[i].y);
       this.ctx.fillStyle = `#aaaaaa77`;

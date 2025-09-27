@@ -1,7 +1,7 @@
 import type { Entity } from "../../../core/src/entity/Entity";
 import { PlayerJoinMessage } from "../../../core/src/Schemas";
 import type {
-  BulletMessage,
+  BulletShootMessage,
   EntityID,
   GameID,
   MovementMessage,
@@ -10,13 +10,15 @@ import type {
   ShipSprite,
 } from "../../../core/src/types";
 import type { ClientPlayer } from "../entity/ClientPlayer";
-import { WsBulletMessageHandler } from "./handler/BulletHandler";
 import type { WsMessageHandler } from "./handler/Handler";
 import { WsPlayerJoinCallbackMessageHandler } from "./handler/JoinCallbackHandler";
 import { WsMovementMessageHandler } from "./handler/MovementHandler";
 import { WsStatusMessageHandler } from "./handler/StatusHandler";
 import { WsUpdatePlayersMessageHandler } from "./handler/UpdatePlayersHandler";
 import * as schemas from "../../../core/src/Schemas";
+import { WsSpawnEntitiesMessageHandler } from "./handler/SpawnEntitiesHandler";
+import { WsModifyEntitiesMessageHandler } from "./handler/ModifyEntitiesHandler";
+import { WsKillEntitiesMessageHandler } from "./handler/KillEntitiesHandler";
 
 export interface SocketMessageData<T> {
   client: WebSocketClient;
@@ -44,11 +46,13 @@ export class WebSocketClient {
     this.socket.onerror = console.error;
 
     this.handlers = [
-      new WsBulletMessageHandler(),
       new WsPlayerJoinCallbackMessageHandler(),
       new WsMovementMessageHandler(),
       new WsStatusMessageHandler(),
       new WsUpdatePlayersMessageHandler(),
+      new WsSpawnEntitiesMessageHandler(),
+      new WsModifyEntitiesMessageHandler(),
+      new WsKillEntitiesMessageHandler(),
     ];
 
     this.joinCallbackDataResolve = () => {
@@ -109,8 +113,8 @@ export class WebSocketClient {
     );
   }
 
-  public sendBullet(msg: Omit<BulletMessage, "type">) {
-    this.socket.send(JSON.stringify(schemas.BulletMessage.parse(msg)));
+  public sendBullet(msg: Omit<BulletShootMessage, "type">) {
+    this.socket.send(JSON.stringify(schemas.BulletShootMessage.parse(msg)));
   }
 
   public sendMovement(msg: Omit<MovementMessage, "type">) {

@@ -5,7 +5,7 @@ import { WsMessageHandler } from "./handler/Handler";
 import { WsJoinMessageHandler } from "./handler/JoinHandler";
 import { WsStatusMessageHandler } from "./handler/StatusHandler";
 import { WsMovementMessageHandler } from "./handler/MovementHandler";
-import { WsBulletMessageHandler } from "./handler/BulletHandler";
+import { WsBulletShootMessageHandler } from "./handler/BulletShootHandler";
 
 export interface SocketMessageData<T> {
   socket: WebSocket;
@@ -24,7 +24,7 @@ export class WebSocketServerManager {
       new WsJoinMessageHandler(),
       new WsStatusMessageHandler(),
       new WsMovementMessageHandler(),
-      new WsBulletMessageHandler(),
+      new WsBulletShootMessageHandler(),
     ];
     this.wss = new WebSocketServer({ port: 8081 });
 

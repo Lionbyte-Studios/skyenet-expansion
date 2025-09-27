@@ -1,7 +1,7 @@
 import { ClientGame } from "./ClientGame.js";
-import { GameRenderer } from "./lib/GameRenderer.js";
-import { GameMenu } from "./lib/GameMenu.js";
-import { AtlasManager } from "./lib/AtlasManager.js";
+import { GameRenderer } from "./graphics/game/GameRenderer.js";
+import { GameMenu } from "./graphics/GameMenu.js";
+import { AtlasManager } from "./graphics/AtlasManager.js";
 import { GameMode } from "../../core/src/types.js";
 import { ClientStorage } from "./lib/settings/ClientStorage.js";
 import { WebSocketClient } from "./net/WebSocketClient.js";

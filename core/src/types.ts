@@ -1,9 +1,12 @@
 import z from "zod";
 import {
-  BulletMessage,
+  BulletShootMessage,
+  KillEntitiesMessage,
+  ModifyEntitiesMessage,
   MovementMessage,
   PlayerJoinMessage,
   PlayerJoinMessageCallback,
+  SpawnEntitiesMessage,
   StatusMessage,
   UpdatePlayersMessage,
 } from "./Schemas";
@@ -17,7 +20,10 @@ export enum WebSocketMessageType {
   PlayerJoin,
   PlayerJoinCallback,
   UpdatePlayers,
-  BulletMessage,
+  SpawnEntities,
+  KillEntities,
+  ModifyEntities,
+  BulletShoot,
 }
 
 export type MovementMessage = z.infer<typeof MovementMessage>;
@@ -26,8 +32,11 @@ export type PlayerJoinCallbackMessage = z.infer<
   typeof PlayerJoinMessageCallback
 >;
 export type UpdatePlayersMessage = z.infer<typeof UpdatePlayersMessage>;
-export type BulletMessage = z.infer<typeof BulletMessage>;
 export type PlayerJoinMessage = z.infer<typeof PlayerJoinMessage>;
+export type SpawnEntitiesMessage = z.infer<typeof SpawnEntitiesMessage>;
+export type ModifyEntitiesMessage = z.infer<typeof ModifyEntitiesMessage>;
+export type KillEntitiesMessage = z.infer<typeof KillEntitiesMessage>;
+export type BulletShootMessage = z.infer<typeof BulletShootMessage>;
 
 export enum ShipSprite {
   Gray = "gray-ship",

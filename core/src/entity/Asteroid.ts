@@ -11,8 +11,14 @@ export class Asteroid extends Entity {
   rotation: number;
   size: number;
 
-  constructor(x: number, y: number, rotation: number, size: number) {
-    super(x, y);
+  constructor(
+    x: number,
+    y: number,
+    rotation: number,
+    size: number,
+    entityID?: string,
+  ) {
+    super(x, y, entityID);
     this.rotation = rotation;
     this.size = size;
   }
