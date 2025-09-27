@@ -1,6 +1,5 @@
-import type { Entity } from "../../../../core/src/entity/Entity";
+import { EntityType, type Entity } from "../../../../core/src/entity/Entity";
 import {
-  EntityType,
   WebSocketMessageType,
   type PlayerJoinCallbackMessage,
 } from "../../../../core/src/types";

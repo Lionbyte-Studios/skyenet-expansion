@@ -1,6 +1,12 @@
 import { Game } from "../Game";
 import { alphabetForID, EntityID } from "../types";
 
+export enum EntityType {
+  Bullet,
+  Asteroid,
+  TextDisplay,
+}
+
 // Making the function here without importing from Util.ts to prevent circular dependencies breaking everything
 function genStringID(length: number) {
   let id = "";
@@ -11,6 +17,7 @@ function genStringID(length: number) {
 }
 
 export class Entity {
+  [index: string]: any;
   entityID: EntityID;
   x: number;
   y: number;

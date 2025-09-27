@@ -1,9 +1,9 @@
 import { Asteroid } from "../entity/Asteroid";
 import { Bullet } from "../entity/Bullet";
-import { Entity } from "../entity/Entity";
+import { Entity, EntityType } from "../entity/Entity";
 import { TextDisplay } from "../entity/TextDisplay";
 import { EntitySchema } from "../Schemas";
-import { alphabetForID, EntityType } from "../types";
+import { alphabetForID } from "../types";
 
 export function genStringID(length: number) {
   let id = "";
