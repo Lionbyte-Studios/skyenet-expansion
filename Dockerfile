@@ -42,6 +42,7 @@ COPY . .
 # Expose the port that the application listens on.
 EXPOSE 5173
 EXPOSE 8081
+EXPOSE 8082
 
 ##RUN mkdir -p node_modules/.cache && chmod -R 777 node_modules/.cache
 

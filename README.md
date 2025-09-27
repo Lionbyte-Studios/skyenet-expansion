@@ -19,6 +19,11 @@ docker compose up --build
 
 to run it in the background, add `-d` to the end, and then use `docker compose down` to stop the background container.
 
+## How to mongo??
+
+If you're not running this in a container, you can directly access a MongoDB instance running on your machine with `localhost` or whatever IP/domain it is accessible on.
+If running in a container with MongoDB running as a service on your host (not containerized), you can use `ip addr show docker0` to get the IP address through which you can access ports on the host machine inside a container. Usually, this is `172.17.0.1`. If your MongoDB is running on the default port, the mongo uri looks like this: `mongodb://172.17.0.1:27017/`. You will probably also need to set the `bindIp` in the MongoDB config to `0.0.0.0` instead of `127.0.0.1`, else Mongo will refuse the connection.
+
 ## Official Roadmap:
 
 - youre a spaceship
