@@ -81,7 +81,7 @@ export class GameRenderer {
     this.ctx.translate(game.camera.x, game.camera.y);
     this.ctx.font = "48px serif";
     this.ctx.textAlign = "center";
-    this.ctx.fillText(`${game.players.length} person is connected`, 0, -100);
+    this.ctx.fillText(`${game.players.length} ${game.players.length === 1 ? "player is" : "players are"} connected`, 0, -100);
 
     for (let i = game.players.length - 1; i >= 0; i--) {
       for (let a = 0; a < game.players[i].flames.length; a++) {
