@@ -30,7 +30,7 @@ export function isValidUsername(username: string): boolean {
   if (username.length < 3) return false;
   if (username.length > 32) return false;
   for (const regex in usernameRegexes) {
-    if (regex.match(username) === null) return false;
+    if (username.match(regex) === null) return false;
   }
   return true;
 }
