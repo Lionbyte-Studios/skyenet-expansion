@@ -89,7 +89,7 @@ export class GameRenderer {
       (entity) => "render" in entity && typeof entity.render === "function",
     ) as (Entity & { render: (info: RenderInfo) => void })[];
     renderableEntities.forEach((entity) => {
-      entity.render({ ctx: this.ctx, game: game});
+      entity.render({ ctx: this.ctx, game: game });
     });
 
     for (let i = game.players.length - 1; i >= 0; i--) {

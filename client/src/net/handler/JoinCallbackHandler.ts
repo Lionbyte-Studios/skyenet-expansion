@@ -62,7 +62,7 @@ export class WsPlayerJoinCallbackMessageHandler extends WsMessageHandler<PlayerJ
           newEntity = new ClientTextDisplay(
             entity.entityData.text,
             entity.entityData.x,
-            entity.entityData.y
+            entity.entityData.y,
           );
           break;
         default:

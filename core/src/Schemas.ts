@@ -1,9 +1,5 @@
 import * as z from "zod";
-import {
-  ShipEngineSprite,
-  ShipSprite,
-  WebSocketMessageType,
-} from "./types";
+import { ShipEngineSprite, ShipSprite, WebSocketMessageType } from "./types";
 import { EntityType } from "./entity/Entity";
 import { BulletType } from "./entity/Bullet";
 
@@ -125,10 +121,12 @@ export const TextDisplayMessage = z.object({
 
 export const SpawnEntitiesMessage = z.object({
   type: lt(WebSocketMessageType.SpawnEntities),
-  entities: z.array(z.object({
-    type: z.enum(EntityType),
-    data: z.any(),
-  })),
+  entities: z.array(
+    z.object({
+      type: z.enum(EntityType),
+      data: z.any(),
+    }),
+  ),
 });
 
 export const KillEntitiesMessage = z.object({
@@ -138,9 +136,11 @@ export const KillEntitiesMessage = z.object({
 
 export const ModifyEntitiesMessage = z.object({
   type: lt(WebSocketMessageType.ModifyEntities),
-  modifications: z.array(z.object({
-    entityID: z.string(),
-    type: z.enum(EntityType),
-    modified_data: z.any(),
-  }))
+  modifications: z.array(
+    z.object({
+      entityID: z.string(),
+      type: z.enum(EntityType),
+      modified_data: z.any(),
+    }),
+  ),
 });
