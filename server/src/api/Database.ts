@@ -40,3 +40,9 @@ export async function getUserByID(user_id: string): Promise<User | undefined> {
   if (res === null) return undefined;
   return res;
 }
+
+export async function getUserByUsername(username: string): Promise<User | undefined> {
+  const res = await users.findOne({ username: username });
+  if (res === null) return undefined;
+  return res;
+}

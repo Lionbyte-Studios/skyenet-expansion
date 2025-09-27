@@ -1,6 +1,7 @@
 import express from "express";
 import { User } from "../../../core/src/DatabaseSchemas";
 import {
+  generateToken,
   generateUserID,
   hashPassword,
   isValidEmail,
@@ -80,6 +81,30 @@ export class ApiManager {
         return;
       }
       res.status(200).json(user);
+    });
+
+    this.app.post("/login", async (req, res) => {
+      const body: { username: string; password: string } = req.body;
+      if(!(typeof body.username === "string")) {
+        res.status(400).json({error: ApiErrorType.UsernameIsNotString});
+        return;
+      }
+      if(!(typeof body.password === "string")) {
+        res.status(400).json({error: ApiErrorType.PasswordIsNotString});
+        return;
+      }
+      const user = await database.getUserByUsername(body.username);
+      if(user === undefined) {
+        res.status(404).json({error: ApiErrorType.InvalidUsername});
+        return;
+      }
+      const hashedPassword = hashPassword(body.password, user.user_id);
+      if(hashedPassword !== user.password) {
+        res.status(401).json({error: ApiErrorType.InvalidPassword});
+        return;
+      }
+      const token = generateToken();
+      res.status(200).json({token: token, username: user.username, user_id: user.user_id, bio: user.bio, statistics: user.statistics, achievements: user.achievements});
     });
 
     this.app.listen(this.port, () => {

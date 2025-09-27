@@ -6,6 +6,7 @@ import {
   UserWithoutPassword,
 } from "../../../core/src/DatabaseSchemas";
 import { usernameRegexes } from "../../../core/src/types";
+import {randomBytes} from "node:crypto";
 
 export function generateUserID(): string {
   return uuidv4();
@@ -39,4 +40,8 @@ export function isValidEmail(email: string): boolean {
   if (email.length < 3) return false;
   if (email.length > 64) return false;
   return true;
+}
+
+export function generateToken(length: number = 64) {
+  return Buffer.from(randomBytes(length)).toString("hex");
 }
