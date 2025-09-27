@@ -5,7 +5,7 @@ import { WsMessageHandler } from "./handler/Handler";
 import { WsJoinMessageHandler } from "./handler/JoinHandler";
 import { WsStatusMessageHandler } from "./handler/StatusHandler";
 import { WsMovementMessageHandler } from "./handler/MovementHandler";
-import { WsBulletShootMessageHandler } from "./handler/BulletHandler";
+import { WsBulletShootMessageHandler } from "./handler/BulletShootHandler";
 
 export interface SocketMessageData<T> {
   socket: WebSocket;

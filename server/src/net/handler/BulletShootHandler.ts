@@ -1,3 +1,4 @@
+import { EntityType } from "../../../../core/src/entity/Entity";
 import * as schemas from "../../../../core/src/Schemas";
 import {
   BulletShootMessage,
@@ -16,17 +17,30 @@ export class WsBulletShootMessageHandler implements WsMessageHandler<BulletShoot
       | BulletShootMessage
       | undefined;
     if (typeof json === "undefined" || json === undefined) return;
-    serverMgr.game.entities.push(
-      new ServerBullet(
+    const newBullet = new ServerBullet(
         json.bullet.x,
         json.bullet.y,
         json.bullet.velX,
         json.bullet.velY,
         json.playerID,
-      ),
+      );
+    serverMgr.game.entities.push(
+      newBullet
     );
     serverMgr.wsMgr.wss.clients.forEach((client) => {
-      client.send(JSON.stringify(schemas.BulletShootMessage.parse(json)));
+      client.send(JSON.stringify(schemas.SpawnEntitiesMessage.parse({
+        entities: [{
+          type: EntityType.Bullet,
+          data: {
+            x: json.bullet.x,
+            y: json.bullet.y,
+            velX: json.bullet.velX,
+            velY: json.bullet.velY,
+            owner: json.playerID,
+            entityID: newBullet.entityID,
+          }
+        }]
+      })));
     });
   }
 }
