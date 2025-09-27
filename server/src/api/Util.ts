@@ -29,7 +29,7 @@ export function removePasswordFromUser(user: User): UserWithoutPassword {
 export function isValidUsername(username: string): boolean {
   if (username.length < 3) return false;
   if (username.length > 32) return false;
-  for (const regex in usernameRegexes) {
+  for (const regex of usernameRegexes) {
     if (username.match(regex) === null) return false;
   }
   return true;
