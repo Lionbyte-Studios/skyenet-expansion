@@ -13,7 +13,6 @@ import { Debug } from "./lib/Debug";
 import { ClientSettings } from "./lib/settings/ClientSettings";
 import { clientStorage } from "./Main";
 import { GameLoopManager } from "../../core/src/GameLoopManager";
-import type { Entity } from "../../core/src/entity/Entity";
 
 export interface ClientGameStats {
   fps: number;

@@ -1,7 +1,5 @@
-import { Bullet } from "../../../../core/src/entity/Bullet";
 import type { Entity } from "../../../../core/src/entity/Entity";
 import type { ClientGame } from "../../ClientGame";
-import { ClientBullet } from "../../entity/ClientBullet";
 import { AtlasManager } from "../AtlasManager";
 
 export class GameRenderer {
@@ -83,10 +81,18 @@ export class GameRenderer {
     this.ctx.translate(game.camera.x, game.camera.y);
     this.ctx.font = "48px serif";
     this.ctx.textAlign = "center";
-    this.ctx.fillText(`${game.players.length} ${game.players.length === 1 ? "player is" : "players are"} connected`, 0, -100);
+    this.ctx.fillText(
+      `${game.players.length} ${game.players.length === 1 ? "player is" : "players are"} connected`,
+      0,
+      -100,
+    );
 
-    const renderableEntities: (Entity & {render: (ctx: CanvasRenderingContext2D, game: ClientGame) => void})[] = game.entities.filter((entity) => "render" in entity && typeof entity.render === "function") as (Entity & {render: (ctx: CanvasRenderingContext2D) => void})[];
-    renderableEntities.forEach(entity => {
+    const renderableEntities: (Entity & {
+      render: (ctx: CanvasRenderingContext2D, game: ClientGame) => void;
+    })[] = game.entities.filter(
+      (entity) => "render" in entity && typeof entity.render === "function",
+    ) as (Entity & { render: (ctx: CanvasRenderingContext2D) => void })[];
+    renderableEntities.forEach((entity) => {
       entity.render(this.ctx, game);
     });
 
@@ -116,7 +122,7 @@ export class GameRenderer {
         (entity) => entity instanceof ClientBullet,
       );
       for (let a = 0; a < bullets.length; a++) {*/
-        /*this.ctx.translate(bullets[a].x, bullets[a].y);
+      /*this.ctx.translate(bullets[a].x, bullets[a].y);
         this.ctx.fillStyle = `#ffffaa`;
         this.ctx.fillRect(-5, -5, 10, 10);
         this.ctx.translate(-bullets[a].x, -bullets[a].y);*/
