@@ -6,7 +6,7 @@ import {
 import { ClientAsteroid } from "../../entity/ClientAsteroid";
 import { ClientBullet } from "../../entity/ClientBullet";
 import { ClientTextDisplay } from "../../entity/ClientTextDisplay";
-import { game } from "../../Main";
+import { clientManager } from "../../Main";
 import type { SocketMessageData } from "../WebSocketClient";
 import { WsMessageHandler } from "./Handler";
 
@@ -50,7 +50,7 @@ export class WsSpawnEntitiesMessageHandler extends WsMessageHandler<SpawnEntitie
           );
           return;
       }
-      game.entities.push(newEntity);
+      clientManager.game!.entities.push(newEntity);
     });
   }
 }

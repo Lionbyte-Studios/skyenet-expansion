@@ -1,11 +1,6 @@
-import { ClientGame } from "./ClientGame.js";
-import { GameRenderer } from "./graphics/game/GameRenderer.js";
-import { GameMenu } from "./graphics/GameMenu.js";
-import { AtlasManager } from "./graphics/AtlasManager.js";
-import { GameMode } from "../../core/src/types.js";
-import { ClientStorage } from "./lib/settings/ClientStorage.js";
-import { WebSocketClient } from "./net/WebSocketClient.js";
+import { ClientManager } from "./ClientManager.js";
 
+/*
 export let game: ClientGame;
 let renderer: GameRenderer;
 let menu: GameMenu;
@@ -13,18 +8,11 @@ export let atlasManager: AtlasManager;
 let gameState: "menu" | "playing" = "menu";
 export const clientStorage = new ClientStorage();
 export let webSocketManager: WebSocketClient;
+*/
+export const clientManager: ClientManager = await ClientManager.create();
+clientManager.startTick();
 
-document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
-  <div>
-  </div>
-`;
-
-// Disable right click
-document.addEventListener("contextmenu", (event) => event.preventDefault());
-
-const canvas = document.getElementById("screen") as HTMLCanvasElement;
-const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
-const display = { startWidth: 1280, aspectRatio: [16, 9], scale: 0 };
+/*
 let gameStartRequested: boolean = false;
 
 function tick() {
@@ -114,3 +102,4 @@ async function initMenu() {
 }
 
 initMenu();
+*/

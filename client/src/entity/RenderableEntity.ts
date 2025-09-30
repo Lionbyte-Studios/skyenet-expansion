@@ -1,9 +1,4 @@
-import type { ClientGame } from "../ClientGame";
-
-export interface RenderInfo {
-  ctx: CanvasRenderingContext2D;
-  game: ClientGame;
-}
+import type { RenderInfo } from "../ClientManager";
 
 export interface RenderableEntity {
   render: (info: RenderInfo) => void;

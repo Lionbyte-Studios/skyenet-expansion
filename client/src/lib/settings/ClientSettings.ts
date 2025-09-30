@@ -1,10 +1,10 @@
-import { clientStorage } from "../../Main";
+import { clientManager } from "../../Main";
 
 export class ClientSettings {
   public superKeyEnabled: boolean = false;
   public superKey: string = "Backslash";
   public save() {
-    clientStorage.set("settings", JSON.stringify(this));
+    clientManager.clientStorage.set("settings", JSON.stringify(this));
   }
   public static from(value: string): ClientSettings {
     let json: { superKeyEnabled: boolean; superKey: string };

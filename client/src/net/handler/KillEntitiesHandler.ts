@@ -2,7 +2,7 @@ import {
   WebSocketMessageType,
   type KillEntitiesMessage,
 } from "../../../../core/src/types";
-import { game } from "../../Main";
+import { clientManager } from "../../Main";
 import type { SocketMessageData } from "../WebSocketClient";
 import { WsMessageHandler } from "./Handler";
 
@@ -10,7 +10,7 @@ export class WsKillEntitiesMessageHandler extends WsMessageHandler<KillEntitiesM
   handledType = WebSocketMessageType.KillEntities;
   public handleMessage(data: SocketMessageData<KillEntitiesMessage>): void {
     data.message.entities.forEach((entityID) => {
-      const index = game.entities.findIndex(
+      const index = clientManager.game!.entities.findIndex(
         (entity) => (entity.entityID = entityID),
       );
       if (index === -1) {
@@ -19,7 +19,7 @@ export class WsKillEntitiesMessageHandler extends WsMessageHandler<KillEntitiesM
         );
         return;
       }
-      game.entities.splice(index, 1);
+      clientManager.game!.entities.splice(index, 1);
     });
   }
 }

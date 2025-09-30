@@ -73,8 +73,8 @@ export async function login(
  * @returns Either the User or undefined if the user was not found.
  */
 export async function getUser(user_id: string): Promise<User | undefined> {
-    const res = await fetch("http://localhost:8082/user/" + user_id);
-    const json = await res.json();
-    if ('error' in json) return undefined;
-    return json;
+  const res = await fetch("http://localhost:8082/user/" + user_id);
+  const json = await res.json();
+  if ("error" in json) return undefined;
+  return json;
 }

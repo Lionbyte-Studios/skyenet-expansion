@@ -1,13 +1,14 @@
 import type { Entity } from "../../../core/src/entity/Entity";
 import { PlayerJoinMessage } from "../../../core/src/Schemas";
-import type {
-  BulletShootMessage,
-  EntityID,
-  GameID,
-  MovementMessage,
-  PlayerID,
-  ShipEngineSprite,
-  ShipSprite,
+import {
+  WebSocketMessageType,
+  type BulletShootMessage,
+  type EntityID,
+  type GameID,
+  type MovementMessage,
+  type PlayerID,
+  type ShipEngineSprite,
+  type ShipSprite,
 } from "../../../core/src/types";
 import type { ClientPlayer } from "../entity/ClientPlayer";
 import type { WsMessageHandler } from "./handler/Handler";
@@ -19,6 +20,7 @@ import * as schemas from "../../../core/src/Schemas";
 import { WsSpawnEntitiesMessageHandler } from "./handler/SpawnEntitiesHandler";
 import { WsModifyEntitiesMessageHandler } from "./handler/ModifyEntitiesHandler";
 import { WsKillEntitiesMessageHandler } from "./handler/KillEntitiesHandler";
+import { clientManager } from "../Main";
 
 export interface SocketMessageData<T> {
   client: WebSocketClient;
@@ -39,11 +41,15 @@ export class WebSocketClient {
   private joinCallbackDataResolve: (data: JoinCallbackData) => void;
   private readonly socket;
   private handlers: WsMessageHandler<unknown>[];
+  private queue: [WsMessageHandler<unknown>, message: unknown][];
 
   constructor(addr: string) {
     this.socket = new WebSocket(addr);
-    this.socket.onmessage = (event) => this.onMessage(event);
+    this.socket.onmessage = (event) => {
+      this.onMessage(event);
+    };
     this.socket.onerror = console.error;
+    this.queue = [];
 
     this.handlers = [
       new WsPlayerJoinCallbackMessageHandler(),
@@ -84,6 +90,51 @@ export class WebSocketClient {
       );
       return;
     }
+
+    if (
+      typeof clientManager.game === "undefined" ||
+      clientManager.game === undefined
+    ) {
+      if (json.type !== WebSocketMessageType.PlayerJoinCallback) {
+        this.handlers
+          .filter((handler) => handler.handledType === json.type)
+          .forEach((handler) => {
+            this.queue.push([handler, json]);
+          });
+        return;
+      }
+    } else {
+      // UpdatePlayers messages first
+      this.queue.sort((a, b) => {
+        if (
+          a[0].handledType === WebSocketMessageType.UpdatePlayers &&
+          b[0].handledType !== WebSocketMessageType.UpdatePlayers
+        )
+          return 1;
+        if (
+          a[0].handledType === WebSocketMessageType.UpdatePlayers &&
+          b[0].handledType === WebSocketMessageType.UpdatePlayers
+        )
+          return 0;
+        if (
+          a[0].handledType !== WebSocketMessageType.UpdatePlayers &&
+          b[0].handledType === WebSocketMessageType.UpdatePlayers
+        )
+          return -1;
+        return 0;
+      });
+      while (this.queue.length > 0) {
+        const queuedHandler = this.queue.shift();
+        if (queuedHandler === undefined) break;
+        console.log("TYPE:" + queuedHandler[0].handledType);
+        queuedHandler[0].handleMessage({
+          socket: this.socket,
+          message: queuedHandler[1],
+          client: this,
+        });
+      }
+    }
+
     this.handlers
       .filter((handler) => handler.handledType === json.type)
       .forEach((handler) => {

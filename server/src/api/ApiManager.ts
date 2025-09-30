@@ -119,19 +119,17 @@ export class ApiManager {
         res.status(500).json({ ok: false });
         return;
       }
-      res
-        .status(200)
-        .json({
-          ok: true,
-          session: {
-            token: token,
-            username: user.username,
-            user_id: user.user_id,
-            bio: user.bio,
-            statistics: user.statistics,
-            achievements: user.achievements,
-          },
-        });
+      res.status(200).json({
+        ok: true,
+        session: {
+          token: token,
+          username: user.username,
+          user_id: user.user_id,
+          bio: user.bio,
+          statistics: user.statistics,
+          achievements: user.achievements,
+        },
+      });
     });
 
     this.app.listen(this.port, () => {

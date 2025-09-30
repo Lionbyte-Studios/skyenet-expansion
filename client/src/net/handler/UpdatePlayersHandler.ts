@@ -3,7 +3,7 @@ import {
   type UpdatePlayersMessage,
 } from "../../../../core/src/types";
 import { ClientPlayer } from "../../entity/ClientPlayer";
-import { game } from "../../Main";
+import { clientManager } from "../../Main";
 import type { SocketMessageData } from "../WebSocketClient";
 import { WsMessageHandler } from "./Handler";
 
@@ -11,13 +11,21 @@ export class WsUpdatePlayersMessageHandler extends WsMessageHandler<UpdatePlayer
   handledType: WebSocketMessageType = WebSocketMessageType.UpdatePlayers;
   public handleMessage(data: SocketMessageData<UpdatePlayersMessage>): void {
     data.message.playersRemoved.forEach((removedPlayerID) => {
-      game.players.splice(
-        game.players.findIndex((player) => player.playerID === removedPlayerID),
+      clientManager.game!.players.splice(
+        clientManager.game!.players.findIndex(
+          (player) => player.playerID === removedPlayerID,
+        ),
         1,
       );
     });
+    console.log(clientManager.game);
     data.message.playersAdded.forEach((player) => {
-      if (player.playerID === game.myPlayer.playerID) return;
+      if (player.playerID === clientManager.game.myPlayer.playerID) return;
+      if (
+        clientManager.game.players.filter((p) => p.playerID === player.playerID)
+          .length > 0
+      )
+        return;
       const newPlayer = new ClientPlayer(
         player.playerID,
         player.entityID,
@@ -34,7 +42,7 @@ export class WsUpdatePlayersMessageHandler extends WsMessageHandler<UpdatePlayer
       if (player.flames !== undefined) {
         newPlayer.flames = player.flames;
       }
-      game.players.push(newPlayer);
+      clientManager.game!.players.push(newPlayer);
     });
   }
 }
