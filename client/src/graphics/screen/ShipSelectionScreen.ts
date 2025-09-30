@@ -4,11 +4,29 @@ import { MainMenuScreen } from "./MainMenuScreen";
 import { ClientScreen } from "./Screen";
 import { ships } from "../../assets/textures/skins/players.json";
 import type { Ship } from "../../../../core/src/types";
+import { ButtonComponent } from "../component/ButtonComponent";
 
 export class ShipSelectionScreen extends ClientScreen {
   constructor(renderInfo: RenderInfo) {
     super(renderInfo);
     clientManager.state.ships = ships as Ship[];
+    this.components = [
+      new ButtonComponent({
+        x: 50,
+        y: 50,
+        data: {
+          width: 100,
+          height: 40,
+          text: "BACK",
+          onclick: () => {
+            clientManager.setScreen(MainMenuScreen);
+          },
+          textProperties: {
+            font: "16px Arial",
+          },
+        },
+      }),
+    ];
   }
   public render(renderInfo: RenderInfo): void {
     const baseWidth = 1280;
@@ -23,14 +41,6 @@ export class ShipSelectionScreen extends ClientScreen {
     renderInfo.ctx.font = "32px Arial";
     renderInfo.ctx.textAlign = "center";
     renderInfo.ctx.fillText("SELECT SHIP", baseWidth / 2, 100);
-
-    // Draw back button
-    renderInfo.ctx.fillStyle = "#333333";
-    renderInfo.ctx.fillRect(50, 50, 100, 40);
-    renderInfo.ctx.fillStyle = "#ffffff";
-    renderInfo.ctx.font = "16px Arial";
-    renderInfo.ctx.textAlign = "center";
-    renderInfo.ctx.fillText("BACK", 100, 75);
 
     // Draw ship list
     const shipItemHeight = 80;
@@ -88,23 +98,6 @@ export class ShipSelectionScreen extends ClientScreen {
         clientManager.setScreen(MainMenuScreen);
         return;
       }
-    }
-
-    // Check if clicked on "Back" button
-    const backButton = {
-      x: 50,
-      y: 50,
-      width: 100,
-      height: 40,
-    };
-
-    if (
-      info.base.x >= backButton.x &&
-      info.base.x <= backButton.x + backButton.width &&
-      info.base.y >= backButton.y &&
-      info.base.y <= backButton.y + backButton.height
-    ) {
-      clientManager.setScreen(MainMenuScreen);
     }
   }
 }
