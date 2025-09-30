@@ -1,6 +1,6 @@
 import { GameMode } from "../../../../core/src/types";
 import { ClientGame } from "../../ClientGame";
-import type { RenderInfo } from "../../ClientManager";
+import type { MouseInfo, RenderInfo } from "../../ClientManager";
 import { clientManager } from "../../Main";
 import { GameRenderer } from "../game/GameRenderer";
 import { ClientScreen } from "./Screen";
@@ -18,13 +18,9 @@ export class InGameScreen extends ClientScreen {
     clientManager.game.renderer.drawGame(renderInfo);
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public onMouseMove(_event: MouseEvent, _canvasXY: [number, number]): void {
-    // throw new Error("Method not implemented.");
-  }
+  public onMouseMove(_info: MouseInfo): void {}
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public onClick(_event: PointerEvent, _canvasXY: [number, number]): void {
-    // throw new Error("Method not implemented.");
-  }
+  public onClick(_info: MouseInfo): void {}
   public async initGame() {
     const selectedShip = clientManager.state.selectedShip;
     clientManager.webSocketManager.joinGame(

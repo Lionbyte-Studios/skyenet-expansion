@@ -26,6 +26,21 @@ interface ClientState {
   ships: Ship[];
 }
 
+export interface MouseInfo {
+  real: {
+    x: number;
+    y: number;
+  };
+  canvas: {
+    x: number;
+    y: number;
+  };
+  base: {
+    x: number;
+    y: number;
+  };
+}
+
 export class ClientManager {
   public game!: ClientGame;
   public canvas: HTMLCanvasElement;
@@ -95,20 +110,53 @@ export class ClientManager {
     this.ctx.scale(scale, scale);
 
     this.currentScreen.render(this.getRenderInfo());
+    this.currentScreen.components.forEach((component) =>
+      component.render(this.getRenderInfo()),
+    );
   }
 
   private onClick(event: PointerEvent) {
     const rect = this.canvas.getBoundingClientRect();
     const mouseX = event.clientX - rect.left;
     const mouseY = event.clientY - rect.top;
-    this.currentScreen.onClick(event, [mouseX, mouseY]);
+    // Convert click coordinates to base resolution
+    const scale = this.canvas.width / 1280;
+    const clickXBase = mouseX / scale;
+    const clickYBase = mouseY / scale;
+    this.currentScreen.onClick({
+      real: { x: event.clientX, y: event.clientY },
+      canvas: { x: mouseX, y: mouseY },
+      base: { x: clickXBase, y: clickYBase },
+    });
+    this.currentScreen.components.forEach((component) => {
+      component.onClick({
+        real: { x: event.clientX, y: event.clientY },
+        canvas: { x: mouseX, y: mouseY },
+        base: { x: clickXBase, y: clickYBase },
+      });
+    });
   }
 
   private onMouseMove(event: MouseEvent) {
     const rect = this.canvas.getBoundingClientRect();
     const mouseX = event.clientX - rect.left;
     const mouseY = event.clientY - rect.top;
-    this.currentScreen.onMouseMove(event, [mouseX, mouseY]);
+    // Convert mouse coordinates to base resolution
+    const scale = this.canvas.width / 1280;
+    const clickXBase = mouseX / scale;
+    const clickYBase = mouseY / scale;
+    this.currentScreen.onMouseMove({
+      real: { x: event.clientX, y: event.clientY },
+      canvas: { x: mouseX, y: mouseY },
+      base: { x: clickXBase, y: clickYBase },
+    });
+    this.currentScreen.components.forEach((component) => {
+      component.onMouseMove({
+        real: { x: event.clientX, y: event.clientY },
+        canvas: { x: mouseX, y: mouseY },
+        base: { x: clickXBase, y: clickYBase },
+      });
+    });
   }
 
   public getRenderInfo(): RenderInfo {

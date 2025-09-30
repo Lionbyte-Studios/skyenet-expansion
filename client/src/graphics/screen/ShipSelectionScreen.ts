@@ -1,4 +1,4 @@
-import type { RenderInfo } from "../../ClientManager";
+import type { MouseInfo, RenderInfo } from "../../ClientManager";
 import { clientManager } from "../../Main";
 import { MainMenuScreen } from "./MainMenuScreen";
 import { ClientScreen } from "./Screen";
@@ -75,20 +75,15 @@ export class ShipSelectionScreen extends ClientScreen {
     }
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public onMouseMove(_event: MouseEvent, _canvasXY: [number, number]): void {}
-  public onClick(_event: PointerEvent, canvasXY: [number, number]): void {
-    // Convert click coordinates to base resolution
-    const scale = this.renderInfo.canvas.width / 1280;
-    const clickXBase = canvasXY[0] / scale;
-    const clickYBase = canvasXY[1] / scale;
-
+  public onMouseMove(info: MouseInfo): void {}
+  public onClick(info: MouseInfo): void {
     const shipItemHeight = 80;
     const startY = 150;
 
     // Check if clicked on a ship
     for (let i = 0; i < this.renderInfo.state.ships.length; i++) {
       const itemY = startY + i * shipItemHeight;
-      if (clickYBase >= itemY && clickYBase <= itemY + shipItemHeight) {
+      if (info.base.y >= itemY && info.base.y <= itemY + shipItemHeight) {
         clientManager.state.selectedShip = this.renderInfo.state.ships[i];
         clientManager.setScreen(MainMenuScreen);
         return;
@@ -104,10 +99,10 @@ export class ShipSelectionScreen extends ClientScreen {
     };
 
     if (
-      clickXBase >= backButton.x &&
-      clickXBase <= backButton.x + backButton.width &&
-      clickYBase >= backButton.y &&
-      clickYBase <= backButton.y + backButton.height
+      info.base.x >= backButton.x &&
+      info.base.x <= backButton.x + backButton.width &&
+      info.base.y >= backButton.y &&
+      info.base.y <= backButton.y + backButton.height
     ) {
       clientManager.setScreen(MainMenuScreen);
     }
