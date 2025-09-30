@@ -74,8 +74,9 @@ export class ShipSelectionScreen extends ClientScreen {
       renderInfo.ctx.fillText(ship.description, 150, itemY + 50);
     }
   }
-  public onMouseMove(event: MouseEvent, canvasXY: [number, number]): void {}
-  public onClick(event: PointerEvent, canvasXY: [number, number]): void {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public onMouseMove(_event: MouseEvent, _canvasXY: [number, number]): void {}
+  public onClick(_event: PointerEvent, canvasXY: [number, number]): void {
     // Convert click coordinates to base resolution
     const scale = this.renderInfo.canvas.width / 1280;
     const clickXBase = canvasXY[0] / scale;

@@ -17,10 +17,12 @@ export class InGameScreen extends ClientScreen {
     }
     clientManager.game.renderer.drawGame(renderInfo);
   }
-  public onMouseMove(event: MouseEvent, canvasXY: [number, number]): void {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public onMouseMove(_event: MouseEvent, _canvasXY: [number, number]): void {
     // throw new Error("Method not implemented.");
   }
-  public onClick(event: PointerEvent, canvasXY: [number, number]): void {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public onClick(_event: PointerEvent, _canvasXY: [number, number]): void {
     // throw new Error("Method not implemented.");
   }
   public async initGame() {
