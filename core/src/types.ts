@@ -79,3 +79,11 @@ export enum ApiErrorType {
   InvalidPassword,
   InternalServerError,
 }
+
+export interface Ship {
+  id: string;
+  name: string;
+  description: string;
+  sprite: ShipSprite;
+  engineSprite: ShipEngineSprite;
+}

@@ -1,7 +1,6 @@
-import { ShipEngineSprite, ShipSprite } from "../../core/src/types";
+import { ShipEngineSprite, ShipSprite, type Ship } from "../../core/src/types";
 import type { ClientGame } from "./ClientGame";
 import { AtlasManager } from "./graphics/AtlasManager";
-import type { Ship } from "./graphics/GameMenu";
 import { MainMenuScreen } from "./graphics/screen/MainMenuScreen";
 import { ClientScreen } from "./graphics/screen/Screen";
 import { ClientStorage } from "./lib/settings/ClientStorage";

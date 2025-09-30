@@ -3,7 +3,7 @@ import { clientManager } from "../../Main";
 import { MainMenuScreen } from "./MainMenuScreen";
 import { ClientScreen } from "./Screen";
 import { ships } from "../../assets/textures/skins/players.json";
-import type { Ship } from "../GameMenu";
+import type { Ship } from "../../../../core/src/types";
 
 export class ShipSelectionScreen extends ClientScreen {
   constructor(renderInfo: RenderInfo) {
