@@ -17,6 +17,7 @@ function genStringID(length: number) {
 }
 
 export class Entity {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [index: string]: any;
   entityID: EntityID;
   x: number;

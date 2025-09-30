@@ -2,6 +2,7 @@ import { GameMode } from "../../core/src/types";
 import { ServerGame } from "./ServerGame";
 import { genStringID } from "../../core/src/util/Util";
 import { WebSocketServerManager } from "./net/WebSocketServer";
+import { ApiManager } from "./api/ApiManager";
 import { TextDisplay } from "../../core/src/entity/TextDisplay";
 
 export class ServerManager {
@@ -18,3 +19,6 @@ export class ServerManager {
 
 export const serverMgr = new ServerManager();
 serverMgr.game.startGameLoop();
+
+// Start the API (express.js)
+export const apiMgr = new ApiManager();

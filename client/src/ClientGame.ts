@@ -11,8 +11,9 @@ import { Camera } from "./graphics/game/Camera";
 import { KeyManager } from "./lib/Keyman";
 import { Debug } from "./lib/Debug";
 import { ClientSettings } from "./lib/settings/ClientSettings";
-import { clientStorage } from "./Main";
 import { GameLoopManager } from "../../core/src/GameLoopManager";
+import { clientManager } from "./Main";
+import type { GameRenderer } from "./graphics/game/GameRenderer";
 
 export interface ClientGameStats {
   fps: number;
@@ -40,12 +41,14 @@ export class ClientGame extends Game {
   public clientSettings: ClientSettings;
   public stats: ClientGameStats;
   private gameLoopManager: GameLoopManager;
+  public renderer!: GameRenderer;
 
   constructor(
     gameID: GameID,
     gameMode: GameMode,
     myPlayerID: PlayerID,
     myEntityID: EntityID,
+    // renderer: GameRenderer,
   ) {
     super(gameID, gameMode);
     this.stats = {
@@ -56,10 +59,10 @@ export class ClientGame extends Game {
       ticksThisSecond: 0,
       framesThisSecond: 0,
     };
-    this.gameLoopManager = new GameLoopManager(
-      () => this.tick(),
-      this.config.tps,
-    );
+    // this.renderer = renderer;
+    this.gameLoopManager = new GameLoopManager(() => {
+      this.tick();
+    }, this.config.tps);
     this.myPlayer = new MyPlayer(
       myPlayerID,
       myEntityID,
@@ -69,7 +72,7 @@ export class ClientGame extends Game {
       this.config.defaultShipSprite,
       this.config.defaultShipEngineSprite,
     );
-    this.players[0] = this.myPlayer;
+    this.players = [this.myPlayer];
     for (let i = 0; i < 50; i++) {
       this.stars.push({
         x: -30 + Math.random() * 1330,
@@ -77,7 +80,10 @@ export class ClientGame extends Game {
         z: 5 + Math.random() * 4,
       });
     }
-    const settings = clientStorage.get("settings", ClientSettings);
+    const settings = clientManager.clientStorage.get(
+      "settings",
+      ClientSettings,
+    );
     if (settings === undefined) this.clientSettings = new ClientSettings();
     else this.clientSettings = settings;
     console.log("Client Settings: " + JSON.stringify(this.clientSettings));

@@ -5,7 +5,7 @@ import {
   type ShipSprite,
 } from "../../../core/src/types";
 import { ClientGame } from "../ClientGame";
-import { webSocketManager } from "../Main";
+import { clientManager } from "../Main";
 import { ClientPlayer } from "./ClientPlayer";
 
 export class MyPlayer extends ClientPlayer {
@@ -86,7 +86,7 @@ export class MyPlayer extends ClientPlayer {
       this.HP--;
     }
     if (game.keyManager.wasKeyJustPressed("Space")) {
-      webSocketManager.sendBullet({
+      clientManager.webSocketManager.sendBullet({
         bullet: {
           type: BulletType.Starter,
           x: this.x,
@@ -100,7 +100,7 @@ export class MyPlayer extends ClientPlayer {
   }
 
   public sendMovement() {
-    webSocketManager.sendMovement({
+    clientManager.webSocketManager.sendMovement({
       playerID: this.playerID,
       x: this.x,
       y: this.y,

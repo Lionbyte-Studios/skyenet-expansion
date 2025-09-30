@@ -10,8 +10,8 @@ export class Camera {
     this.game = game;
   }
   tick() {
-    var tempx = this.x;
-    var tempy = this.y;
+    const tempx = this.x;
+    const tempy = this.y;
     this.x =
       (-this.game.myPlayer.x +
         Math.sin((this.game.myPlayer.rotation * Math.PI) / 180) *
