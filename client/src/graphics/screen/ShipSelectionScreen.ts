@@ -2,8 +2,14 @@ import type { RenderInfo } from "../../ClientManager";
 import { clientManager } from "../../Main";
 import { MainMenuScreen } from "./MainMenuScreen";
 import { ClientScreen } from "./Screen";
+import { ships } from "../../assets/textures/skins/players.json";
+import type { Ship } from "../GameMenu";
 
 export class ShipSelectionScreen extends ClientScreen {
+  constructor(renderInfo: RenderInfo) {
+    super(renderInfo);
+    clientManager.state.ships = ships as Ship[];
+  }
   public render(renderInfo: RenderInfo): void {
     const baseWidth = 1280;
     const baseHeight = 720;
