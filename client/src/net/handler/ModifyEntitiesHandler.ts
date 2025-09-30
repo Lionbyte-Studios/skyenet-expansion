@@ -10,7 +10,7 @@ export class WsModifyEntitiesMessageHandler extends WsMessageHandler<ModifyEntit
   handledType = WebSocketMessageType.ModifyEntities;
   public handleMessage(data: SocketMessageData<ModifyEntitiesMessage>): void {
     data.message.modifications.forEach((modification) => {
-      const index = clientManager.game!.entities.findIndex(
+      const index = clientManager.game.entities.findIndex(
         (entity) => (entity.entityID = modification.entityID),
       );
       if (index === -1) {
@@ -18,7 +18,7 @@ export class WsModifyEntitiesMessageHandler extends WsMessageHandler<ModifyEntit
         return;
       }
       for (const key in modification.modified_data) {
-        clientManager.game!.entities[index][key] =
+        clientManager.game.entities[index][key] =
           modification.modified_data[key];
       }
     });

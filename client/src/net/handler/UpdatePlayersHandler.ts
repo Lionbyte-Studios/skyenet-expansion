@@ -11,8 +11,8 @@ export class WsUpdatePlayersMessageHandler extends WsMessageHandler<UpdatePlayer
   handledType: WebSocketMessageType = WebSocketMessageType.UpdatePlayers;
   public handleMessage(data: SocketMessageData<UpdatePlayersMessage>): void {
     data.message.playersRemoved.forEach((removedPlayerID) => {
-      clientManager.game!.players.splice(
-        clientManager.game!.players.findIndex(
+      clientManager.game.players.splice(
+        clientManager.game.players.findIndex(
           (player) => player.playerID === removedPlayerID,
         ),
         1,
@@ -42,7 +42,7 @@ export class WsUpdatePlayersMessageHandler extends WsMessageHandler<UpdatePlayer
       if (player.flames !== undefined) {
         newPlayer.flames = player.flames;
       }
-      clientManager.game!.players.push(newPlayer);
+      clientManager.game.players.push(newPlayer);
     });
   }
 }

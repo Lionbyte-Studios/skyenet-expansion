@@ -50,7 +50,7 @@ export class WsSpawnEntitiesMessageHandler extends WsMessageHandler<SpawnEntitie
           );
           return;
       }
-      clientManager.game!.entities.push(newEntity);
+      clientManager.game.entities.push(newEntity);
     });
   }
 }
