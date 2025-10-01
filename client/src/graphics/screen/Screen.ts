@@ -8,8 +8,8 @@ export abstract class ClientScreen {
     this.renderInfo = renderInfo;
   }
   public abstract render(renderInfo: RenderInfo): void;
-  public abstract onMouseMove(info: MouseInfo): void;
-  public abstract onClick(info: MouseInfo): void;
+  public onMouseMove(info: MouseInfo): void {}
+  public onClick(info: MouseInfo): void {}
   // This method guarantees "clientManager" to be defined.
   public init(): void {}
   protected setComponentData<D = void>(
