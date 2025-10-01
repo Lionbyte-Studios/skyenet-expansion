@@ -15,6 +15,6 @@ export abstract class Component<T> {
     this.args = args;
   }
   public abstract render(renderInfo: RenderInfo): void;
-  public abstract onMouseMove(info: MouseInfo): void;
-  public abstract onClick(info: MouseInfo): void;
+  public onMouseMove(info: MouseInfo): void {}
+  public onClick(info: MouseInfo): void {}
 }

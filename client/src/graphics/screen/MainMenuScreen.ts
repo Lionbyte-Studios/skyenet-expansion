@@ -62,10 +62,9 @@ export class MainMenuScreen extends ClientScreen {
       );
     }
   }
-  public onMouseMove(info: MouseInfo): void {
+  public override onMouseMove(info: MouseInfo): void {
     this.mouseInfo = info;
   }
-  public onClick(info: MouseInfo): void {}
 
   public override init(): void {
     this.components = [

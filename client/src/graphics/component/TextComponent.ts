@@ -1,4 +1,4 @@
-import type { RenderInfo, MouseInfo } from "../../ClientManager";
+import type { RenderInfo } from "../../ClientManager";
 import { Component, type ComponentRenderArgs } from "./Component";
 
 type TextProperties = {
@@ -76,6 +76,4 @@ export class TextComponent extends Component<TextComponentData> {
 
     renderInfo.ctx.restore();
   }
-  public onMouseMove(info: MouseInfo): void {}
-  public onClick(info: MouseInfo): void {}
 }
