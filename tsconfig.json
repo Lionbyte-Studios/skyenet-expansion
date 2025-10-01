@@ -2,6 +2,7 @@
   "compilerOptions": {
     "strict": true,
     "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "noUnusedParameters": false,
   }
 }

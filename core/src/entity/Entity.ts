@@ -34,6 +34,5 @@ export class Entity {
   public generateID(): EntityID {
     return genStringID(8);
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public tick<T extends Game>(game?: T) {}
 }

@@ -65,8 +65,7 @@ export class MainMenuScreen extends ClientScreen {
   public onMouseMove(info: MouseInfo): void {
     this.mouseInfo = info;
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public onClick(_info: MouseInfo): void {}
+  public onClick(info: MouseInfo): void {}
 
   public override init(): void {
     this.components = [

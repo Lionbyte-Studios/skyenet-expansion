@@ -63,8 +63,7 @@ export class ShipSelectionScreen extends ClientScreen {
       renderInfo.ctx.fillText(ship.description, 150, itemY + 50);
     }
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public onMouseMove(_info: MouseInfo): void {}
+  public onMouseMove(info: MouseInfo): void {}
   public onClick(info: MouseInfo): void {
     const shipItemHeight = 80;
     const startY = 150;
