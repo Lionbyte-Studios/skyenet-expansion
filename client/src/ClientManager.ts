@@ -1,7 +1,6 @@
 import { ShipEngineSprite, ShipSprite, type Ship } from "../../core/src/types";
 import type { ClientGame } from "./ClientGame";
 import { AtlasManager } from "./graphics/AtlasManager";
-import { MainMenuScreen } from "./graphics/screen/MainMenuScreen";
 import { ClientScreen } from "./graphics/screen/Screen";
 import { ClientStorage } from "./lib/settings/ClientStorage";
 import { WebSocketClient } from "./net/WebSocketClient";
@@ -46,7 +45,7 @@ export class ClientManager {
   public canvas: HTMLCanvasElement;
   public ctx: CanvasRenderingContext2D;
   public display: DisplayInfo;
-  public currentScreen: ClientScreen;
+  public currentScreen!: ClientScreen;
   public state: ClientState;
   public webSocketManager: WebSocketClient;
   public clientStorage: ClientStorage;
@@ -64,7 +63,6 @@ export class ClientManager {
     this.canvas = document.getElementById("screen") as HTMLCanvasElement;
     this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
     this.display = { startWidth: 1280, aspectRatio: [16, 9], scale: 0 };
-    this.currentScreen = new MainMenuScreen(this.getRenderInfo());
 
     this.canvas.addEventListener("click", (event) => {
       this.onClick(event);
@@ -211,5 +209,10 @@ export class ClientManager {
     screenClass: new (renderInfo: RenderInfo) => T,
   ) {
     this.currentScreen = new screenClass(this.getRenderInfo());
+    this.runScreenInit();
+  }
+
+  public runScreenInit() {
+    this.currentScreen.init();
   }
 }

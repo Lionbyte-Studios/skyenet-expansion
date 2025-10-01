@@ -2,6 +2,7 @@ import type { MouseInfo, RenderInfo } from "../../ClientManager";
 import { nullMouseInfo } from "../../lib/Util";
 import { clientManager } from "../../Main";
 import { ButtonComponent } from "../component/ButtonComponent";
+import { TextComponent } from "../component/TextComponent";
 import { InGameScreen } from "./InGameScreen";
 import { ClientScreen } from "./Screen";
 import { ShipSelectionScreen } from "./ShipSelectionScreen";
@@ -12,66 +13,12 @@ export class MainMenuScreen extends ClientScreen {
   private readonly baseWidth = 1280;
   private readonly baseHeight = 720;
 
-  constructor(renderInfo: RenderInfo) {
-    super(renderInfo);
-    this.components = [
-      new ButtonComponent({
-        x: this.baseWidth * 0.1,
-        y: this.baseHeight * 0.7,
-        data: {
-          width: 200,
-          height: 60,
-          text: "START GAME",
-          onclick: () => {
-            clientManager.setScreen(InGameScreen);
-            (clientManager.currentScreen as InGameScreen).initGame();
-          },
-        },
-      }),
-      new ButtonComponent({
-        x: this.baseWidth * 0.6,
-        y: this.baseHeight * 0.3,
-        data: {
-          width: this.baseWidth * 0.3,
-          height: this.baseHeight * 0.4,
-          hidden: true,
-          onclick: () => {
-            clientManager.setScreen(ShipSelectionScreen);
-          },
-        },
-      }),
-    ];
-  }
-
   public render(renderInfo: RenderInfo): void {
     // Draw title
     renderInfo.ctx.fillStyle = "#ffffff";
     renderInfo.ctx.font = "48px Arial";
     renderInfo.ctx.textAlign = "center";
     renderInfo.ctx.fillText("SPACENET", this.baseWidth / 2, 100);
-
-    // Draw menu items on the left
-    renderInfo.ctx.font = "24px Arial";
-    renderInfo.ctx.textAlign = "left";
-
-    // Ship selection info
-    renderInfo.ctx.font = "20px Arial";
-    renderInfo.ctx.fillText(
-      "Selected Ship:",
-      this.baseWidth * 0.1,
-      this.baseHeight * 0.3,
-    );
-    renderInfo.ctx.font = "16px Arial";
-    renderInfo.ctx.fillText(
-      clientManager.state.selectedShip.name,
-      this.baseWidth * 0.1,
-      this.baseHeight * 0.35,
-    );
-    renderInfo.ctx.fillText(
-      clientManager.state.selectedShip.description,
-      this.baseWidth * 0.1,
-      this.baseHeight * 0.4,
-    );
 
     // Draw ship that follows mouse (right side)
     if (renderInfo.atlasManager.areAllLoaded()) {
@@ -103,16 +50,6 @@ export class MainMenuScreen extends ClientScreen {
       );
 
       renderInfo.ctx.restore();
-
-      // Draw click instruction
-      renderInfo.ctx.fillStyle = "#888888";
-      renderInfo.ctx.font = "14px Arial";
-      renderInfo.ctx.textAlign = "center";
-      renderInfo.ctx.fillText(
-        "Click on ship to change",
-        this.baseWidth * 0.75,
-        this.baseHeight * 0.8,
-      );
     } else {
       console.log("Atlas not loaded, drawing fallback");
       // Draw fallback rectangle
@@ -130,4 +67,81 @@ export class MainMenuScreen extends ClientScreen {
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public onClick(_info: MouseInfo): void {}
+
+  public override init(): void {
+    this.components = [
+      new ButtonComponent({
+        x: this.baseWidth * 0.1,
+        y: this.baseHeight * 0.7,
+        data: {
+          width: 200,
+          height: 60,
+          text: "START GAME",
+          onclick: () => {
+            clientManager.setScreen(InGameScreen);
+            (clientManager.currentScreen as InGameScreen).initGame();
+          },
+        },
+      }),
+      new ButtonComponent({
+        x: this.baseWidth * 0.6,
+        y: this.baseHeight * 0.3,
+        data: {
+          width: this.baseWidth * 0.3,
+          height: this.baseHeight * 0.4,
+          hidden: true,
+          onclick: () => {
+            clientManager.setScreen(ShipSelectionScreen);
+          },
+        },
+      }),
+      new TextComponent({
+        x: this.baseWidth * 0.75,
+        y: this.baseHeight * 0.8,
+        data: {
+          text: "Click on ship to change",
+          textProperties: {
+            fillStyle: "#888888",
+            font: "14px Arial",
+            align: "center",
+          },
+        },
+      }),
+      new TextComponent({
+        x: this.baseWidth * 0.1,
+        y: this.baseHeight * 0.3,
+        data: {
+          text: "Selected Ship:",
+          textProperties: {
+            font: "20px Arial",
+            align: "left",
+          },
+        },
+      }),
+      new TextComponent({
+        x: this.baseWidth * 0.1,
+        y: this.baseHeight * 0.35,
+        data: {
+          text: clientManager.state.selectedShip.name,
+          textProperties: {
+            font: "16px Arial",
+            align: "left",
+          },
+        },
+        custom_id: "selected_ship_name",
+      }),
+      new TextComponent({
+        x: this.baseWidth * 0.1,
+        y: this.baseHeight * 0.4,
+        data: {
+          text: clientManager.state.selectedShip.description,
+          textProperties: {
+            font: "16px Arial",
+            align: "left",
+          },
+        },
+        custom_id: "selected_ship_description",
+      }),
+    ];
+  }
 }

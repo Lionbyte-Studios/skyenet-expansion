@@ -1,4 +1,5 @@
 import { ClientManager } from "./ClientManager.js";
+import { MainMenuScreen } from "./graphics/screen/MainMenuScreen.js";
 
 /*
 export let game: ClientGame;
@@ -10,6 +11,7 @@ export const clientStorage = new ClientStorage();
 export let webSocketManager: WebSocketClient;
 */
 export const clientManager: ClientManager = await ClientManager.create();
+clientManager.setScreen(MainMenuScreen);
 clientManager.startTick();
 
 /*

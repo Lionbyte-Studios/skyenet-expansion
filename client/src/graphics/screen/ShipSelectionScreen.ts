@@ -7,27 +7,6 @@ import type { Ship } from "../../../../core/src/types";
 import { ButtonComponent } from "../component/ButtonComponent";
 
 export class ShipSelectionScreen extends ClientScreen {
-  constructor(renderInfo: RenderInfo) {
-    super(renderInfo);
-    clientManager.state.ships = ships as Ship[];
-    this.components = [
-      new ButtonComponent({
-        x: 50,
-        y: 50,
-        data: {
-          width: 100,
-          height: 40,
-          text: "BACK",
-          onclick: () => {
-            clientManager.setScreen(MainMenuScreen);
-          },
-          textProperties: {
-            font: "16px Arial",
-          },
-        },
-      }),
-    ];
-  }
   public render(renderInfo: RenderInfo): void {
     const baseWidth = 1280;
     const baseHeight = 720;
@@ -99,5 +78,25 @@ export class ShipSelectionScreen extends ClientScreen {
         return;
       }
     }
+  }
+  public override init(): void {
+    clientManager.state.ships = ships as Ship[];
+    this.components = [
+      new ButtonComponent({
+        x: 50,
+        y: 50,
+        data: {
+          width: 100,
+          height: 40,
+          text: "BACK",
+          onclick: () => {
+            clientManager.setScreen(MainMenuScreen);
+          },
+          textProperties: {
+            font: "16px Arial",
+          },
+        },
+      }),
+    ];
   }
 }
