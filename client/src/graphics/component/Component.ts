@@ -17,4 +17,5 @@ export abstract class Component<T> {
   public abstract render(renderInfo: RenderInfo): void;
   public abstract onMouseMove(info: MouseInfo): void;
   public abstract onClick(info: MouseInfo): void;
+  public onKeyDown(event: KeyboardEvent): void {}
 }

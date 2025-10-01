@@ -50,6 +50,7 @@ export class ClientManager {
   public webSocketManager: WebSocketClient;
   public clientStorage: ClientStorage;
   public atlasManager: AtlasManager;
+  public cursor: string = "crosshair";
 
   constructor(atlasManager: AtlasManager) {
     document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
@@ -69,6 +70,9 @@ export class ClientManager {
     });
     this.canvas.addEventListener("mousemove", (event) => {
       this.onMouseMove(event);
+    });
+    window.addEventListener("keydown", (event) => {
+      this.onKeyDown(event);
     });
     this.state = {
       selectedShip: {
@@ -95,6 +99,7 @@ export class ClientManager {
 
   public tick() {
     requestAnimationFrame(this.tick.bind(this));
+
     this.canvas.width = window.innerWidth;
     this.canvas.height = (9 * window.innerWidth) / 16; // 16:9 aspect ratio
 
@@ -111,6 +116,8 @@ export class ClientManager {
     this.currentScreen.components.forEach((component) =>
       component.render(this.getRenderInfo()),
     );
+
+    this.canvas.style.cursor = this.cursor;
   }
 
   private onClick(event: PointerEvent) {
@@ -136,6 +143,7 @@ export class ClientManager {
   }
 
   private onMouseMove(event: MouseEvent) {
+    this.cursor = "crosshair";
     const rect = this.canvas.getBoundingClientRect();
     const mouseX = event.clientX - rect.left;
     const mouseY = event.clientY - rect.top;
@@ -154,6 +162,12 @@ export class ClientManager {
         canvas: { x: mouseX, y: mouseY },
         base: { x: clickXBase, y: clickYBase },
       });
+    });
+  }
+
+  private onKeyDown(event: KeyboardEvent) {
+    this.currentScreen.components.forEach((component) => {
+      component.onKeyDown(event);
     });
   }
 
