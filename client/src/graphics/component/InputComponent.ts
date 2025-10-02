@@ -43,23 +43,15 @@ export class InputComponent extends Component<InputComponentData> {
     renderInfo.ctx.font = this.data.font;
     renderInfo.ctx.textAlign = "center";
     renderInfo.ctx.textBaseline = "middle";
-    if (this.text.length === 0) {
-      renderInfo.ctx.fillStyle = "#7a7a7a";
-      renderInfo.ctx.fillText(
-        this.data.placeholder,
-        this.args.x + this.data.width * 0.5,
-        this.args.y + this.data.height * 0.5,
-        this.data.width,
-      );
-    } else {
-      renderInfo.ctx.fillStyle = "#ffffff";
-      renderInfo.ctx.fillText(
-        this.text,
-        this.args.x + this.data.width * 0.5,
-        this.args.y + this.data.height * 0.5,
-        this.data.width,
-      );
-    }
+    const textToRender =
+      this.text.length === 0 ? this.data.placeholder : this.text;
+    const colorToRender = this.text.length === 0 ? "#7a7a7a" : "#ffffff";
+    renderInfo.ctx.fillStyle = colorToRender;
+    renderInfo.ctx.fillText(
+      this.limitText(renderInfo.ctx, textToRender, this.data.width),
+      this.args.x + this.data.width * 0.5,
+      this.args.y + this.data.height * 0.5,
+    );
     renderInfo.ctx.restore();
   }
   public onMouseMove(info: MouseInfo): void {
@@ -97,5 +89,17 @@ export class InputComponent extends Component<InputComponentData> {
     } else if (event.key === "Backspace") {
       this.text = this.text.slice(0, -1);
     }
+  }
+
+  private limitText(
+    ctx: CanvasRenderingContext2D,
+    text: string,
+    maxWidth: number,
+  ) {
+    let newText = text;
+    while (ctx.measureText(newText).width > maxWidth && newText.length !== 0) {
+      newText = newText.slice(1);
+    }
+    return newText;
   }
 }
