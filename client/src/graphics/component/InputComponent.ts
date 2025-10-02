@@ -10,6 +10,7 @@ type InputComponentData = {
   placeholder?: string;
   initialValue?: string;
   selected: boolean;
+  textLengthLimit?: number;
 };
 
 export class InputComponent extends Component<InputComponentData> {
@@ -22,6 +23,7 @@ export class InputComponent extends Component<InputComponentData> {
     const initialValue =
       args.data.initialValue === undefined ? "" : args.data.initialValue;
     const font = args.data.font === undefined ? "20px Arial" : args.data.font;
+    const textLengthLimit = args.data.textLengthLimit === undefined ? 1024 : args.data.textLengthLimit;
     this.data = {
       placeholder: placeholder,
       initialValue: initialValue,
@@ -29,6 +31,7 @@ export class InputComponent extends Component<InputComponentData> {
       width: args.data.width,
       height: args.data.height,
       selected: args.data.selected,
+      textLengthLimit: textLengthLimit,
     };
   }
   public render(renderInfo: RenderInfo): void {
@@ -85,6 +88,7 @@ export class InputComponent extends Component<InputComponentData> {
     if (!this.data.selected) return;
     console.log("key: " + event.key);
     if (event.key.length === 1) {
+      if(this.text.length >= this.data.textLengthLimit) return;
       this.text += event.key;
     } else if (event.key === "Backspace") {
       this.text = this.text.slice(0, -1);
