@@ -4,6 +4,7 @@ import { clientManager } from "../../Main";
 import { ButtonComponent } from "../component/ButtonComponent";
 import { TextComponent } from "../component/TextComponent";
 import { InGameScreen } from "./InGameScreen";
+import { LoginScreen } from "./LoginScreen";
 import { ClientScreen } from "./Screen";
 import { ShipSelectionScreen } from "./ShipSelectionScreen";
 
@@ -139,6 +140,18 @@ export class MainMenuScreen extends ClientScreen {
           },
         },
         custom_id: "selected_ship_description",
+      }),
+      new ButtonComponent({
+        x: this.baseWidth * 0.9,
+        y: this.baseHeight * 0.1,
+        data: {
+          width: 120,
+          height: 60,
+          text: "LOGIN",
+          onclick: () => {
+            clientManager.setScreen(LoginScreen);
+          },
+        },
       }),
     ];
   }

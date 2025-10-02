@@ -23,7 +23,10 @@ export class InputComponent extends Component<InputComponentData> {
     const initialValue =
       args.data.initialValue === undefined ? "" : args.data.initialValue;
     const font = args.data.font === undefined ? "20px Arial" : args.data.font;
-    const textLengthLimit = args.data.textLengthLimit === undefined ? 1024 : args.data.textLengthLimit;
+    const textLengthLimit =
+      args.data.textLengthLimit === undefined
+        ? 1024
+        : args.data.textLengthLimit;
     this.data = {
       placeholder: placeholder,
       initialValue: initialValue,
@@ -46,15 +49,42 @@ export class InputComponent extends Component<InputComponentData> {
     renderInfo.ctx.font = this.data.font;
     renderInfo.ctx.textAlign = "center";
     renderInfo.ctx.textBaseline = "middle";
-    const textToRender =
-      this.text.length === 0 ? this.data.placeholder : this.text;
+    const textToRender = this.limitText(
+      renderInfo.ctx,
+      this.text.length === 0 ? this.data.placeholder : this.text,
+      this.data.width,
+    );
     const colorToRender = this.text.length === 0 ? "#7a7a7a" : "#ffffff";
     renderInfo.ctx.fillStyle = colorToRender;
     renderInfo.ctx.fillText(
-      this.limitText(renderInfo.ctx, textToRender, this.data.width),
+      textToRender,
       this.args.x + this.data.width * 0.5,
       this.args.y + this.data.height * 0.5,
     );
+
+    if (this.data.selected) {
+      renderInfo.ctx.strokeStyle = "#7c7c7cff";
+      renderInfo.ctx.strokeRect(
+        this.args.x,
+        this.args.y,
+        this.data.width,
+        this.data.height,
+      );
+      const timestamp = Date.now() % 1000;
+      if (timestamp < 500) {
+        renderInfo.ctx.fillStyle = "#c9c9c9ff";
+        const offset =
+          this.text.length === 0
+            ? 0
+            : renderInfo.ctx.measureText(textToRender).width * 0.5;
+        renderInfo.ctx.fillRect(
+          this.args.x + this.data.width * 0.5 + offset,
+          this.args.y + this.data.height * 0.1,
+          3,
+          this.data.height * 0.8,
+        );
+      }
+    }
     renderInfo.ctx.restore();
   }
   public onMouseMove(info: MouseInfo): void {
@@ -88,7 +118,7 @@ export class InputComponent extends Component<InputComponentData> {
     if (!this.data.selected) return;
     console.log("key: " + event.key);
     if (event.key.length === 1) {
-      if(this.text.length >= this.data.textLengthLimit) return;
+      if (this.text.length >= this.data.textLengthLimit) return;
       this.text += event.key;
     } else if (event.key === "Backspace") {
       this.text = this.text.slice(0, -1);
