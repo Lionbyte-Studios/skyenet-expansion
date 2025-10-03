@@ -1,6 +1,7 @@
 import type { MouseInfo, RenderInfo } from "../../ClientManager";
 import { nullMouseInfo } from "../../lib/Util";
 import { clientManager } from "../../Main";
+import { logout } from "../../net/api/Api";
 import { ButtonComponent } from "../component/ButtonComponent";
 import { TextComponent } from "../component/TextComponent";
 import { UserPfpComponent } from "../component/UserPfpComponent";
@@ -159,6 +160,19 @@ export class MainMenuScreen extends ClientScreen {
                 action: "tooltip",
                 text: "no way :3 are we being real",
                 tooltipWidth: this.baseWidth * 0.1,
+              },
+              onClick: async () => {
+                const logout_res = await logout(
+                  clientManager.clientStorage.get("token")!,
+                );
+                if (typeof logout_res === "string") {
+                  console.log("Could not log out: " + logout_res);
+                  alert("Failed to log out. Check the console for details");
+                  return;
+                } else {
+                  clientManager.clientStorage.remove("token");
+                  window.location.reload();
+                }
               },
             },
             custom_id: "user_pfp",

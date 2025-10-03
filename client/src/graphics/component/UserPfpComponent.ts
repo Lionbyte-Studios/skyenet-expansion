@@ -1,6 +1,6 @@
 import type { MouseInfo, RenderInfo } from "../../ClientManager";
 import { Component } from "./Component";
-import { fetchBlob } from "../../lib/Util";
+import { fetchBlob, isInCircleArea } from "../../lib/Util";
 import { TextBoxComponent } from "./TextboxComponent";
 import { clientManager } from "../../Main";
 
@@ -84,16 +84,37 @@ export class UserPfpComponent extends Component<UserPfpComponentData> {
     if (this.args.data.onHover === undefined) return;
     const { x, y } = info.base;
     if (this.distanceSquared === undefined || this.center === undefined) return;
-    const dist = Math.abs(
-      Math.pow(Math.abs(this.center[0] - x), 2) +
-        Math.pow(Math.abs(this.center[1] - y), 2),
-    );
-    if (dist > this.distanceSquared) return;
+    if (
+      !isInCircleArea(
+        {
+          center: { x: this.center[0], y: this.center[1] },
+          radiusSquared: this.distanceSquared,
+        },
+        { x: x, y: y },
+      )
+    )
+      return;
     if (this.args.data.onHover.action === "tooltip") {
       this.renderTooltip = true;
       clientManager.cursor = "pointer";
     } else {
       this.args.data.onHover.fn();
     }
+  }
+  public override onClick(info: MouseInfo): void {
+    if (this.args.data.onClick === undefined) return;
+    const { x, y } = info.base;
+    if (this.distanceSquared === undefined || this.center === undefined) return;
+    if (
+      !isInCircleArea(
+        {
+          center: { x: this.center[0], y: this.center[1] },
+          radiusSquared: this.distanceSquared,
+        },
+        { x: x, y: y },
+      )
+    )
+      return;
+    this.args.data.onClick();
   }
 }

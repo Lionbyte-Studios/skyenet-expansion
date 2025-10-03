@@ -97,3 +97,7 @@ export interface LoginCallback {
     username: string;
   };
 }
+
+export interface LogoutCallback {
+  ok: boolean;
+}

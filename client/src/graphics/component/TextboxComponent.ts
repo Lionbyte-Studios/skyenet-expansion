@@ -72,7 +72,7 @@ export class TextBoxComponent extends Component<TextBoxComponentData> {
     ctx: CanvasRenderingContext2D,
     maxWidth: number,
   ): string[] {
-    let arr: string[] = [];
+    const arr: string[] = [];
     let currentText = "";
     for (const c of text) {
       if (ctx.measureText(currentText + c).width <= maxWidth) currentText += c;

@@ -30,4 +30,9 @@ export class ClientStorage {
     this.storageMap.set(key, stringValue);
     localStorage.setItem(key, stringValue);
   }
+
+  public remove(key: string) {
+    localStorage.removeItem(key);
+    this.storageMap.delete(key);
+  }
 }

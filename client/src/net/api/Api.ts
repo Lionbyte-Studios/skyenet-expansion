@@ -1,4 +1,7 @@
-import { type LoginCallback } from "../../../../core/src/types";
+import {
+  type LoginCallback,
+  type LogoutCallback,
+} from "../../../../core/src/types";
 
 // /**
 //  * Calls the API to create a user.
@@ -81,6 +84,24 @@ import { type LoginCallback } from "../../../../core/src/types";
 
 export async function login(token: string): Promise<LoginCallback | string> {
   const res = await fetch("http://localhost:8082/login", {
+    method: "POST",
+    headers: {
+      Accept: "application/json, text/plain, */*",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      token: token,
+    }),
+  });
+  const json = await res.json();
+  if ("error" in json) {
+    return json.error;
+  }
+  return json;
+}
+
+export async function logout(token: string): Promise<LogoutCallback | string> {
+  const res = await fetch("http://localhost:8082/logout", {
     method: "POST",
     headers: {
       Accept: "application/json, text/plain, */*",

@@ -250,6 +250,29 @@ export class ApiManager {
       });
     });
 
+    this.app.post("/logout", async (req, res) => {
+      const body: { token: string } = req.body;
+      if (typeof body.token !== "string") {
+        res.status(400).json({ error: "'token' not provided." });
+        return;
+      }
+      const user_and_session = await database.getUserAndSessionByToken(
+        body.token,
+      );
+      if (user_and_session === undefined) {
+        res.status(403).json({ error: "Did not find user/session." });
+        return;
+      }
+      const delete_res = await database.deleteUserSessions(
+        user_and_session[0].id,
+      );
+      if (!delete_res) {
+        res.status(500).json({ error: "Failed to delete session(s)." });
+        return;
+      }
+      res.status(200).json({ ok: true });
+    });
+
     this.app.listen(this.port, () => {
       console.log(`Express listening on port ${port}`);
     });
