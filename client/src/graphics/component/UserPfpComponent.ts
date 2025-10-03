@@ -22,14 +22,18 @@ export class UserPfpComponent extends Component<UserPfpComponentData> {
   private distanceSquared: number | undefined = undefined;
   private center: [number, number] | undefined = undefined;
   private renderTooltip: boolean = false;
-  public tooltipTextBox: TextBoxComponent = new TextBoxComponent({
-    x: this.args.x - this.args.data.width / 2,
-    y: this.args.y + this.args.data.width + 10,
-    data: {
-      text: "Not logged in",
-      width: this.args.data.width * 2,
-    },
-  });
+  public tooltipTextBox: TextBoxComponent | undefined =
+    this.args.data.onHover === undefined ||
+    this.args.data.onHover.action !== "tooltip"
+      ? undefined
+      : new TextBoxComponent({
+          x: this.args.x - this.args.data.width / 2,
+          y: this.args.y + this.args.data.width + 10,
+          data: {
+            text: this.args.data.onHover.text,
+            width: this.args.data.width * 2,
+          },
+        });
   public render(renderInfo: RenderInfo): void {
     const centerX = this.args.x + this.args.data.width / 2;
     const centerY = this.args.y + this.args.data.height / 2;
@@ -60,7 +64,7 @@ export class UserPfpComponent extends Component<UserPfpComponentData> {
     // draw tooltip
     if (this.renderTooltip) {
       if (this.args.data.onHover?.action !== "tooltip") return;
-      this.tooltipTextBox.render(renderInfo);
+      this.tooltipTextBox!.render(renderInfo);
     }
   }
   public override init(): void {

@@ -8,6 +8,7 @@ import { UserPfpComponent } from "../component/UserPfpComponent";
 import { InGameScreen } from "./InGameScreen";
 import { ClientScreen } from "./Screen";
 import { ShipSelectionScreen } from "./ShipSelectionScreen";
+import { discord } from "../../../../config.json";
 
 export class MainMenuScreen extends ClientScreen {
   private mouseInfo: MouseInfo = nullMouseInfo();
@@ -143,12 +144,27 @@ export class MainMenuScreen extends ClientScreen {
         custom_id: "selected_ship_description",
       }),
     ];
-    if (clientManager.loggedInUser !== undefined) {
-      (async () => {
+    (async () => {
+      let componentToAppend: UserPfpComponent = new UserPfpComponent({
+        x: this.baseWidth - this.baseWidth * 0.025 - this.baseWidth * 0.05,
+        y: this.baseWidth * 0.025,
+        data: {
+          url: discord.default_avatar_url,
+          width: this.baseWidth * 0.05,
+          height: this.baseWidth * 0.05,
+          onHover: {
+            action: "tooltip",
+            text: "Not logged in!\nClick to login",
+          },
+          onClick: () => {
+            location.href = discord.app_auth_url;
+          },
+        },
+      });
+      if (clientManager.loggedInUser !== undefined) {
         const user = await clientManager.loggedInUser;
-        if (user === undefined) return;
-        this.components.push(
-          new UserPfpComponent({
+        if (user !== undefined) {
+          componentToAppend = new UserPfpComponent({
             x: this.baseWidth - this.baseWidth * 0.025 - this.baseWidth * 0.05,
             y: this.baseWidth * 0.025,
             data: {
@@ -158,7 +174,7 @@ export class MainMenuScreen extends ClientScreen {
               height: this.baseWidth * 0.05,
               onHover: {
                 action: "tooltip",
-                text: "no way :3 are we being real",
+                text: `Logged in as ${user.discord.global_name} (${user.discord.username})`,
                 tooltipWidth: this.baseWidth * 0.1,
               },
               onClick: async () => {
@@ -176,11 +192,12 @@ export class MainMenuScreen extends ClientScreen {
               },
             },
             custom_id: "user_pfp",
-          }),
-        );
-        const index = this.getComponentIndexById("user_pfp");
-        this.components[index!].init();
-      })();
-    }
+          });
+        }
+      }
+      this.components.push(componentToAppend);
+      const index = this.getComponentIndexById("user_pfp");
+      this.components[index!].init();
+    })();
   }
 }

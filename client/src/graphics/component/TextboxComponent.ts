@@ -75,10 +75,11 @@ export class TextBoxComponent extends Component<TextBoxComponentData> {
     const arr: string[] = [];
     let currentText = "";
     for (const c of text) {
-      if (ctx.measureText(currentText + c).width <= maxWidth) currentText += c;
+      if (ctx.measureText(currentText + c).width <= maxWidth && c !== "\n")
+        currentText += c;
       else {
         arr.push(currentText);
-        currentText = c;
+        currentText = c == "\n" ? "" : c;
       }
     }
     if (currentText.length !== 0) arr.push(currentText);
