@@ -141,18 +141,6 @@ export class MainMenuScreen extends ClientScreen {
         },
         custom_id: "selected_ship_description",
       }),
-      /*new ButtonComponent({
-        x: this.baseWidth * 0.9,
-        y: this.baseHeight * 0.1,
-        data: {
-          width: 120,
-          height: 60,
-          text: "LOGIN",
-          onclick: () => {
-            clientManager.setScreen(LoginScreen);
-          },
-        },
-      }),*/
     ];
     if (clientManager.loggedInUser !== undefined) {
       (async () => {
@@ -167,6 +155,11 @@ export class MainMenuScreen extends ClientScreen {
               user_id: user.discord.user_id,
               width: this.baseWidth * 0.05,
               height: this.baseWidth * 0.05,
+              onHover: {
+                action: "tooltip",
+                text: "no way :3 are we being real",
+                tooltipWidth: this.baseWidth * 0.1,
+              },
             },
             custom_id: "user_pfp",
           }),

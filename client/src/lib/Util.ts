@@ -20,3 +20,15 @@ export async function fetchBlob(url: string): Promise<Blob> {
   const response = await fetch(url);
   return response.blob();
 }
+
+// export type OmitRequired<T> = {
+//   [K in keyof T as {} extends Pick<T, K> ? K : never]: T[K];
+// };
+
+export type DeepRequired<T> = {
+  [K in keyof T]-?: T[K] extends object
+    ? T[K] extends Function
+      ? T[K]
+      : DeepRequired<T[K]>
+    : T[K];
+};
