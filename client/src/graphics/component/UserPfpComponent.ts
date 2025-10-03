@@ -96,28 +96,4 @@ export class UserPfpComponent extends Component<UserPfpComponentData> {
       this.args.data.onHover.fn();
     }
   }
-
-  private breakText(
-    ctx: CanvasRenderingContext2D,
-    text: string,
-    maxWidth: number,
-  ): string {
-    let newText = "";
-    let currentLine = "";
-    for (const char of text) {
-      if (ctx.measureText(currentLine + char).width > maxWidth) {
-        newText += currentLine + "\n";
-        currentLine = "";
-      }
-      currentLine += char;
-    }
-    newText += currentLine;
-    return newText;
-  }
-
-  private countNewlines(text: string): number {
-    let count = 0;
-    for (const char of text) if (char === "\n") count++;
-    return count;
-  }
 }
