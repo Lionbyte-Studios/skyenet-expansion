@@ -2,7 +2,8 @@
   "mongo_uri": "mongodb://localhost:27017/",
   "discord": {
     "client_id": "",
-    "client_secret": ""
+    "client_secret": "",
+    "app_auth_url": ""
   },
   "api_url": "localhost:8082",
   "website_url": "localhost:5173",
