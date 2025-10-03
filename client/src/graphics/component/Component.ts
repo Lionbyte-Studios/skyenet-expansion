@@ -1,8 +1,7 @@
 import type { MouseInfo, RenderInfo } from "../../ClientManager";
 
 export interface ComponentRenderArgs<T = void> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any;
+  [key: string]: unknown;
   x: number;
   y: number;
   data: T;

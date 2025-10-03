@@ -12,9 +12,8 @@ export abstract class ClientScreen {
   public onClick(info: MouseInfo): void {}
   // This method guarantees "clientManager" to be defined.
   public init(): void {}
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  protected setComponentData<T extends Component<any>>(
-    componentPredicate: (component: Component<T>, index: number) => boolean,
+  protected setComponentData<T extends Component<T["args"]["data"]>>(
+    componentPredicate: (component: T, index: number) => boolean,
     data: Partial<ComponentRenderArgs<Partial<T["args"]["data"]>>>,
   ) {
     for (const [i, value] of (this.components as T[]).entries()) {
