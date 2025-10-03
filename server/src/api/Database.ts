@@ -1,5 +1,5 @@
 import { Session, User } from "../../../core/src/DatabaseSchemas";
-import { mongo_uri } from "../../../config.json";
+import { mongo_uri } from "../../../.serverconfig.json";
 import { MongoClient, UpdateFilter } from "mongodb";
 
 type DatabaseOperationResult = boolean;

@@ -2,7 +2,8 @@ import express from "express";
 import { createOrUpdateUser, generateUserID, makeSessionObject } from "./Util";
 import * as database from "./Database";
 import cors from "cors";
-import { discord, website_url, api_url, proto } from "../../../config.json";
+import { discord } from "../../../.serverconfig.json";
+import { proto, api_url, website_url } from "../../../config.json";
 
 export class ApiManager {
   private app: express.Express;

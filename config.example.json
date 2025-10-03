@@ -1,8 +1,5 @@
 {
-  "mongo_uri": "mongodb://localhost:27017/",
   "discord": {
-    "client_id": "",
-    "client_secret": "",
     "app_auth_url": "",
     "default_avatar_url": "https://cdn.discordapp.com/embed/avatars/5.png"
   },
