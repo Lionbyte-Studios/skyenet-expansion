@@ -11,10 +11,12 @@ type InputComponentData = {
   initialValue?: string;
   selected: boolean;
   textLengthLimit?: number;
+  type?: "text" | "password";
+  password_redacter?: string;
 };
 
 export class InputComponent extends Component<InputComponentData> {
-  private text: string = "";
+  public text: string = "";
   private data: Required<InputComponentData>;
   constructor(args: ComponentRenderArgs<InputComponentData>) {
     super(args);
@@ -23,6 +25,11 @@ export class InputComponent extends Component<InputComponentData> {
     const initialValue =
       args.data.initialValue === undefined ? "" : args.data.initialValue;
     const font = args.data.font === undefined ? "20px Arial" : args.data.font;
+    const type = args.data.type === undefined ? "text" : args.data.type;
+    const password_redacter =
+      args.data.password_redacter === undefined
+        ? "●"
+        : args.data.password_redacter;
     const textLengthLimit =
       args.data.textLengthLimit === undefined
         ? 1024
@@ -35,6 +42,8 @@ export class InputComponent extends Component<InputComponentData> {
       height: args.data.height,
       selected: args.data.selected,
       textLengthLimit: textLengthLimit,
+      type: type,
+      password_redacter: password_redacter,
     };
   }
   public render(renderInfo: RenderInfo): void {
@@ -51,7 +60,11 @@ export class InputComponent extends Component<InputComponentData> {
     renderInfo.ctx.textBaseline = "middle";
     const textToRender = this.limitText(
       renderInfo.ctx,
-      this.text.length === 0 ? this.data.placeholder : this.text,
+      this.text.length === 0
+        ? this.data.placeholder
+        : this.data.type === "text"
+          ? this.text
+          : this.makePassword(this.text.length),
       this.data.width,
     );
     const colorToRender = this.text.length === 0 ? "#7a7a7a" : "#ffffff";
@@ -116,7 +129,6 @@ export class InputComponent extends Component<InputComponentData> {
   }
   public override onKeyDown(event: KeyboardEvent): void {
     if (!this.data.selected) return;
-    console.log("key: " + event.key);
     if (event.key.length === 1) {
       if (this.text.length >= this.data.textLengthLimit) return;
       this.text += event.key;
@@ -135,5 +147,9 @@ export class InputComponent extends Component<InputComponentData> {
       newText = newText.slice(1);
     }
     return newText;
+  }
+
+  private makePassword(len: number) {
+    return this.data.password_redacter.repeat(len);
   }
 }

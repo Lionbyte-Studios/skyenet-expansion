@@ -15,3 +15,8 @@ export function isInArea(
 export function nullMouseInfo(): MouseInfo {
   return { real: { x: 0, y: 0 }, canvas: { x: 0, y: 0 }, base: { x: 0, y: 0 } };
 }
+
+export async function fetchBlob(url: string): Promise<Blob> {
+  const response = await fetch(url);
+  return response.blob();
+}

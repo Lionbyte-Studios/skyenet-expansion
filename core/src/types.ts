@@ -87,3 +87,13 @@ export interface Ship {
   sprite: ShipSprite;
   engineSprite: ShipEngineSprite;
 }
+
+export interface LoginCallback {
+  id: string;
+  discord: {
+    user_id: string;
+    avatar: string;
+    global_name: string;
+    username: string;
+  };
+}

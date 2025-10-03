@@ -8,7 +8,7 @@ import {
 } from "../../../core/src/DatabaseSchemas";
 import { usernameRegexes } from "../../../core/src/types";
 import { randomBytes } from "node:crypto";
-import { getNextSessionID } from "./Database";
+import { createUser, getUserByUserID, replaceUser } from "./Database";
 
 export function generateUserID(): string {
   return uuidv4();
@@ -51,19 +51,28 @@ export function generateToken(length: number = 64) {
 /**
  * default expiration time is 24 hours
  */
-export async function makeSessionObject(
-  token: string,
+export function makeSessionObject(
   user_id: string,
-  session_expiration_time: number = 86400000,
-): Promise<Session | undefined> {
-  const nextSessionID = await getNextSessionID();
-  if (nextSessionID === undefined) return undefined;
-  const timestamp = Date.now();
+  discord_data: {
+    discord_user: Session["discord_user"];
+    discord_session: Session["discord_session"];
+  },
+): Session {
   return {
-    token: token,
-    user_id: user_id,
-    created_at: timestamp,
-    expires: timestamp + session_expiration_time,
-    session_id: nextSessionID,
+    associated_user: user_id,
+    token: generateToken(64),
+    discord_user: discord_data.discord_user,
+    discord_session: discord_data.discord_session,
+    created_at: Date.now(),
   };
+}
+
+export async function createOrUpdateUser(user: User): Promise<boolean> {
+  const find_user_res = await getUserByUserID(user.id);
+  if (find_user_res === undefined) {
+    const create_user_res = await createUser(user);
+    return create_user_res;
+  }
+  const update_user_res = await replaceUser(user.id, user);
+  return update_user_res;
 }

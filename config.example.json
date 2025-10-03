@@ -1,3 +1,11 @@
 {
-  "mongo_uri": "mongodb://localhost:27017/"
+  "mongo_uri": "mongodb://localhost:27017/",
+  "discord": {
+    "client_id": "",
+    "client_secret": ""
+  },
+  "api_url": "localhost:8082",
+  "website_url": "localhost:5173",
+  "socket_url": "localhost:8081",
+  "proto": "http"
 }

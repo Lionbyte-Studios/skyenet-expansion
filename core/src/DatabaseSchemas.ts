@@ -1,4 +1,4 @@
-export interface User {
+/*export interface User {
   user_id: string;
   username: string;
   email: string;
@@ -6,6 +6,38 @@ export interface User {
   bio: string;
   statistics: UserStatistics;
   achievements: Achievement[];
+}*/
+
+export interface User {
+  id: string;
+  discord: {
+    user_id: string;
+    username: string;
+    avatar: string;
+    email: string;
+    global_name: string;
+  };
+}
+
+export interface Session {
+  token: string;
+  discord_session: {
+    access_token: string;
+    expires_in: number;
+    token_type: string;
+    refresh_token: string;
+    scope: string;
+  };
+  discord_user: {
+    user_id: string;
+    username: string;
+    avatar: string;
+    email: string;
+    global_name: string;
+  };
+  // id
+  associated_user: string;
+  created_at: number;
 }
 
 export type UserWithOptionalPassword = Omit<User, "password"> & {
@@ -22,7 +54,7 @@ export interface Achievement {
   name: string;
   description: string;
 }
-
+/*
 export interface Session {
   session_id: number;
   token: string;
@@ -32,3 +64,4 @@ export interface Session {
   // Timestamp
   expires: number;
 }
+*/

@@ -12,11 +12,11 @@ export abstract class ClientScreen {
   public onClick(info: MouseInfo): void {}
   // This method guarantees "clientManager" to be defined.
   public init(): void {}
-  protected setComponentData<D = void>(
-    componentPredicate: (component: Component<D>, index: number) => boolean,
-    data: Partial<ComponentRenderArgs<D>>,
+  protected setComponentData<T extends Component<unknown>>(
+    componentPredicate: (component: Component<T>, index: number) => boolean,
+    data: Partial<ComponentRenderArgs<Partial<T["args"]["data"]>>>,
   ) {
-    for (const [i, value] of (this.components as Component<D>[]).entries()) {
+    for (const [i, value] of (this.components as T[]).entries()) {
       if (componentPredicate(value, i)) {
         for (const key in data) {
           this.components[i].args[key] = data[key];
@@ -24,5 +24,17 @@ export abstract class ClientScreen {
         return;
       }
     }
+  }
+  protected getComponentByID<C extends Component<unknown>>(
+    id: string,
+  ): C | undefined {
+    return this.components.find((c) => c.args.custom_id === id) as
+      | C
+      | undefined;
+  }
+  protected getComponentIndexById(id: string): number | undefined {
+    const index = this.components.findIndex((c) => c.args.custom_id === id);
+    if (index === -1) return undefined;
+    return index;
   }
 }

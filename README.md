@@ -18,9 +18,11 @@ docker compose up --build
 ```
 
 you can also enable watch:
+
 ```bash
 docker compose up --watch
 ```
+
 this will automatically apply changes you make without you needing to restart the container or do anything!!
 
 to run it in the background, add `-d` to the end, and then use `docker compose down` to stop the background container.

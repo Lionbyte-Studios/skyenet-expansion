@@ -3,8 +3,8 @@ import { nullMouseInfo } from "../../lib/Util";
 import { clientManager } from "../../Main";
 import { ButtonComponent } from "../component/ButtonComponent";
 import { TextComponent } from "../component/TextComponent";
+import { UserPfpComponent } from "../component/UserPfpComponent";
 import { InGameScreen } from "./InGameScreen";
-import { LoginScreen } from "./LoginScreen";
 import { ClientScreen } from "./Screen";
 import { ShipSelectionScreen } from "./ShipSelectionScreen";
 
@@ -141,7 +141,7 @@ export class MainMenuScreen extends ClientScreen {
         },
         custom_id: "selected_ship_description",
       }),
-      new ButtonComponent({
+      /*new ButtonComponent({
         x: this.baseWidth * 0.9,
         y: this.baseHeight * 0.1,
         data: {
@@ -152,7 +152,28 @@ export class MainMenuScreen extends ClientScreen {
             clientManager.setScreen(LoginScreen);
           },
         },
-      }),
+      }),*/
     ];
+    if (clientManager.loggedInUser !== undefined) {
+      (async () => {
+        const user = await clientManager.loggedInUser;
+        if (user === undefined) return;
+        this.components.push(
+          new UserPfpComponent({
+            x: this.baseWidth - this.baseWidth * 0.025 - this.baseWidth * 0.05,
+            y: this.baseWidth * 0.025,
+            data: {
+              avatar: user.discord.avatar,
+              user_id: user.discord.user_id,
+              width: this.baseWidth * 0.05,
+              height: this.baseWidth * 0.05,
+            },
+            custom_id: "user_pfp",
+          }),
+        );
+        const index = this.getComponentIndexById("user_pfp");
+        this.components[index!].init();
+      })();
+    }
   }
 }

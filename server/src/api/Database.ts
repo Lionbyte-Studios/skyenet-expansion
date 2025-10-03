@@ -1,6 +1,6 @@
 import { Session, User } from "../../../core/src/DatabaseSchemas";
 import { mongo_uri } from "../../../config.json";
-import { MongoClient } from "mongodb";
+import { MongoClient, UpdateFilter } from "mongodb";
 
 type DatabaseOperationResult = boolean;
 
@@ -15,50 +15,67 @@ export async function createUser(user: User): Promise<DatabaseOperationResult> {
   return res.acknowledged;
 }
 
-export async function deleteUserByID(
+export async function updateUser(
   user_id: string,
-): Promise<DatabaseOperationResult> {
-  const res = await users.deleteOne({ user_id: user_id });
+  updateData: UpdateFilter<User>,
+): Promise<boolean> {
+  const res = await users.updateOne({ id: user_id }, updateData);
   return res.acknowledged;
 }
 
-export async function userWithUsernameExists(
+export async function replaceUser(
+  user_id: string,
+  newUser: User,
+): Promise<boolean> {
+  const res = await users.replaceOne({ id: user_id }, newUser);
+  return res.acknowledged;
+}
+
+export async function getUserByUserID(
+  user_id: string,
+): Promise<User | undefined> {
+  const res = await users.findOne({ id: user_id });
+  if (res === null) return undefined;
+  return res;
+}
+
+export async function deleteUserByDiscordID(
+  user_id: string,
+): Promise<DatabaseOperationResult> {
+  const res = await users.deleteOne({ discord: { user_id: user_id } });
+  return res.acknowledged;
+}
+
+export async function userWithDiscordUsernameExists(
   username: string,
 ): Promise<boolean> {
-  const res = await users.findOne({ username: username });
+  const res = await users.findOne({ discord: { username: username } });
   if (res === null) return false;
   return true;
 }
 
-export async function userWithIDExists(user_id: string): Promise<boolean> {
-  const res = await users.findOne({ user_id: user_id });
+export async function userWithDiscordIDExists(
+  user_id: string,
+): Promise<boolean> {
+  const res = await users.findOne({ discord: { user_id: user_id } });
   if (res === null) return false;
   return true;
 }
 
-export async function getUserByID(user_id: string): Promise<User | undefined> {
-  const res = await users.findOne({ user_id: user_id });
+export async function getUserByDiscordID(
+  user_id: string,
+): Promise<User | undefined> {
+  const res = await users.findOne({ discord: { user_id: user_id } });
   if (res === null) return undefined;
   return res;
 }
 
-export async function getUserByUsername(
+export async function getUserByDiscordUsername(
   username: string,
 ): Promise<User | undefined> {
-  const res = await users.findOne({ username: username });
+  const res = await users.findOne({ discord: { username: username } });
   if (res === null) return undefined;
   return res;
-}
-
-export async function getNextSessionID(): Promise<number | undefined> {
-  const max = sessions.find().sort({ session_id: -1 }).limit(1); // Find session with biggest session id
-  let found: Session | undefined = undefined;
-  for await (const doc of max) {
-    found = doc;
-    break;
-  }
-  if (found === undefined) return undefined;
-  return found.session_id + 1;
 }
 
 export async function createSession(
@@ -68,27 +85,25 @@ export async function createSession(
   return res.acknowledged;
 }
 
-export async function getSessionBySessionID(
-  session_id: number,
+export async function getSessionByAssociatedUserID(
+  associated_user_id: string,
 ): Promise<Session | undefined> {
-  const session = await sessions.findOne({ session_id: session_id });
-  if (session === null) return undefined;
-  return session;
+  const res = await sessions.findOne({ associated_user: associated_user_id });
+  if (res === null) return undefined;
+  return res;
 }
 
-export async function deleteSession(
-  session_id: number,
-): Promise<DatabaseOperationResult> {
-  const res = await sessions.deleteOne({ session_id: session_id });
+export async function deleteUserSessions(user_id: string): Promise<boolean> {
+  const res = await sessions.deleteMany({ associated_user: user_id });
   return res.acknowledged;
 }
 
-/**
- * @returns -1 if the query was not acknowledged, the number of deleted sessions otherwise
- */
-export async function deleteAllExpiredSessions(): Promise<number> {
-  const currentTime = Date.now();
-  const res = await sessions.deleteMany({ expires: { $lt: currentTime } });
-  if (!res.acknowledged) return -1;
-  return res.deletedCount;
+export async function getUserAndSessionByToken(
+  token: string,
+): Promise<[User, Session] | undefined> {
+  const session = await sessions.findOne({ token: token });
+  if (session === null) return undefined;
+  const user = await users.findOne({ id: session.associated_user });
+  if (user === null) return undefined;
+  return [user, session];
 }

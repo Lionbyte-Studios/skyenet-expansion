@@ -18,4 +18,5 @@ export abstract class Component<T> {
   public onKeyDown(event: KeyboardEvent): void {}
   public onMouseMove(info: MouseInfo): void {}
   public onClick(info: MouseInfo): void {}
+  public init(): void {}
 }

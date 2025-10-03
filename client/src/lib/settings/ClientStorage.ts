@@ -17,10 +17,10 @@ export class ClientStorage {
     this.storageMap.clear();
   }
 
-  public get<T>(key: string, type: { from(value: string): T }): T | undefined {
+  public get(key: string): string | undefined {
     const item = this.storageMap.get(key);
     if (item === undefined) return undefined;
-    return type.from(item);
+    return item;
   }
 
   public set(key: string, value: unknown) {
