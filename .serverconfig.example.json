@@ -1,0 +1,7 @@
+{
+  "mongo_uri": "mongodb://localhost:27017/",
+  "discord": {
+    "client_id": "",
+    "client_secret": ""
+  }
+}

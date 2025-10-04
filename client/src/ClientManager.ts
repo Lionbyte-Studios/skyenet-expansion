@@ -1,9 +1,16 @@
-import { ShipEngineSprite, ShipSprite, type Ship } from "../../core/src/types";
+import {
+  ShipEngineSprite,
+  ShipSprite,
+  type LoginCallback,
+  type Ship,
+} from "../../core/src/types";
 import type { ClientGame } from "./ClientGame";
 import { AtlasManager } from "./graphics/AtlasManager";
 import { ClientScreen } from "./graphics/screen/Screen";
 import { ClientStorage } from "./lib/settings/ClientStorage";
 import { WebSocketClient } from "./net/WebSocketClient";
+import { socket_url } from "../../config.json";
+import { login } from "./net/api/Api";
 
 export interface RenderInfo {
   ctx: CanvasRenderingContext2D;
@@ -50,6 +57,8 @@ export class ClientManager {
   public webSocketManager: WebSocketClient;
   public clientStorage: ClientStorage;
   public atlasManager: AtlasManager;
+  public cursor: string = "crosshair";
+  public loggedInUser: Promise<LoginCallback> | undefined = undefined;
 
   constructor(atlasManager: AtlasManager) {
     document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
@@ -70,6 +79,9 @@ export class ClientManager {
     this.canvas.addEventListener("mousemove", (event) => {
       this.onMouseMove(event);
     });
+    window.addEventListener("keydown", (event) => {
+      this.onKeyDown(event);
+    });
     this.state = {
       selectedShip: {
         id: "gray-ship",
@@ -80,9 +92,40 @@ export class ClientManager {
       },
       ships: [],
     };
-    this.webSocketManager = new WebSocketClient("ws://localhost:8081");
+    this.webSocketManager = new WebSocketClient("ws://" + socket_url);
     this.clientStorage = new ClientStorage();
     this.atlasManager = atlasManager;
+
+    // check for ?token=... and if it exists, set it in the localStorage and reload.
+    const params = new URLSearchParams(document.location.search);
+    const token = params.get("token");
+    if (token !== null) {
+      // console.log("TOKEN: " + token);
+      params.delete("token");
+      this.clientStorage.set("token", token);
+      window.location.href =
+        window.location.protocol +
+        "//" +
+        window.location.host +
+        window.location.pathname;
+      return;
+    }
+
+    // Check for token in localStorage and try logging in with it
+    const stored_token = this.clientStorage.get("token");
+    if (stored_token !== undefined) {
+      this.loggedInUser = new Promise((resolve, reject) => {
+        login(stored_token).then((login_res) => {
+          if (typeof login_res === "string") {
+            console.log("Error logging in: " + login_res);
+            reject();
+            return;
+          }
+          console.log("Logged in! Data: " + JSON.stringify(login_res));
+          resolve(login_res);
+        });
+      });
+    } else this.loggedInUser = undefined;
   }
 
   public isGameRunning() {
@@ -95,6 +138,7 @@ export class ClientManager {
 
   public tick() {
     requestAnimationFrame(this.tick.bind(this));
+
     this.canvas.width = window.innerWidth;
     this.canvas.height = (9 * window.innerWidth) / 16; // 16:9 aspect ratio
 
@@ -111,6 +155,8 @@ export class ClientManager {
     this.currentScreen.components.forEach((component) =>
       component.render(this.getRenderInfo()),
     );
+
+    this.canvas.style.cursor = this.cursor;
   }
 
   private onClick(event: PointerEvent) {
@@ -136,6 +182,7 @@ export class ClientManager {
   }
 
   private onMouseMove(event: MouseEvent) {
+    this.cursor = "crosshair";
     const rect = this.canvas.getBoundingClientRect();
     const mouseX = event.clientX - rect.left;
     const mouseY = event.clientY - rect.top;
@@ -154,6 +201,12 @@ export class ClientManager {
         canvas: { x: mouseX, y: mouseY },
         base: { x: clickXBase, y: clickYBase },
       });
+    });
+  }
+
+  private onKeyDown(event: KeyboardEvent) {
+    this.currentScreen.components.forEach((component) => {
+      component.onKeyDown(event);
     });
   }
 
@@ -214,5 +267,8 @@ export class ClientManager {
 
   public runScreenInit() {
     this.currentScreen.init();
+    this.currentScreen.components.forEach((component) => {
+      component.init();
+    });
   }
 }

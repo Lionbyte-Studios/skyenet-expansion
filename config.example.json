@@ -1,3 +1,10 @@
 {
-  "mongo_uri": "mongodb://localhost:27017/"
+  "discord": {
+    "app_auth_url": "",
+    "default_avatar_url": "https://cdn.discordapp.com/embed/avatars/5.png"
+  },
+  "api_url": "localhost:8082",
+  "website_url": "localhost:5173",
+  "socket_url": "localhost:8081",
+  "proto": "http"
 }

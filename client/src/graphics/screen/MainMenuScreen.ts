@@ -1,11 +1,14 @@
 import type { MouseInfo, RenderInfo } from "../../ClientManager";
 import { nullMouseInfo } from "../../lib/Util";
 import { clientManager } from "../../Main";
+import { logout } from "../../net/api/Api";
 import { ButtonComponent } from "../component/ButtonComponent";
 import { TextComponent } from "../component/TextComponent";
+import { UserPfpComponent } from "../component/UserPfpComponent";
 import { InGameScreen } from "./InGameScreen";
 import { ClientScreen } from "./Screen";
 import { ShipSelectionScreen } from "./ShipSelectionScreen";
+import { discord } from "../../../../config.json";
 
 export class MainMenuScreen extends ClientScreen {
   private mouseInfo: MouseInfo = nullMouseInfo();
@@ -141,5 +144,60 @@ export class MainMenuScreen extends ClientScreen {
         custom_id: "selected_ship_description",
       }),
     ];
+    (async () => {
+      let componentToAppend: UserPfpComponent = new UserPfpComponent({
+        x: this.baseWidth - this.baseWidth * 0.025 - this.baseWidth * 0.05,
+        y: this.baseWidth * 0.025,
+        data: {
+          url: discord.default_avatar_url,
+          width: this.baseWidth * 0.05,
+          height: this.baseWidth * 0.05,
+          onHover: {
+            action: "tooltip",
+            text: "Not logged in!\nClick to login",
+          },
+          onClick: () => {
+            location.href = discord.app_auth_url;
+          },
+        },
+      });
+      if (clientManager.loggedInUser !== undefined) {
+        const user = await clientManager.loggedInUser;
+        if (user !== undefined) {
+          componentToAppend = new UserPfpComponent({
+            x: this.baseWidth - this.baseWidth * 0.025 - this.baseWidth * 0.05,
+            y: this.baseWidth * 0.025,
+            data: {
+              avatar: user.discord.avatar,
+              user_id: user.discord.user_id,
+              width: this.baseWidth * 0.05,
+              height: this.baseWidth * 0.05,
+              onHover: {
+                action: "tooltip",
+                text: `Logged in as ${user.discord.global_name} (${user.discord.username})`,
+                tooltipWidth: this.baseWidth * 0.1,
+              },
+              onClick: async () => {
+                const logout_res = await logout(
+                  clientManager.clientStorage.get("token")!,
+                );
+                if (typeof logout_res === "string") {
+                  console.log("Could not log out: " + logout_res);
+                  alert("Failed to log out. Check the console for details");
+                  return;
+                } else {
+                  clientManager.clientStorage.remove("token");
+                  window.location.reload();
+                }
+              },
+            },
+            custom_id: "user_pfp",
+          });
+        }
+      }
+      this.components.push(componentToAppend);
+      const index = this.getComponentIndexById("user_pfp");
+      this.components[index!].init();
+    })();
   }
 }

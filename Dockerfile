@@ -32,12 +32,25 @@ RUN pnpm install
 
 RUN mkdir node_modules/.vite/ && chmod -R 777 node_modules/.vite/
 
-# Run the application as a non-root user.
-USER node
+# ARG UID=10001
+# RUN adduser \
+#     --disabled-password \
+#     --gecos "" \
+#     --home "/nonexistent" \
+#     --shell "/sbin/nologin" \
+#     --no-create-home \
+#     --uid "${UID}" \
+#     node
 
+# Run the application as root to avoid permission issues
+USER root
 
-# Copy the rest of the source files into the image.
+# # Copy the rest of the source files into the image.
 COPY . .
+# COPY --chown=node:node . /usr/src/app/
+# RUN chown -R node ./*
+# RUN chown -R node ./.*
+# RUN chown -R node /usr/src/app
 
 # Expose the port that the application listens on.
 EXPOSE 5173
