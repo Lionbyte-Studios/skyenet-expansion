@@ -28,6 +28,7 @@ The recommended way of running the game is using docker:
     - The `--watch` flag makes it so that any changes you make in the local filesystem will automatically be updated inside the Docker Container, so that restarting isn't necessary to apply changes.
     - If you don't want/need `--watch` it, replace it with `--build`.
     - You can add the `-d` flag to run the Container in the background.
+    - You may need to `docker compose up --build` once first.
 
 You can also run without docker:
 
