@@ -1,5 +1,6 @@
 import { Bullet } from "../../../core/src/entity/Bullet";
-import type { RenderableEntity, RenderInfo } from "./RenderableEntity";
+import type { RenderInfo } from "../ClientManager";
+import type { RenderableEntity } from "./RenderableEntity";
 
 export class ClientBullet extends Bullet implements RenderableEntity {
   public render(info: RenderInfo) {
