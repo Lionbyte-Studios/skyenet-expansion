@@ -126,7 +126,6 @@ export class WebSocketClient {
       while (this.queue.length > 0) {
         const queuedHandler = this.queue.shift();
         if (queuedHandler === undefined) break;
-        console.log("TYPE:" + queuedHandler[0].handledType);
         queuedHandler[0].handleMessage({
           socket: this.socket,
           message: queuedHandler[1],

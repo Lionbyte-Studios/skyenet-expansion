@@ -11,12 +11,19 @@ export class WsKillEntitiesMessageHandler extends WsMessageHandler<KillEntitiesM
   public handleMessage(data: SocketMessageData<KillEntitiesMessage>): void {
     data.message.entities.forEach((entityID) => {
       const index = clientManager.game.entities.findIndex(
-        (entity) => (entity.entityID = entityID),
+        (entity) => entity.entityID === entityID,
       );
       if (index === -1) {
-        console.warn(
-          `Entity with ID ${entityID} that should have been killed was not found.`,
+        const playerIndex = clientManager.game.players.findIndex(
+          (player) => player.entityID === entityID,
         );
+        if (playerIndex === -1) {
+          console.warn(
+            `Entity or player with ID ${entityID} that should have been killed was not found.`,
+          );
+          return;
+        }
+        clientManager.game.players.splice(playerIndex, 1);
         return;
       }
       clientManager.game.entities.splice(index, 1);

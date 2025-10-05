@@ -5,11 +5,12 @@
 First, create a directory for the game (such as `space-game`) and cd into it.
 
 There are different ways to download the code onto your local machine:
+
 - Use git clone (recommended): `git clone https://github.com/lionbyte-studios/skyenet-expansion .`
-    - The `.` (dot) at the end makes it so that the repository is cloned into your current directory.
+  - The `.` (dot) at the end makes it so that the repository is cloned into your current directory.
 - Download the ZIP:
-    - You can download the ZIP of the `main` branch [here](https://github.com/Lionbyte-Studios/skyenet-expansion/archive/refs/heads/main.zip).
-    - Unzip it and cd into it.
+  - You can download the ZIP of the `main` branch [here](https://github.com/Lionbyte-Studios/skyenet-expansion/archive/refs/heads/main.zip).
+  - Unzip it and cd into it.
 
 ## 2. Make config files
 
@@ -25,10 +26,10 @@ The recommended way of running the game is using docker:
 
 1. Install Docker Compose, if you haven't already.
 2. You can either run the script `docker-watch.sh` or manually do `docker compose up --watch` in the project's root directory.
-    - The `--watch` flag makes it so that any changes you make in the local filesystem will automatically be updated inside the Docker Container, so that restarting isn't necessary to apply changes.
-    - If you don't want/need `--watch` it, replace it with `--build`.
-    - You can add the `-d` flag to run the Container in the background.
-    - You may need to `docker compose up --build` once first.
+   - The `--watch` flag makes it so that any changes you make in the local filesystem will automatically be updated inside the Docker Container, so that restarting isn't necessary to apply changes.
+   - If you don't want/need `--watch` it, replace it with `--build`.
+   - You can add the `-d` flag to run the Container in the background.
+   - You may need to `docker compose up --build` once first.
 
 You can also run without docker:
 
@@ -37,7 +38,6 @@ You can also run without docker:
 `pnpm run dev:server` - only start the backend server & API
 
 The game will be available to play in your browser at `localhost:5173`.
-
 
 ## 4. Database & Discord login
 

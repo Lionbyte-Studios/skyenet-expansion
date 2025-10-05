@@ -80,11 +80,9 @@ export class ClientGame extends Game {
         z: 5 + Math.random() * 4,
       });
     }
-    const raw_settings = clientManager.clientStorage.get(
-      "settings",
-    );
+    const raw_settings = clientManager.clientStorage.get("settings");
     let settings;
-    if(raw_settings === undefined) settings = new ClientSettings();
+    if (raw_settings === undefined) settings = new ClientSettings();
     else settings = ClientSettings.from(raw_settings);
     this.clientSettings = settings;
     console.log("Client Settings: " + JSON.stringify(this.clientSettings));

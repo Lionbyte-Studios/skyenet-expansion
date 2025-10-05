@@ -1,4 +1,3 @@
-import { Player } from "../../core/src/entity/Player";
 import { Game } from "../../core/src/Game";
 import { GameLoopManager } from "../../core/src/GameLoopManager";
 import {
@@ -8,6 +7,7 @@ import {
   StatusMessage,
 } from "../../core/src/types";
 import { genStringID, goBackChar } from "../../core/src/util/Util";
+import { ServerPlayer } from "./entity/ServerPlayer";
 
 export interface ServerGameStats {
   tps: number;
@@ -46,10 +46,10 @@ export class ServerGame extends Game {
   public static generateRandomPlayerID() {
     return genStringID(8);
   }
-  public generatePlayer(): Player {
+  public generatePlayer(socket_id: string): ServerPlayer {
     const id = ServerGame.generateRandomPlayerID();
     const entityID = genStringID(8);
-    return new Player(
+    return new ServerPlayer(
       id,
       entityID,
       this.config.defaultSpawnCoords.x,
@@ -57,6 +57,7 @@ export class ServerGame extends Game {
       0,
       this.config.defaultShipSprite,
       this.config.defaultShipEngineSprite,
+      socket_id,
     );
   }
 
