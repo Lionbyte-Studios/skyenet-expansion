@@ -160,12 +160,12 @@ export class GameRenderer {
       if (renderInfo.atlasManager.areAllLoaded()) {
         const shipTexture = renderInfo.game.players[i].shipSprite;
 
-        renderInfo.atlasManager.drawTexture(
+        renderInfo.atlasManager.drawTextureCentered(
           "entities",
           shipTexture,
           renderInfo.ctx,
-          -16, // Center the 32x32 sprite
-          -16,
+          0,
+          0,
         );
       } else {
         // Fallback: draw a simple rectangle while atlas loads
