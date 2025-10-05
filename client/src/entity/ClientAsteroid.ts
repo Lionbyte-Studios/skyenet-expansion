@@ -32,6 +32,5 @@ export class ClientAsteroid extends Asteroid implements RenderableEntity {
       -(this.y - info.game.camera.y),
     );
     info.ctx.translate(-info.game.camera.x, -info.game.camera.y);
-    this.rotation++;
   }
 }

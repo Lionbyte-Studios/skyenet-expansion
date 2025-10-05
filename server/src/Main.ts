@@ -15,7 +15,6 @@ export class ServerManager {
     this.wsMgr = new WebSocketServerManager();
     this.game.entities.push(new TextDisplay("hi", 300, -300));
     this.game.entities.push(new TextDisplay("hi", 10000, 0));
-    this.game.entities.push(new Asteroid(300, 300, 50, 1));
   }
 }
 
