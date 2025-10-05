@@ -1,11 +1,11 @@
-import { ServerPlayer } from "../../server/src/entity/ServerPlayer";
 import { Config } from "./config/Config";
 import { DefaultConfig } from "./config/DefaultConfig";
 import { Entity } from "./entity/Entity";
+import { Player } from "./entity/Player";
 import { GameID, GameMode } from "./types";
 
 export class Game {
-  public players: ServerPlayer[];
+  public players: Player[];
   public gameID: GameID;
   public gameMode: GameMode;
   public entities: Entity[];
@@ -19,7 +19,7 @@ export class Game {
     this.players = [];
   }
 
-  public addPlayer(player: ServerPlayer) {
+  public addPlayer(player: Player) {
     this.players.push(player);
   }
 

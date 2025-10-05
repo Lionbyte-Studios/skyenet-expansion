@@ -95,7 +95,9 @@ export class GameRenderer {
       (entity) => "render" in entity && typeof entity.render === "function",
     ) as (Entity & { render: (info: RenderInfo) => void })[];
     renderableEntities.forEach((entity) => {
+      renderInfo.ctx.save();
       entity.render(renderInfo);
+      renderInfo.ctx.restore();
     });
 
     for (let i = renderInfo.game.players.length - 1; i >= 0; i--) {

@@ -16,6 +16,7 @@ export interface ServerGameStats {
 }
 
 export class ServerGame extends Game {
+  public override players: ServerPlayer[];
   private gameLoopManager: GameLoopManager;
   public stats: ServerGameStats;
 
@@ -30,6 +31,7 @@ export class ServerGame extends Game {
       lastTickSecondTimestamp: Date.now(),
       ticksThisSecond: 0,
     };
+    this.players = [];
     setInterval(() => this.logStats(), 1000);
   }
 

@@ -1,8 +1,5 @@
 import { WebSocket, WebSocketServer } from "ws";
-import {
-  ServerError,
-  StatusMessage,
-} from "../../../core/src/Schemas";
+import { ServerError, StatusMessage } from "../../../core/src/Schemas";
 import { PlayerID, WebSocketMessageType } from "../../../core/src/types";
 import { WsMessageHandler } from "./handler/Handler";
 import { WsJoinMessageHandler } from "./handler/JoinHandler";

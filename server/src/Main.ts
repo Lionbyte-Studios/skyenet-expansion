@@ -4,6 +4,7 @@ import { genStringID } from "../../core/src/util/Util";
 import { WebSocketServerManager } from "./net/WebSocketServer";
 import { ApiManager } from "./api/ApiManager";
 import { TextDisplay } from "../../core/src/entity/TextDisplay";
+import { Asteroid } from "../../core/src/entity/Asteroid";
 
 export class ServerManager {
   public game: ServerGame;
@@ -14,6 +15,7 @@ export class ServerManager {
     this.wsMgr = new WebSocketServerManager();
     this.game.entities.push(new TextDisplay("hi", 300, -300));
     this.game.entities.push(new TextDisplay("hi", 10000, 0));
+    this.game.entities.push(new Asteroid(300, 300, 50, 1));
   }
 }
 
