@@ -31,6 +31,11 @@ export function entitiyToZodEntitySchema(entity: Entity) {
 // \033[F
 export const goBackChar = "\x1b[F";
 
-export type OmitFunctions<T> = Omit<T, {[K in keyof T]: T[K] extends Function ? K : never}[keyof T]>;
+export type OmitFunctions<T> = Omit<
+  T,
+  { [K in keyof T]: T[K] extends Function ? K : never }[keyof T]
+>;
 
-export type IndexSignature<T, SignatureType = unknown> = T & {[key: string]: SignatureType};
+export type IndexSignature<T, SignatureType = unknown> = T & {
+  [key: string]: SignatureType;
+};
