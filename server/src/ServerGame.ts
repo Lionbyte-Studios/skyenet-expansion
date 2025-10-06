@@ -1,3 +1,4 @@
+import { Entity } from "../../core/src/entity/Entity";
 import { Game } from "../../core/src/Game";
 import { GameLoopManager } from "../../core/src/GameLoopManager";
 import {
@@ -6,7 +7,12 @@ import {
   MovementMessage,
   StatusMessage,
 } from "../../core/src/types";
-import { genStringID, goBackChar } from "../../core/src/util/Util";
+import {
+  genStringID,
+  goBackChar,
+  IndexSignature,
+  OmitFunctions,
+} from "../../core/src/util/Util";
 import { ServerPlayer } from "./entity/ServerPlayer";
 
 export interface ServerGameStats {
@@ -80,5 +86,35 @@ export class ServerGame extends Game {
   }
   public stopGameLoop() {
     this.gameLoopManager.stop();
+  }
+
+  public modifyEntityData<T extends Entity = Entity>(
+    entityPredicate: (entity: Entity, index: number) => boolean,
+    data: IndexSignature<Partial<OmitFunctions<T>>>,
+  ) {
+    this.entities.forEach((entity, index, arr) => {
+      if (!entityPredicate(entity, index)) return;
+      for (const key in data) {
+        arr[index][key] = data[key];
+      }
+    });
+
+    // TODO send websocket data
+  }
+
+  public spawnEntity(entity: Entity) {
+    this.entities.push(entity);
+
+    // TODO send websocket data
+  }
+
+  public killEntity(
+    entityPredicate: (entity: Entity, index: number) => boolean,
+  ) {
+    this.entities.forEach((entity, index, arr) => {
+      if (entityPredicate(entity, index)) arr.splice(index, 1);
+    });
+
+    // TODO send websocket data
   }
 }
