@@ -11,7 +11,7 @@ export class WsModifyEntitiesMessageHandler extends WsMessageHandler<ModifyEntit
   public handleMessage(data: SocketMessageData<ModifyEntitiesMessage>): void {
     data.message.modifications.forEach((modification) => {
       const index = clientManager.game.entities.findIndex(
-        (entity) => (entity.entityID = modification.entityID),
+        (entity) => entity.entityID === modification.entityID,
       );
       if (index === -1) {
         console.error(`No entity with ID ${modification.entityID} found!`);

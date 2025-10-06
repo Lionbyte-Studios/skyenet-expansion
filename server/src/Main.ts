@@ -4,7 +4,6 @@ import { genStringID } from "../../core/src/util/Util";
 import { WebSocketServerManager } from "./net/WebSocketServer";
 import { ApiManager } from "./api/ApiManager";
 import { TextDisplay } from "../../core/src/entity/TextDisplay";
-import { Asteroid } from "../../core/src/entity/Asteroid";
 
 export class ServerManager {
   public game: ServerGame;

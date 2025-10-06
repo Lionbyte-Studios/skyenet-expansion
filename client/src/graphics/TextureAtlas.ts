@@ -110,8 +110,8 @@ export class TextureAtlas {
         region.y,
         region.width,
         region.height,
-        dx - region.width / 2,
-        dy - region.height / 2,
+        dx - dWidth / 2,
+        dy - dHeight / 2,
         dWidth,
         dHeight,
       );
