@@ -1,11 +1,15 @@
 import { Entity } from "../../core/src/entity/Entity";
 import { Game } from "../../core/src/Game";
 import { GameLoopManager } from "../../core/src/GameLoopManager";
+import * as schemas from "../../core/src/Schemas";
 import {
+  EntityID,
   GameID,
   GameMode,
+  ModifyEntitiesMessage,
   MovementMessage,
   StatusMessage,
+  WebSocketMessageType,
 } from "../../core/src/types";
 import {
   genStringID,
@@ -14,6 +18,7 @@ import {
   OmitFunctions,
 } from "../../core/src/util/Util";
 import { ServerPlayer } from "./entity/ServerPlayer";
+import { serverMgr } from "./Main";
 
 export interface ServerGameStats {
   tps: number;
@@ -92,29 +97,64 @@ export class ServerGame extends Game {
     entityPredicate: (entity: Entity, index: number) => boolean,
     data: IndexSignature<Partial<OmitFunctions<T>>>,
   ) {
+    const modified: ModifyEntitiesMessage = {
+      type: WebSocketMessageType.ModifyEntities,
+      modifications: [],
+    };
     this.entities.forEach((entity, index, arr) => {
       if (!entityPredicate(entity, index)) return;
+      modified.modifications.push({
+        entityID: entity.entityID,
+        type: entity.entityType,
+        modified_data: data,
+      });
       for (const key in data) {
         arr[index][key] = data[key];
       }
     });
-
-    // TODO send websocket data
+    serverMgr.wsMgr.wss.clients.forEach((client) => {
+      client.send(
+        JSON.stringify(schemas.ModifyEntitiesMessage.parse(modified)),
+      );
+    });
   }
 
   public spawnEntity(entity: Entity) {
     this.entities.push(entity);
 
-    // TODO send websocket data
+    serverMgr.wsMgr.wss.clients.forEach((client) => {
+      client.send(
+        JSON.stringify(
+          schemas.SpawnEntitiesMessage.parse({
+            entities: [
+              {
+                type: entity.entityType,
+                data: entity,
+              },
+            ],
+          }),
+        ),
+      );
+    });
   }
 
   public killEntity(
     entityPredicate: (entity: Entity, index: number) => boolean,
   ) {
+    const entitiesKilled: EntityID[] = [];
     this.entities.forEach((entity, index, arr) => {
+      entitiesKilled.push(entity.entityID);
       if (entityPredicate(entity, index)) arr.splice(index, 1);
     });
 
-    // TODO send websocket data
+    serverMgr.wsMgr.wss.clients.forEach((client) => {
+      client.send(
+        JSON.stringify(
+          schemas.KillEntitiesMessage.parse({
+            entities: entitiesKilled,
+          }),
+        ),
+      );
+    });
   }
 }

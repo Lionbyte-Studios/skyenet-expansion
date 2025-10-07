@@ -14,43 +14,50 @@ export class WsSpawnEntitiesMessageHandler extends WsMessageHandler<SpawnEntitie
   handledType = WebSocketMessageType.SpawnEntities;
   public handleMessage(data: SocketMessageData<SpawnEntitiesMessage>) {
     const entities = data.message.entities;
-    entities.forEach((entity) => {
-      let newEntity: Entity;
-      switch (entity.type) {
-        case EntityType.Asteroid:
-          newEntity = new ClientAsteroid(
-            entity.data.x,
-            entity.data.y,
-            entity.data.rotation,
-            entity.data.size,
-            entity.data.entityID,
-          );
-          break;
-        case EntityType.Bullet:
-          newEntity = new ClientBullet(
-            entity.data.x,
-            entity.data.y,
-            entity.data.velX,
-            entity.data.velY,
-            entity.data.owner,
-            entity.data.entityID,
-          );
-          break;
-        case EntityType.TextDisplay:
-          newEntity = new ClientTextDisplay(
-            entity.data.text,
-            entity.data.x,
-            entity.data.y,
-            entity.data.entityID,
-          );
-          break;
-        default:
-          console.error(
-            `Unknown entity type: ${entity.type}\nData: ${entity.data}`,
-          );
-          return;
-      }
-      clientManager.game.entities.push(newEntity);
-    });
+    entities.forEach(
+      (entity: { [key: string]: any; type: EntityType; data: any }) => { // eslint-disable-line @typescript-eslint/no-explicit-any
+        for (const key in entity) {
+          if (typeof entity[key] === "function") {
+            delete entity[key];
+          }
+        }
+        let newEntity: Entity;
+        switch (entity.type) {
+          case EntityType.Asteroid:
+            newEntity = new ClientAsteroid(
+              entity.data.x,
+              entity.data.y,
+              entity.data.rotation,
+              entity.data.size,
+              entity.data.entityID,
+            );
+            break;
+          case EntityType.Bullet:
+            newEntity = new ClientBullet(
+              entity.data.x,
+              entity.data.y,
+              entity.data.velX,
+              entity.data.velY,
+              entity.data.owner,
+              entity.data.entityID,
+            );
+            break;
+          case EntityType.TextDisplay:
+            newEntity = new ClientTextDisplay(
+              entity.data.text,
+              entity.data.x,
+              entity.data.y,
+              entity.data.entityID,
+            );
+            break;
+          default:
+            console.error(
+              `Unknown entity type: ${entity.type}\nData: ${entity.data}`,
+            );
+            return;
+        }
+        clientManager.game.entities.push(newEntity);
+      },
+    );
   }
 }

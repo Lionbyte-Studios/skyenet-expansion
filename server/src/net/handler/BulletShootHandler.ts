@@ -1,4 +1,3 @@
-import { EntityType } from "../../../../core/src/entity/Entity";
 import * as schemas from "../../../../core/src/Schemas";
 import {
   BulletShootMessage,
@@ -19,34 +18,16 @@ export class WsBulletShootMessageHandler
       | BulletShootMessage
       | undefined;
     if (typeof json === "undefined" || json === undefined) return;
-    const newBullet = new ServerBullet(
-      json.bullet.x,
-      json.bullet.y,
-      json.bullet.velX,
-      json.bullet.velY,
-      json.playerID,
+    const bulletData = schemas.BulletShootMessage.safeParse(json);
+    if (!bulletData.success) return;
+    serverMgr.game.spawnEntity(
+      new ServerBullet(
+        bulletData.data.bullet.x,
+        bulletData.data.bullet.y,
+        bulletData.data.bullet.velX,
+        bulletData.data.bullet.velY,
+        bulletData.data.playerID,
+      ),
     );
-    serverMgr.game.entities.push(newBullet);
-    serverMgr.wsMgr.wss.clients.forEach((client) => {
-      client.send(
-        JSON.stringify(
-          schemas.SpawnEntitiesMessage.parse({
-            entities: [
-              {
-                type: EntityType.Bullet,
-                data: {
-                  x: json.bullet.x,
-                  y: json.bullet.y,
-                  velX: json.bullet.velX,
-                  velY: json.bullet.velY,
-                  owner: json.playerID,
-                  entityID: newBullet.entityID,
-                },
-              },
-            ],
-          }),
-        ),
-      );
-    });
   }
 }

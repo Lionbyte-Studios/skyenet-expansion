@@ -1,10 +1,11 @@
-import { Entity } from "./Entity";
+import { Entity, EntityType } from "./Entity";
 
 export enum AsteroidType {
   Average,
 }
 
 export class Asteroid extends Entity {
+  entityType: EntityType = EntityType.Asteroid;
   type: AsteroidType = AsteroidType.Average;
   velX: number = 0;
   velY: number = 0;

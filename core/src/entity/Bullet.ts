@@ -1,11 +1,12 @@
 import { PlayerID } from "../types";
-import { Entity } from "./Entity";
+import { Entity, EntityType } from "./Entity";
 
 export enum BulletType {
   Starter,
 }
 
 export class Bullet extends Entity {
+  entityType: EntityType = EntityType.Bullet;
   type: BulletType = BulletType.Starter;
   velX: number = 0;
   velY: number = 0;

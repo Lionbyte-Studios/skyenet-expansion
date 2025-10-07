@@ -12,8 +12,8 @@ export class ServerManager {
   constructor() {
     this.game = new ServerGame(genStringID(8), GameMode.FFA);
     this.wsMgr = new WebSocketServerManager();
-    this.game.entities.push(new TextDisplay("hi", 300, -300));
-    this.game.entities.push(new TextDisplay("hi", 10000, 0));
+    // this.game.entities.push(new TextDisplay("hi", 300, -300));
+    // this.game.entities.push(new TextDisplay("hi", 10000, 0));
   }
 }
 
@@ -22,3 +22,5 @@ serverMgr.game.startGameLoop();
 
 // Start the API (express.js)
 export const apiMgr = new ApiManager();
+
+serverMgr.game.spawnEntity(new TextDisplay("hii", 300, -300));
