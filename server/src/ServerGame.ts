@@ -16,7 +16,9 @@ import {
   goBackChar,
   IndexSignature,
   OmitFunctions,
+  randomNumberInRange,
 } from "../../core/src/util/Util";
+import { ServerAsteroid } from "./entity/ServerAsteroid";
 import { ServerPlayer } from "./entity/ServerPlayer";
 import { serverMgr } from "./Main";
 
@@ -84,6 +86,26 @@ export class ServerGame extends Game {
     this.entities.forEach((entity) => {
       entity.tick();
     });
+    this.randomTasks();
+  }
+
+  private randomTasks() {
+    if (randomNumberInRange(0, 300) === 0) {
+      const xy = [
+        randomNumberInRange(-1000, 1000),
+        randomNumberInRange(-1000, 1000),
+      ];
+      this.spawnEntity(
+        new ServerAsteroid(
+          xy[0],
+          xy[1],
+          randomNumberInRange(0, 360),
+          randomNumberInRange(1, 10),
+          randomNumberInRange(-3, 3),
+        ),
+      );
+      console.log(`Spawning new asteroid at ${xy[0]} ${xy[1]}`);
+    }
   }
 
   public startGameLoop() {
@@ -101,7 +123,7 @@ export class ServerGame extends Game {
       type: WebSocketMessageType.ModifyEntities,
       modifications: [],
     };
-    this.entities.forEach((entity, index, arr) => {
+    this.entities.forEach((entity, index) => {
       if (!entityPredicate(entity, index)) return;
       modified.modifications.push({
         entityID: entity.entityID,
@@ -109,7 +131,7 @@ export class ServerGame extends Game {
         modified_data: data,
       });
       for (const key in data) {
-        arr[index][key] = data[key];
+        this.entities[index][key] = data[key];
       }
     });
     serverMgr.wsMgr.wss.clients.forEach((client) => {
@@ -142,10 +164,13 @@ export class ServerGame extends Game {
     entityPredicate: (entity: Entity, index: number) => boolean,
   ) {
     const entitiesKilled: EntityID[] = [];
-    this.entities.forEach((entity, index, arr) => {
+    this.entities.forEach((entity, index) => {
+      if (!entityPredicate(entity, index)) return;
       entitiesKilled.push(entity.entityID);
-      if (entityPredicate(entity, index)) arr.splice(index, 1);
+      this.entities.splice(index, 1);
     });
+
+    console.log(`Killing entities: ${JSON.stringify(entitiesKilled)}`);
 
     serverMgr.wsMgr.wss.clients.forEach((client) => {
       client.send(

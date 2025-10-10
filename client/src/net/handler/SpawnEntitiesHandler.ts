@@ -15,7 +15,8 @@ export class WsSpawnEntitiesMessageHandler extends WsMessageHandler<SpawnEntitie
   public handleMessage(data: SocketMessageData<SpawnEntitiesMessage>) {
     const entities = data.message.entities;
     entities.forEach(
-      (entity: { [key: string]: any; type: EntityType; data: any }) => { // eslint-disable-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (entity: { [key: string]: any; type: EntityType; data: any }) => {
         for (const key in entity) {
           if (typeof entity[key] === "function") {
             delete entity[key];

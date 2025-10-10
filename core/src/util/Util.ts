@@ -39,3 +39,7 @@ export type OmitFunctions<T> = Omit<
 export type IndexSignature<T, SignatureType = unknown> = T & {
   [key: string]: SignatureType;
 };
+
+export function randomNumberInRange(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
