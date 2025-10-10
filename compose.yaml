@@ -16,6 +16,17 @@ services:
     ports:
       - 5173:5173
       - 8081:8081
+      - 8082:8082
+    develop:
+      watch:
+        - action: sync
+          path: .
+          target: /usr/src/app
+          initial_sync: true
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: package.json
 # The commented out section below is an example of how to define a PostgreSQL
 # database that your application can use. `depends_on` tells Docker Compose to
 # start the database before your application. The `db-data` volume persists the

@@ -87,6 +87,49 @@ export class TextureAtlas {
     }
   }
 
+  public drawTextureCentered(
+    ctx: CanvasRenderingContext2D,
+    textureName: string,
+    dx: number,
+    dy: number,
+    dWidth?: number,
+    dHeight?: number,
+  ): void {
+    if (!this.loaded) return;
+
+    const region = this.regions.get(textureName);
+    if (!region) {
+      console.warn(`Texture "${textureName}" not found in atlas`);
+      return;
+    }
+
+    if (dWidth !== undefined && dHeight !== undefined) {
+      ctx.drawImage(
+        this.image,
+        region.x,
+        region.y,
+        region.width,
+        region.height,
+        dx - dWidth / 2,
+        dy - dHeight / 2,
+        dWidth,
+        dHeight,
+      );
+    } else {
+      ctx.drawImage(
+        this.image,
+        region.x,
+        region.y,
+        region.width,
+        region.height,
+        dx - region.width / 2,
+        dy - region.height / 2,
+        region.width,
+        region.height,
+      );
+    }
+  }
+
   // Draw texture by grid coordinates (1-indexed)
   public drawTileByGrid(
     ctx: CanvasRenderingContext2D,

@@ -65,6 +65,25 @@ export class AtlasManager {
     return true;
   }
 
+  public drawTextureCentered(
+    atlasName: string,
+    textureName: string,
+    ctx: CanvasRenderingContext2D,
+    dx: number,
+    dy: number,
+    dWidth?: number,
+    dHeight?: number,
+  ): boolean {
+    const atlas = this.atlases.get(atlasName);
+    if (!atlas) {
+      console.warn(`Atlas "${atlasName}" not found`);
+      return false;
+    }
+
+    atlas.drawTextureCentered(ctx, textureName, dx, dy, dWidth, dHeight);
+    return true;
+  }
+
   // Draw tile by grid coordinates
   public drawTileByGrid(
     atlasName: string,

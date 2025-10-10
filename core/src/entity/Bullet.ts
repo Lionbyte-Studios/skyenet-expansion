@@ -1,11 +1,12 @@
 import { PlayerID } from "../types";
-import { Entity } from "./Entity";
+import { Entity, EntityType } from "./Entity";
 
 export enum BulletType {
   Starter,
 }
 
 export class Bullet extends Entity {
+  entityType: EntityType = EntityType.Bullet;
   type: BulletType = BulletType.Starter;
   velX: number = 0;
   velY: number = 0;
@@ -17,8 +18,9 @@ export class Bullet extends Entity {
     velX: number,
     velY: number,
     owner: PlayerID,
+    entityID?: string,
   ) {
-    super(x, y);
+    super(x, y, entityID);
     this.velX = velX;
     this.velY = velY;
     this.owner = owner;

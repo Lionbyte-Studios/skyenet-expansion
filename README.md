@@ -2,21 +2,9 @@
 
 a goofy space game >:3
 
-## Dev
+## Setup
 
-Make sure port `5173` and `8081` are not used by any other applications.
-
-`pnpm run dev` - start the dev server & client
-
-## Docker
-
-Run the docker container with:
-
-```bash
-docker compose up --build
-```
-
-to run it in the background, add `-d` to the end, and then use `docker compose down` to stop the background container.
+Refer to [SETUP.md](SETUP.md) for the full setup guide.
 
 ## Official Roadmap:
 

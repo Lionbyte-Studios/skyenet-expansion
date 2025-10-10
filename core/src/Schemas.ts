@@ -1,10 +1,6 @@
 import * as z from "zod";
-import {
-  EntityType,
-  ShipEngineSprite,
-  ShipSprite,
-  WebSocketMessageType,
-} from "./types";
+import { ShipEngineSprite, ShipSprite, WebSocketMessageType } from "./types";
+import { EntityType } from "./entity/Entity";
 import { BulletType } from "./entity/Bullet";
 
 function lt(type: WebSocketMessageType) {
@@ -103,8 +99,8 @@ export const UpdatePlayersMessage = z.object({
   playersRemoved: z.array(z.string()),
 });
 
-export const BulletMessage = BaseWebSocketMessageSchema.extend({
-  type: lt(WebSocketMessageType.BulletMessage),
+export const BulletShootMessage = BaseWebSocketMessageSchema.extend({
+  type: lt(WebSocketMessageType.BulletShoot),
   bullet: z.object({
     type: z.enum(BulletType),
     x: z.number(),
@@ -112,4 +108,39 @@ export const BulletMessage = BaseWebSocketMessageSchema.extend({
     velX: z.number(),
     velY: z.number(),
   }),
+});
+/*
+export const TextDisplayMessage = z.object({
+  type: lt(WebSocketMessageType.TextDisplayMessage),
+  textDisplay: z.object({
+    text: z.string(),
+    x: z.number(),
+    y: z.number(),
+  }),
+});*/
+
+export const SpawnEntitiesMessage = z.object({
+  type: lt(WebSocketMessageType.SpawnEntities),
+  entities: z.array(
+    z.object({
+      type: z.enum(EntityType),
+      data: z.any(),
+    }),
+  ),
+});
+
+export const KillEntitiesMessage = z.object({
+  type: lt(WebSocketMessageType.KillEntities),
+  entities: z.array(z.string()),
+});
+
+export const ModifyEntitiesMessage = z.object({
+  type: lt(WebSocketMessageType.ModifyEntities),
+  modifications: z.array(
+    z.object({
+      entityID: z.string(),
+      type: z.enum(EntityType),
+      modified_data: z.any(),
+    }),
+  ),
 });

@@ -19,7 +19,7 @@ export class WsJoinMessageHandler
   handledType: WebSocketMessageType = WebSocketMessageType.PlayerJoin;
 
   public async handleMessage(data: SocketMessageData<PlayerJoinMessage>) {
-    const player = serverMgr.game.generatePlayer();
+    const player = serverMgr.game.generatePlayer(data.socketData.socket_id);
     serverMgr.game.addPlayer(player);
     const entitiesAsSchema: z.infer<typeof EntitySchema>[] = [];
     serverMgr.game.entities.forEach((entity) => {

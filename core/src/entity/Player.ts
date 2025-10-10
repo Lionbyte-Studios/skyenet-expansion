@@ -1,8 +1,9 @@
 import { Game } from "../Game";
 import { EntityID, PlayerID, ShipEngineSprite, ShipSprite } from "../types";
-import { Entity } from "./Entity";
+import { Entity, EntityType } from "./Entity";
 
 export class Player extends Entity {
+  entityType: EntityType = EntityType.Player;
   playerID: PlayerID;
   velX: number = 0;
   velY: number = 0;

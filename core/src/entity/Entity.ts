@@ -1,6 +1,13 @@
 import { Game } from "../Game";
 import { alphabetForID, EntityID } from "../types";
 
+export enum EntityType {
+  Bullet,
+  Asteroid,
+  TextDisplay,
+  Player,
+}
+
 // Making the function here without importing from Util.ts to prevent circular dependencies breaking everything
 function genStringID(length: number) {
   let id = "";
@@ -10,10 +17,13 @@ function genStringID(length: number) {
   return id;
 }
 
-export class Entity {
+export abstract class Entity {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [index: string]: any;
   entityID: EntityID;
   x: number;
   y: number;
+  abstract entityType: EntityType;
   constructor(x: number, y: number, entityID?: EntityID) {
     if (entityID === undefined) {
       this.entityID = this.generateID();
@@ -26,6 +36,5 @@ export class Entity {
   public generateID(): EntityID {
     return genStringID(8);
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public tick<T extends Game>(game?: T) {}
 }

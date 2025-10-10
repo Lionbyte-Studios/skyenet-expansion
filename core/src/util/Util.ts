@@ -1,8 +1,9 @@
 import { Asteroid } from "../entity/Asteroid";
 import { Bullet } from "../entity/Bullet";
-import { Entity } from "../entity/Entity";
+import { Entity, EntityType } from "../entity/Entity";
+import { TextDisplay } from "../entity/TextDisplay";
 import { EntitySchema } from "../Schemas";
-import { alphabetForID, EntityType } from "../types";
+import { alphabetForID } from "../types";
 
 export function genStringID(length: number) {
   let id = "";
@@ -12,17 +13,12 @@ export function genStringID(length: number) {
   return id;
 }
 
-export function assert(condition: boolean) {
-  if (!condition) {
-    throw new Error(`Assertion failed! Time: ${Date.now()}`);
-  }
-}
-
 export function entitiyToZodEntitySchema(entity: Entity) {
   let type: EntityType;
 
   if (entity instanceof Bullet) type = EntityType.Bullet;
   else if (entity instanceof Asteroid) type = EntityType.Asteroid;
+  else if (entity instanceof TextDisplay) type = EntityType.TextDisplay;
   else throw new Error(`Entity instanceof checks failed :(`);
 
   return EntitySchema.parse({
@@ -34,3 +30,16 @@ export function entitiyToZodEntitySchema(entity: Entity) {
 
 // \033[F
 export const goBackChar = "\x1b[F";
+
+export type OmitFunctions<T> = Omit<
+  T,
+  { [K in keyof T]: T[K] extends Function ? K : never }[keyof T] // eslint-disable-line @typescript-eslint/no-unsafe-function-type
+>;
+
+export type IndexSignature<T, SignatureType = unknown> = T & {
+  [key: string]: SignatureType;
+};
+
+export function randomNumberInRange(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min)) + min;
+}

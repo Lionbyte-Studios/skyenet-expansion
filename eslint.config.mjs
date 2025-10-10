@@ -12,6 +12,17 @@ export default defineConfig([
   {
     files: ["client/**/*.{js,mjs,cjs,ts,mts,cts}"],
     languageOptions: { globals: globals.browser },
+    rules: {
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          argsIgnorePattern: "(.*?)",
+          varsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "(.*?)",
+        },
+      ],
+    },
   },
   {
     files: [
@@ -19,6 +30,17 @@ export default defineConfig([
       "server/**/*.{js,mjs,cjs,ts,mts,cts}",
     ],
     languageOptions: { globals: globals.node },
+    rules: {
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          argsIgnorePattern: "(.*?)",
+          varsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "(.*?)",
+        },
+      ],
+    },
   },
   tseslint.configs.recommended,
 ]);
