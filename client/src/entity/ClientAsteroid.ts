@@ -48,4 +48,8 @@ export class ClientAsteroid extends Asteroid implements RenderableEntity {
     );
     info.ctx.translate(-info.game.camera.x, -info.game.camera.y);
   }
+
+  public onKill(info: RenderInfo) {
+    /* TODO particles */
+  }
 }

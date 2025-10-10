@@ -26,6 +26,13 @@ export class WsKillEntitiesMessageHandler extends WsMessageHandler<KillEntitiesM
         clientManager.game.players.splice(playerIndex, 1);
         return;
       }
+      if (
+        "onKill" in clientManager.game.entities[index] &&
+        typeof clientManager.game.entities[index].onKill === "function"
+      )
+        clientManager.game.entities[index].onKill(
+          clientManager.getRenderInfo(),
+        );
       clientManager.game.entities.splice(index, 1);
     });
   }
