@@ -9,6 +9,7 @@ import {
   CommandExecutionEnvironment,
   CommandManager,
 } from "../../core/src/commands/lib/CommandManager";
+import { registerCommands } from "./CommandRegisterer";
 
 class ServerCommandExecutionEnvironment extends CommandExecutionEnvironment {
   public sendMessage(message: string, context: CommandContext): void {
@@ -28,6 +29,7 @@ export class ServerManager {
     this.commandManager.setGlobalContext(
       new CommandContext(new ServerCommandExecutionEnvironment()),
     );
+    registerCommands(this.commandManager);
   }
 }
 

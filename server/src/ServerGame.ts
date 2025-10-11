@@ -13,7 +13,6 @@ import {
 } from "../../core/src/types";
 import {
   genStringID,
-  goBackChar,
   IndexSignature,
   OmitFunctions,
   randomNumberInRange,

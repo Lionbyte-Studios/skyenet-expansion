@@ -144,3 +144,8 @@ export const ModifyEntitiesMessage = z.object({
     }),
   ),
 });
+
+export const CommandMessage = z.object({
+  type: lt(WebSocketMessageType.Command),
+  command: z.string(),
+});

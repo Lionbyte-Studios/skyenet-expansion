@@ -3,6 +3,7 @@ import { PlayerJoinMessage } from "../../../core/src/Schemas";
 import {
   WebSocketMessageType,
   type BulletShootMessage,
+  type CommandMessage,
   type EntityID,
   type GameID,
   type MovementMessage,
@@ -169,5 +170,9 @@ export class WebSocketClient {
 
   public sendMovement(msg: Omit<MovementMessage, "type">) {
     this.socket.send(JSON.stringify(schemas.MovementMessage.parse(msg)));
+  }
+
+  public sendCommand(msg: Omit<CommandMessage, "type">) {
+    this.socket.send(JSON.stringify(schemas.CommandMessage.parse(msg)));
   }
 }

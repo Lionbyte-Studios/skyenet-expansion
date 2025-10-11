@@ -8,9 +8,10 @@ import { WsMovementMessageHandler } from "./handler/MovementHandler";
 import { WsBulletShootMessageHandler } from "./handler/BulletShootHandler";
 import { serverMgr } from "../Main";
 import { generateUserID } from "../api/Util";
+import { WsCommandMessageHandler } from "./handler/CommandHandler";
 
 export interface SocketMessageData<T> {
-  socket: WebSocket;
+  socket: WebSocketClientWithData;
   socketData: WebSocketClientData;
   message: T;
 }
@@ -18,6 +19,7 @@ export interface SocketMessageData<T> {
 export type WebSocketClientData = {
   isAlive: boolean;
   socket_id: string;
+  admin: boolean;
   playerID?: PlayerID;
 };
 
@@ -35,6 +37,7 @@ export class WebSocketServerManager {
       new WsStatusMessageHandler(),
       new WsMovementMessageHandler(),
       new WsBulletShootMessageHandler(),
+      new WsCommandMessageHandler(),
     ];
     this.wss = new WebSocketServer({ port: 8081 });
 
@@ -43,6 +46,7 @@ export class WebSocketServerManager {
         isAlive: true,
         socket_id: this.generateSocketId(),
         playerID: "",
+        admin: false,
       };
       ws.on("error", console.error);
       ws.on("pong", () => {
