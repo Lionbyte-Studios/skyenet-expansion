@@ -20,7 +20,16 @@ export class WsCommandMessageHandler
     if (typeof json === "undefined" || json === undefined) return;
     const commandData = schemas.CommandMessage.safeParse(json);
     if (!commandData.success) return;
-    if (!data.socket.data!.admin) return;
+    const index = serverMgr.game.players.findIndex(
+      (player) => player.socket_id === data.socket.data!.socket_id,
+    );
+    if (!serverMgr.game.players[index].admin) {
+      console.log(
+        `Player ${serverMgr.game.players[index].playerID} attempted to run command '${commandData.data.command}', but does not have permission.`,
+      );
+      return;
+    }
+    console.log(`Running command: '${commandData.data.command}'`);
     serverMgr.commandManager.runCommand(commandData.data.command);
   }
 }

@@ -19,7 +19,6 @@ export interface SocketMessageData<T> {
 export type WebSocketClientData = {
   isAlive: boolean;
   socket_id: string;
-  admin: boolean;
   playerID?: PlayerID;
 };
 
@@ -46,7 +45,6 @@ export class WebSocketServerManager {
         isAlive: true,
         socket_id: this.generateSocketId(),
         playerID: "",
-        admin: false,
       };
       ws.on("error", console.error);
       ws.on("pong", () => {

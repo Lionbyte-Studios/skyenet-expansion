@@ -1,4 +1,5 @@
 import type { ClientGame } from "../ClientGame";
+import { clientManager } from "../Main";
 
 export class Debug {
   game: ClientGame;
@@ -16,6 +17,11 @@ export class Debug {
       }
       if (this.game.keyManager.wasKeyJustPressed("KeyT")) {
         this.terminal = !this.terminal;
+      }
+      if (this.game.keyManager.wasKeyJustPressed("KeyC")) {
+        const cmd = prompt("Enter command:");
+        if (cmd === null) return;
+        clientManager.webSocketManager.sendCommand({ command: cmd });
       }
     }
   }

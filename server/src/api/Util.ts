@@ -8,7 +8,13 @@ import {
 } from "../../../core/src/DatabaseSchemas";
 import { usernameRegexes } from "../../../core/src/types";
 import { randomBytes } from "node:crypto";
-import { createUser, getUserByUserID, replaceUser } from "./Database";
+import {
+  createUser,
+  getUserAndSessionByToken,
+  getUserByUserID,
+  replaceUser,
+} from "./Database";
+import { admins } from "../../../.serverconfig.json";
 
 export function generateUserID(): string {
   return uuidv4();
@@ -75,4 +81,13 @@ export async function createOrUpdateUser(user: User): Promise<boolean> {
   }
   const update_user_res = await replaceUser(user.id, user);
   return update_user_res;
+}
+
+export async function isAdminByToken(token: string): Promise<boolean> {
+  const user_and_session = await getUserAndSessionByToken(token);
+  if (user_and_session === undefined) {
+    return false;
+  }
+  if (admins.includes(user_and_session[0].discord.user_id)) return true;
+  return false;
 }

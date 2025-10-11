@@ -159,6 +159,7 @@ export class WebSocketClient {
         PlayerJoinMessage.parse({
           shipSprite: selectedShip,
           shipEngineSprite: selectedShipEngine,
+          discord_auth: clientManager.clientStorage.get("token"),
         }),
       ),
     );

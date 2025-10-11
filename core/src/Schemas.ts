@@ -83,6 +83,7 @@ export const PlayerJoinMessage = z.object({
   type: lt(WebSocketMessageType.PlayerJoin),
   shipSprite: z.enum(ShipSprite),
   shipEngineSprite: z.enum(ShipEngineSprite),
+  discord_auth: z.optional(z.string()),
 });
 export const PlayerJoinMessageCallback = z.object({
   type: lt(WebSocketMessageType.PlayerJoinCallback),

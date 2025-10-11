@@ -1,4 +1,5 @@
 import z from "zod";
+import * as schemas from "../../../../core/src/Schemas";
 import {
   PlayerJoinMessageCallback,
   UpdatePlayersMessage,
@@ -12,6 +13,7 @@ import { serverMgr } from "../../Main";
 import { SocketMessageData } from "../WebSocketServer";
 import { WsMessageHandler } from "./Handler";
 import { EntitySchema } from "../../../../core/src/Schemas";
+import { isAdminByToken } from "../../api/Util";
 
 export class WsJoinMessageHandler
   implements WsMessageHandler<PlayerJoinMessage>
@@ -19,7 +21,20 @@ export class WsJoinMessageHandler
   handledType: WebSocketMessageType = WebSocketMessageType.PlayerJoin;
 
   public async handleMessage(data: SocketMessageData<PlayerJoinMessage>) {
+    const json = JSON.parse(data.message.toString()) as
+      | PlayerJoinMessage
+      | undefined;
+    if (typeof json === "undefined" || json === undefined) return;
+    const joinData = schemas.PlayerJoinMessage.safeParse(json);
+    if (!joinData.success) return;
     const player = serverMgr.game.generatePlayer(data.socketData.socket_id);
+    player.shipSprite = joinData.data.shipSprite;
+    player.shipEngineSprite = joinData.data.shipEngineSprite;
+    if (joinData.data.discord_auth !== undefined) {
+      if (await isAdminByToken(joinData.data.discord_auth)) {
+        player.admin = true;
+      }
+    }
     serverMgr.game.addPlayer(player);
     const entitiesAsSchema: z.infer<typeof EntitySchema>[] = [];
     serverMgr.game.entities.forEach((entity) => {
