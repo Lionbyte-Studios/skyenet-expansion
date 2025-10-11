@@ -42,3 +42,5 @@ Refer to [SETUP.md](SETUP.md) for the full setup guide.
 [Space Background Generator](https://deep-fold.itch.io/space-background-generator)
 
 [Planet Generator](https://deep-fold.itch.io/pixel-planet-generator)
+
+Command Syntax (Minecraft Wiki): https://minecraft.wiki/w/Commands#Syntax
