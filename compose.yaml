@@ -11,8 +11,6 @@ services:
   server:
     build:
       context: .
-    stdin_open: true
-    tty: true
     environment:
       NODE_ENV: production
     ports:
