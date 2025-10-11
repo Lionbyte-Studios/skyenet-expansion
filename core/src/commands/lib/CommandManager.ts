@@ -51,7 +51,7 @@ export class CommandManager {
       if (parse_result === undefined) return 0;
       if (parse_result === reader.currentString.length - 1)
         return node.executor(context);
-      reader.cursor = parse_result;
+      reader.cursor = parse_result + 1;
     }
     for (const child of node.children) {
       const child_parse_result = child.parse(reader);

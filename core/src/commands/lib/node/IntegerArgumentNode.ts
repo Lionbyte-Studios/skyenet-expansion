@@ -2,7 +2,7 @@ import { StringReader } from "../CommandStringReader";
 import { ArgumentCommandNode } from "./ArgumentCommandNode";
 import { CommandExecutorFn } from "./CommandNode";
 
-export class StringArgumentNode extends ArgumentCommandNode<string> {
+export class IntegerArgumentNode extends ArgumentCommandNode<number> {
   public argument_name: string;
   constructor(executor: CommandExecutorFn, argument_name: string) {
     super(executor);
@@ -16,11 +16,11 @@ export class StringArgumentNode extends ArgumentCommandNode<string> {
       spaceIndex === -1 ? reader.currentString.length : spaceIndex,
     );
     if (str.length === 0) return undefined;
-    this.argument = str;
+    this.argument = parseInt(str);
     return spaceIndex === -1 ? reader.currentString.length - 1 : spaceIndex;
   }
 
-  public getArgument(): string {
+  public getArgument(): number {
     if (this.argument === undefined)
       throw new Error("Argument is not defined.");
     return this.argument;

@@ -14,9 +14,7 @@ export class LiteralCommandNode extends CommandNode {
       spaceIndex === -1 ? reader.currentString.length : spaceIndex,
     );
     if (this.literal === expectedLiteral) {
-      return spaceIndex === -1
-        ? reader.currentString.length - 1
-        : spaceIndex + 1;
+      return spaceIndex === -1 ? reader.currentString.length - 1 : spaceIndex;
     }
     return undefined;
   }
