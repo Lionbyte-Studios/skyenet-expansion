@@ -45,7 +45,7 @@ export class ChatInputElement extends CanvasElement {
     this.ctx.strokeRect(this.x, this.y, this.width, this.height);
     this.ctx.fillStyle = this.placeHolderStyle;
     this.ctx.font = this.placeHolderFont;
-    this.ctx.fillText(this.placeholder, this.x+5, this.y+20, this.width);
+    this.ctx.fillText(this.placeholder, this.x + 5, this.y + 20, this.width);
   }
 
   private registerEventListeners() {
