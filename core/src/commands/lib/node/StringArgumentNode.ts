@@ -4,7 +4,6 @@ import { CommandExecutorFn } from "./CommandNode";
 
 export class StringArgumentNode extends ArgumentCommandNode<string> {
   public argument_name: string;
-  private argument: string | undefined = undefined;
   constructor(executor: CommandExecutorFn, argument_name: string) {
     super(executor);
     this.argument_name = argument_name;
