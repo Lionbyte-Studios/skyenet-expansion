@@ -45,11 +45,6 @@ export class ServerGame extends Game {
       ticksThisSecond: 0,
     };
     this.players = [];
-    setInterval(() => this.logStats(), 1000);
-  }
-
-  private logStats() {
-    console.log(`TPS: ${this.stats.tps}${goBackChar}`);
   }
 
   public handleMovementMessage(message: MovementMessage) {
