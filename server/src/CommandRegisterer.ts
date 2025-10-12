@@ -1,5 +1,8 @@
+import {
+  CoordinatesArgumentBuilder,
+  CoordinatesType,
+} from "../../core/src/commands/builder/CoordinatesArgumentBuilder";
 import { GreedyStringArgumentBuilder } from "../../core/src/commands/builder/GreedyStringArgumentBuilder";
-import { IntegerArgumentBuilder } from "../../core/src/commands/builder/IntegerArgumentBuilder";
 import { LiteralArgumentBuilder } from "../../core/src/commands/builder/LiteralArgumentBuilder";
 import { StringArgumentBuilder } from "../../core/src/commands/builder/StringArgumentBuilder";
 import { CommandManager } from "../../core/src/commands/lib/CommandManager";
@@ -41,40 +44,25 @@ export function registerCommands(mgr: CommandManager) {
     new LiteralArgumentBuilder("summon").then(
       new LiteralArgumentBuilder("asteroid")
         .then(
-          new IntegerArgumentBuilder("x").then(
-            new IntegerArgumentBuilder("y")
-              .executes((ctx) => {
-                const x = ctx.getArgument<number>("x");
-                const y = ctx.getArgument<number>("y");
-                serverMgr.game.spawnEntity(new ServerAsteroid(x, y, 0, 1, 0));
-                return 1;
-              })
-              .then(
-                new IntegerArgumentBuilder("size").then(
-                  new IntegerArgumentBuilder("rotation").then(
-                    new IntegerArgumentBuilder("velR").executes((ctx) => {
-                      const { x, y, size, rotation, velR } = {
-                        x: ctx.getArgument<number>("x"),
-                        y: ctx.getArgument<number>("y"),
-                        size: ctx.getArgument<number>("size"),
-                        rotation: ctx.getArgument<number>("rotation"),
-                        velR: ctx.getArgument<number>("velR"),
-                      };
-                      serverMgr.game.spawnEntity(
-                        new ServerAsteroid(x, y, rotation, size, velR),
-                      );
-                      return 1;
-                    }),
-                  ),
-                ),
-              ),
-          ),
+          new CoordinatesArgumentBuilder("coords").executes((ctx, source) => {
+            const coords = ctx.getArgument<CoordinatesType>("coords");
+            let x = coords.x.value;
+            let y = coords.y.value;
+            if (coords.x.type === "relative") {
+              x += source.player.x;
+            }
+            if (coords.y.type === "relative") {
+              y += source.player.y;
+            }
+            serverMgr.game.spawnEntity(new ServerAsteroid(x, y, 0, 5, 0));
+            return 1;
+          }),
         )
-        .executes((ctx) => {
-          ctx.sendMessage(
-            "Usage: /summon asteroid <x> <y> [<size> <rotation> <velR>]",
+        .executes((ctx, source) => {
+          serverMgr.game.spawnEntity(
+            new ServerAsteroid(source.player.x, source.player.y, 0, 5, 0),
           );
-          return 0;
+          return 1;
         }),
     ),
   );
