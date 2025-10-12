@@ -17,7 +17,7 @@ export class InGameScreen extends ClientScreen {
   private chatMessages: ChatMessageEntry[] = [];
   public consoleShown: boolean = false;
   // Use base resolution for positioning (1280x720)
-  private readonly baseWidth = 1280;
+  // private readonly baseWidth = 1280;
   private readonly baseHeight = 720;
   public render(renderInfo: RenderInfo): void {
     if (!this.initialized) return;
