@@ -6,6 +6,7 @@ import { GreedyStringArgumentBuilder } from "../../core/src/commands/builder/Gre
 import { LiteralArgumentBuilder } from "../../core/src/commands/builder/LiteralArgumentBuilder";
 import { StringArgumentBuilder } from "../../core/src/commands/builder/StringArgumentBuilder";
 import { CommandManager } from "../../core/src/commands/lib/CommandManager";
+import { ChatMessage } from "../../core/src/Schemas";
 import { ServerAsteroid } from "./entity/ServerAsteroid";
 import { serverMgr } from "./Main";
 import { WebSocketClientWithData } from "./net/WebSocketServer";
@@ -80,6 +81,25 @@ export function registerCommands(mgr: CommandManager) {
           );
           return 1;
         }),
+    ),
+  );
+
+  mgr.registerCommand(
+    new LiteralArgumentBuilder("broadcast").then(
+      new GreedyStringArgumentBuilder("message").executes((ctx, source) => {
+        const message = ctx.getArgument<string>("message");
+        serverMgr.wsMgr.wss.clients.forEach((client) => {
+          client.send(
+            JSON.stringify(
+              ChatMessage.parse({
+                sender: source.playerID,
+                message: message,
+              }),
+            ),
+          );
+        });
+        return 1;
+      }),
     ),
   );
 }

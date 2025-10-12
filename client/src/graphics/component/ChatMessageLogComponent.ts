@@ -36,7 +36,7 @@ export class ChatMessageLogComponent extends Component<ChatMessageLogComponentDa
     },
   });
   public render(renderInfo: RenderInfo): void {
-    if(this.args.data.visible) this.input.render(renderInfo);
+    if (this.args.data.visible) this.input.render(renderInfo);
     renderInfo.ctx.font =
       this.args.data.font === undefined ? "16px Arial" : this.args.data.font;
     let currentPos =
@@ -52,7 +52,7 @@ export class ChatMessageLogComponent extends Component<ChatMessageLogComponentDa
       (a, b) => b.created_at - a.created_at,
     )) {
       renderInfo.ctx.fillText(
-        (message.sender === undefined ? "<server>" : message.sender) +
+        (message.sender === undefined ? "<server>" : `<${message.sender}>`) +
           (message.sender === "" ? "" : " ") +
           message.message,
         this.args.x,
