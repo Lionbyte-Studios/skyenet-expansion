@@ -1,6 +1,6 @@
 import type { MouseInfo, RenderInfo } from "../../ClientManager";
 import { clientManager } from "../../Main";
-import type { ChatMessageEntry } from "../screen/InGameScreen";
+import { InGameScreen, type ChatMessageEntry } from "../screen/InGameScreen";
 import { Component } from "./Component";
 import { InputComponent } from "./InputComponent";
 
@@ -25,6 +25,13 @@ export class ChatMessageLogComponent extends Component<ChatMessageLogComponentDa
         const command = component.text;
         component.text = "";
         clientManager.webSocketManager.sendCommand({ command: command });
+      },
+      onEscape: (component) => {
+        component.data.selected = false;
+        this.args.data.visible = false;
+        if (clientManager.currentScreen instanceof InGameScreen) {
+          clientManager.currentScreen.consoleShown = false;
+        }
       },
     },
   });

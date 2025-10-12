@@ -14,6 +14,7 @@ type InputComponentData = {
   type?: "text" | "password";
   password_redacter?: string;
   onEnter?: (component: InputComponent) => void;
+  onEscape?: (component: InputComponent) => void;
 };
 
 export class InputComponent extends Component<InputComponentData> {
@@ -37,6 +38,8 @@ export class InputComponent extends Component<InputComponentData> {
         : args.data.textLengthLimit;
     const onEnter =
       args.data.onEnter === undefined ? () => {} : args.data.onEnter;
+    const onEscape =
+      args.data.onEscape === undefined ? () => {} : args.data.onEscape;
     this.data = {
       placeholder: placeholder,
       initialValue: initialValue,
@@ -48,6 +51,7 @@ export class InputComponent extends Component<InputComponentData> {
       type: type,
       password_redacter: password_redacter,
       onEnter: onEnter,
+      onEscape: onEscape,
     };
   }
   public render(renderInfo: RenderInfo): void {
@@ -141,6 +145,8 @@ export class InputComponent extends Component<InputComponentData> {
       this.text = this.text.slice(0, -1);
     } else if (event.key === "Enter") {
       this.data.onEnter(this);
+    } else if (event.key === "Escape") {
+      this.data.onEscape(this);
     }
   }
 
