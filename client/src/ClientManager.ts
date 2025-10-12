@@ -73,15 +73,27 @@ export class ClientManager {
     this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
     this.display = { startWidth: 1280, aspectRatio: [16, 9], scale: 0 };
 
-    this.canvas.addEventListener("click", (event) => {
-      this.onClick(event);
-    });
-    this.canvas.addEventListener("mousemove", (event) => {
-      this.onMouseMove(event);
-    });
-    window.addEventListener("keydown", (event) => {
-      this.onKeyDown(event);
-    });
+    this.canvas.addEventListener(
+      "click",
+      (event) => {
+        this.onClick(event);
+      },
+      true,
+    );
+    this.canvas.addEventListener(
+      "mousemove",
+      (event) => {
+        this.onMouseMove(event);
+      },
+      true,
+    );
+    window.addEventListener(
+      "keydown",
+      (event) => {
+        this.onKeyDown(event);
+      },
+      true,
+    );
     this.state = {
       selectedShip: {
         id: "gray-ship",

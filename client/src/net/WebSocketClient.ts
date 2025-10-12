@@ -22,6 +22,7 @@ import { WsSpawnEntitiesMessageHandler } from "./handler/SpawnEntitiesHandler";
 import { WsModifyEntitiesMessageHandler } from "./handler/ModifyEntitiesHandler";
 import { WsKillEntitiesMessageHandler } from "./handler/KillEntitiesHandler";
 import { clientManager } from "../Main";
+import { WsChatMessageHandler } from "./handler/ChatHandler";
 
 export interface SocketMessageData<T> {
   client: WebSocketClient;
@@ -60,6 +61,7 @@ export class WebSocketClient {
       new WsSpawnEntitiesMessageHandler(),
       new WsModifyEntitiesMessageHandler(),
       new WsKillEntitiesMessageHandler(),
+      new WsChatMessageHandler(),
     ];
 
     this.joinCallbackDataResolve = () => {

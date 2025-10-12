@@ -1,4 +1,5 @@
 import type { ClientGame } from "../ClientGame";
+import { InGameScreen } from "../graphics/screen/InGameScreen";
 import { clientManager } from "../Main";
 
 export class Debug {
@@ -19,9 +20,13 @@ export class Debug {
         this.terminal = !this.terminal;
       }
       if (this.game.keyManager.wasKeyJustPressed("KeyC")) {
-        const cmd = prompt("Enter command:");
-        if (cmd === null) return;
-        clientManager.webSocketManager.sendCommand({ command: cmd });
+        // const cmd = prompt("Enter command:");
+        // if (cmd === null) return;
+        // clientManager.webSocketManager.sendCommand({ command: cmd });
+        if (clientManager.currentScreen instanceof InGameScreen) {
+          clientManager.currentScreen.consoleShown =
+            !clientManager.currentScreen.consoleShown;
+        }
       }
     }
   }

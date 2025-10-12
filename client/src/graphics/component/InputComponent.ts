@@ -13,6 +13,7 @@ type InputComponentData = {
   textLengthLimit?: number;
   type?: "text" | "password";
   password_redacter?: string;
+  onEnter?: (component: InputComponent) => void;
 };
 
 export class InputComponent extends Component<InputComponentData> {
@@ -34,6 +35,8 @@ export class InputComponent extends Component<InputComponentData> {
       args.data.textLengthLimit === undefined
         ? 1024
         : args.data.textLengthLimit;
+    const onEnter =
+      args.data.onEnter === undefined ? () => {} : args.data.onEnter;
     this.data = {
       placeholder: placeholder,
       initialValue: initialValue,
@@ -44,6 +47,7 @@ export class InputComponent extends Component<InputComponentData> {
       textLengthLimit: textLengthLimit,
       type: type,
       password_redacter: password_redacter,
+      onEnter: onEnter,
     };
   }
   public render(renderInfo: RenderInfo): void {
@@ -129,11 +133,14 @@ export class InputComponent extends Component<InputComponentData> {
   }
   public override onKeyDown(event: KeyboardEvent): void {
     if (!this.data.selected) return;
+    event.stopPropagation();
     if (event.key.length === 1) {
       if (this.text.length >= this.data.textLengthLimit) return;
       this.text += event.key;
     } else if (event.key === "Backspace") {
       this.text = this.text.slice(0, -1);
+    } else if (event.key === "Enter") {
+      this.data.onEnter(this);
     }
   }
 
