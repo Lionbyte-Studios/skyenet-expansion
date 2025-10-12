@@ -26,6 +26,7 @@ export class Debug {
         if (clientManager.currentScreen instanceof InGameScreen) {
           clientManager.currentScreen.consoleShown =
             !clientManager.currentScreen.consoleShown;
+          clientManager.currentScreen.selectChatInput();
         }
       }
     }

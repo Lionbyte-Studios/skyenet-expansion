@@ -18,7 +18,7 @@ type InputComponentData = {
 
 export class InputComponent extends Component<InputComponentData> {
   public text: string = "";
-  private data: Required<InputComponentData>;
+  public data: Required<InputComponentData>;
   constructor(args: ComponentRenderArgs<InputComponentData>) {
     super(args);
     const placeholder =

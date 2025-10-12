@@ -100,4 +100,13 @@ export class InGameScreen extends ClientScreen {
       created_at: Date.now(),
     });
   }
+
+  public selectChatInput() {
+    if (this.consoleShown)
+      (
+        this.components[
+          this.getComponentIndexById("chat")!
+        ] as ChatMessageLogComponent
+      ).input.data.selected = true;
+  }
 }

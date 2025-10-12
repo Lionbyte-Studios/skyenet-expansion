@@ -12,7 +12,7 @@ type ChatMessageLogComponentData = {
 
 export class ChatMessageLogComponent extends Component<ChatMessageLogComponentData> {
   public messages: ChatMessageEntry[] = [];
-  private input = new InputComponent({
+  public input = new InputComponent({
     x: this.args.x,
     y: this.args.y - 20,
     data: {
