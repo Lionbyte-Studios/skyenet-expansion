@@ -9,8 +9,8 @@ import { serverMgr } from "./Main";
 export function registerCommands(mgr: CommandManager) {
   mgr.registerCommand(
     new LiteralArgumentBuilder("echo").then(
-      new GreedyStringArgumentBuilder("str").executes((ctx) => {
-        ctx.sendMessage(ctx.getArgument<string>("str"));
+      new GreedyStringArgumentBuilder("str").executes((ctx, source) => {
+        source.sendMessage(ctx.getArgument<string>("str"));
         return 1;
       }),
     ),

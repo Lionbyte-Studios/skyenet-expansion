@@ -1,7 +1,14 @@
-import { CommandContext, CommandResult } from "../CommandManager";
+import {
+  CommandContext,
+  CommandResult,
+  CommandSource,
+} from "../CommandManager";
 import { StringReader } from "../CommandStringReader";
 
-export type CommandExecutorFn = (ctx: CommandContext) => CommandResult;
+export type CommandExecutorFn = (
+  ctx: CommandContext,
+  source: CommandSource,
+) => CommandResult;
 
 export abstract class CommandNode {
   public children: CommandNode[] = [];

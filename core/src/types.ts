@@ -1,6 +1,7 @@
 import z from "zod";
 import {
   BulletShootMessage,
+  ChatMessage,
   CommandMessage,
   KillEntitiesMessage,
   ModifyEntitiesMessage,
@@ -26,6 +27,7 @@ export enum WebSocketMessageType {
   ModifyEntities,
   BulletShoot,
   Command,
+  Chat,
 }
 
 export type MovementMessage = z.infer<typeof MovementMessage>;
@@ -40,6 +42,7 @@ export type ModifyEntitiesMessage = z.infer<typeof ModifyEntitiesMessage>;
 export type KillEntitiesMessage = z.infer<typeof KillEntitiesMessage>;
 export type BulletShootMessage = z.infer<typeof BulletShootMessage>;
 export type CommandMessage = z.infer<typeof CommandMessage>;
+export type ChatMessage = z.infer<typeof ChatMessage>;
 
 export enum ShipSprite {
   Gray = "gray-ship",

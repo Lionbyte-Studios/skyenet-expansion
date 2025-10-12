@@ -3,7 +3,7 @@ import {
   CommandMessage,
   WebSocketMessageType,
 } from "../../../../core/src/types";
-import { serverMgr } from "../../Main";
+import { serverMgr, ServersideCommandSource } from "../../Main";
 import { SocketMessageData } from "../WebSocketServer";
 import { WsMessageHandler } from "./Handler";
 
@@ -30,6 +30,13 @@ export class WsCommandMessageHandler
       return;
     }
     console.log(`Running command: '${commandData.data.command}'`);
-    serverMgr.commandManager.runCommand(commandData.data.command);
+    serverMgr.commandManager.runCommand(
+      commandData.data.command,
+      new ServersideCommandSource(
+        serverMgr.game.players[index].playerID,
+        serverMgr.game.players[index].socket_id,
+        serverMgr.game.players[index],
+      ),
+    );
   }
 }

@@ -1,19 +1,39 @@
 import { GameMode } from "../../core/src/types";
 import { ServerGame } from "./ServerGame";
 import { genStringID } from "../../core/src/util/Util";
-import { WebSocketServerManager } from "./net/WebSocketServer";
+import {
+  WebSocketClientWithData,
+  WebSocketServerManager,
+} from "./net/WebSocketServer";
 import { ApiManager } from "./api/ApiManager";
 import { TextDisplay } from "../../core/src/entity/TextDisplay";
 import {
   CommandContext,
   CommandExecutionEnvironment,
   CommandManager,
+  CommandSource,
 } from "../../core/src/commands/lib/CommandManager";
 import { registerCommands } from "./CommandRegisterer";
+import { ChatMessage } from "../../core/src/Schemas";
 
 class ServerCommandExecutionEnvironment extends CommandExecutionEnvironment {
   public sendMessage(message: string, context: CommandContext): void {
     console.log(message);
+  }
+}
+
+export class ServersideCommandSource extends CommandSource {
+  public sendMessage(message: string): void {
+    serverMgr.wsMgr.wss.clients.forEach((client: WebSocketClientWithData) => {
+      if (client.data!.socket_id !== this.socket_id) return;
+      client.send(
+        JSON.stringify(
+          ChatMessage.parse({
+            message: message,
+          }),
+        ),
+      );
+    });
   }
 }
 

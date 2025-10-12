@@ -150,3 +150,9 @@ export const CommandMessage = z.object({
   type: lt(WebSocketMessageType.Command),
   command: z.string(),
 });
+
+export const ChatMessage = z.object({
+  type: lt(WebSocketMessageType.Chat),
+  sender: z.optional(z.string()), // if sender is undefined, the server has sent this message.
+  message: z.string(),
+});
