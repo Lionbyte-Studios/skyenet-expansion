@@ -15,6 +15,8 @@ export class WsStatusMessageHandler extends WsMessageHandler<StatusMessage> {
       data.socket.send(
         JSON.stringify(schemas.StatusMessage.parse({ status: "pong" })),
       );
+    } else if (status === "disconnecting") {
+      window.location.reload();
     } else console.log(`Got WebSocket status: ${status}`);
   }
 }

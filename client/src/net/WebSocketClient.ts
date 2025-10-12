@@ -50,6 +50,9 @@ export class WebSocketClient {
     this.socket.onmessage = (event) => {
       this.onMessage(event);
     };
+    this.socket.onclose = (event) => {
+      window.location.reload();
+    };
     this.socket.onerror = console.error;
     this.queue = [];
 

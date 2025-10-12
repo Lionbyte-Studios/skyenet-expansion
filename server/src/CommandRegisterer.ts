@@ -8,6 +8,7 @@ import { StringArgumentBuilder } from "../../core/src/commands/builder/StringArg
 import { CommandManager } from "../../core/src/commands/lib/CommandManager";
 import { ServerAsteroid } from "./entity/ServerAsteroid";
 import { serverMgr } from "./Main";
+import { WebSocketClientWithData } from "./net/WebSocketServer";
 
 export function registerCommands(mgr: CommandManager) {
   mgr.registerCommand(
@@ -27,7 +28,15 @@ export function registerCommands(mgr: CommandManager) {
           (player) => player.playerID === id,
         );
         if (index === -1) return 0;
-        serverMgr.game.players[index].leave_game();
+        serverMgr.wsMgr.wss.clients.forEach(
+          (client: WebSocketClientWithData) => {
+            if (
+              client.data!.socket_id !== serverMgr.game.players[index].socket_id
+            )
+              return;
+            serverMgr.game.players[index].leave_game(client);
+          },
+        );
         return 1;
       }),
     ),
@@ -35,7 +44,14 @@ export function registerCommands(mgr: CommandManager) {
 
   mgr.registerCommand(
     new LiteralArgumentBuilder("kickall").executes((ctx) => {
-      serverMgr.game.players.forEach((player) => player.leave_game());
+      serverMgr.game.players.forEach((player) => {
+        serverMgr.wsMgr.wss.clients.forEach(
+          (client: WebSocketClientWithData) => {
+            if (client.data!.socket_id !== player.socket_id) return;
+            player.leave_game(client);
+          },
+        );
+      });
       return 1;
     }),
   );
