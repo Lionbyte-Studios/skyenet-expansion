@@ -43,3 +43,15 @@ export type IndexSignature<T, SignatureType = unknown> = T & {
 export function randomNumberInRange(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min)) + min;
 }
+
+export function isInArea(
+  area: { x: number; y: number; width: number; height: number },
+  pos: { x: number; y: number },
+): boolean {
+  return (
+    pos.x >= area.x &&
+    pos.x <= area.x + area.width &&
+    pos.y >= area.y &&
+    pos.y <= area.y + area.height
+  );
+}

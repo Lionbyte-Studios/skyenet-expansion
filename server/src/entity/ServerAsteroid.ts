@@ -32,4 +32,10 @@ export class ServerAsteroid extends Asteroid {
     );
     this.despawns_in--;
   }
+  public override damage(amount: number): void {
+    this.health -= amount;
+    if (this.health <= 0) {
+      serverMgr.game.killEntity((entity) => entity.entityID === this.entityID);
+    }
+  }
 }

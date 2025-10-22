@@ -37,4 +37,8 @@ export abstract class Entity {
     return genStringID(8);
   }
   public tick<T extends Game>(game?: T) {}
+  public isInHitbox(x: number, y: number): boolean {
+    return false;
+  }
+  public damage(amount: number): void {}
 }

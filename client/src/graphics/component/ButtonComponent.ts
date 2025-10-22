@@ -1,5 +1,5 @@
 import type { MouseInfo, RenderInfo } from "../../ClientManager";
-import { isInArea } from "../../lib/Util";
+import { isInArea } from "../../../../core/src/util/Util";
 import { Component, type ComponentRenderArgs } from "./Component";
 
 type TextProperties = {

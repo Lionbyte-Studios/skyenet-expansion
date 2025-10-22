@@ -9,7 +9,7 @@ import { AtlasManager } from "./graphics/AtlasManager";
 import { ClientScreen } from "./graphics/screen/Screen";
 import { ClientStorage } from "./lib/settings/ClientStorage";
 import { WebSocketClient } from "./net/WebSocketClient";
-import { socket_url } from "../../config.json";
+import { socket_url, proto } from "../../config.json";
 import { login } from "./net/api/Api";
 
 export interface RenderInfo {
@@ -116,10 +116,7 @@ export class ClientManager {
       params.delete("token");
       this.clientStorage.set("token", token);
       window.location.href =
-        window.location.protocol +
-        "//" +
-        window.location.host +
-        window.location.pathname;
+        proto + "://" + window.location.host + window.location.pathname;
       return;
     }
 

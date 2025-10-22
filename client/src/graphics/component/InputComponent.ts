@@ -1,5 +1,5 @@
+import { isInArea } from "../../../../core/src/util/Util";
 import type { RenderInfo, MouseInfo } from "../../ClientManager";
-import { isInArea } from "../../lib/Util";
 import { clientManager } from "../../Main";
 import { Component, type ComponentRenderArgs } from "./Component";
 

@@ -142,6 +142,7 @@ export class WebSocketServerManager {
           const index = serverMgr.game.players.findIndex(
             (player) => player.socket_id === client.data!.socket_id,
           );
+          if (index === -1) return;
           serverMgr.game.players[index].leave_game(client);
           // return client.terminate();
         }

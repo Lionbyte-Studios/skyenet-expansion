@@ -160,6 +160,7 @@ export class MainMenuScreen extends ClientScreen {
             location.href = discord.app_auth_url;
           },
         },
+        custom_id: "user_pfp",
       });
       if (clientManager.loggedInUser !== undefined) {
         const user = await clientManager.loggedInUser;
