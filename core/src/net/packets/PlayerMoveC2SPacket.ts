@@ -1,9 +1,11 @@
-import { ServerPlayListener } from "../../listener/ServerPlayListener";
-import { Packet, PacketDirection, PacketID } from "../../Packet";
-import { PacketBuffer } from "../../PacketBuffer";
+import { ServerPlayListener } from "../listener/ServerPlayListener";
+import { Packet, PacketDirection, PacketID } from "../Packet";
+import { PacketBuffer } from "../PacketBuffer";
 
 export class PlayerMoveC2SPacket extends Packet<ServerPlayListener> {
-  static override id = PacketID.PlayerMoveC2SPacket;
+  static override get id() {
+    return PacketID.PlayerMoveC2SPacket;
+  }
   static override direction = PacketDirection.C2S;
 
   public x: number;

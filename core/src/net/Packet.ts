@@ -9,10 +9,13 @@ export enum PacketDirection {
 export enum PacketID {
   PlayerMoveC2SPacket,
   DebugS2CPacket,
+  JoinGameC2SPacket,
 }
 
 export abstract class Packet<L extends PlayListener> {
-  static id: number;
+  static get id(): PacketID {
+    throw new Error("id must be specified by the packet.");
+  }
   static direction: PacketDirection;
 
   abstract write(buf: PacketBuffer): void;

@@ -1,9 +1,11 @@
-import { ClientPlayListener } from "../../listener/ClientPlayListener";
-import { Packet, PacketID } from "../../Packet";
-import { PacketBuffer } from "../../PacketBuffer";
+import { ClientPlayListener } from "../listener/ClientPlayListener";
+import { Packet, PacketID } from "../Packet";
+import { PacketBuffer } from "../PacketBuffer";
 
 export class DebugS2CPacket extends Packet<ClientPlayListener> {
-  static override id = PacketID.DebugS2CPacket;
+  static override get id() {
+    return PacketID.DebugS2CPacket;
+  }
   private message: string;
   constructor(message: string) {
     super();

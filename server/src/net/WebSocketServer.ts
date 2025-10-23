@@ -6,9 +6,10 @@ import {
 } from "../../../core/src/types";
 import { PacketRegistry } from "../../../core/src/net/PacketRegistry";
 import { ServerPlayListener } from "../../../core/src/net/listener/ServerPlayListener";
-import { PlayerMoveC2SPacket } from "../../../core/src/net/packets/raw/PlayerMoveC2SPacket";
+import { PlayerMoveC2SPacket } from "../../../core/src/net/packets/PlayerMoveC2SPacket";
 import { ServerPlayer } from "../entity/ServerPlayer";
 import { ServerConnection } from "./ServerConnection";
+import { JoinGameC2SPacket } from "../../../core/src/net/packets/JoinGameC2SPacket";
 
 export interface SocketMessageData<T> {
   socket: WebSocketClientWithData;
@@ -35,6 +36,7 @@ export class WebSocketServerManager {
     console.log("WebSocketServerManager  constructor");
     this.registry = new PacketRegistry<ServerPlayListener>();
     this.registry.register(PlayerMoveC2SPacket.id, PlayerMoveC2SPacket);
+    this.registry.register(JoinGameC2SPacket.id, JoinGameC2SPacket);
     this.wss = new WebSocketServer({ port: 8081 });
 
     this.wss.on("connection", (ws) => {

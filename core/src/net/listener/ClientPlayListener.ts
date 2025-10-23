@@ -1,4 +1,4 @@
-import { DebugS2CPacket } from "../packets/raw/DebugS2CPacket";
+import { DebugS2CPacket } from "../packets/DebugS2CPacket";
 import { PlayListener } from "./PlayListener";
 
 export abstract class ClientPlayListener extends PlayListener {

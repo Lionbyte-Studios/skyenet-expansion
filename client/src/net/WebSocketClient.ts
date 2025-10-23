@@ -8,8 +8,8 @@ import type { ClientPlayer } from "../entity/ClientPlayer";
 import { ClientConnection } from "./ClientConnection";
 import { PacketRegistry } from "../../../core/src/net/PacketRegistry";
 import { ClientPlayListener } from "../../../core/src/net/listener/ClientPlayListener";
-import { DebugS2CPacket } from "../../../core/src/net/packets/raw/DebugS2CPacket";
-import { PlayerMoveC2SPacket } from "../../../core/src/net/packets/raw/PlayerMoveC2SPacket";
+import { DebugS2CPacket } from "../../../core/src/net/packets/DebugS2CPacket";
+import { PlayerMoveC2SPacket } from "../../../core/src/net/packets/PlayerMoveC2SPacket";
 
 export interface SocketMessageData<T> {
   client: WebSocketClient;

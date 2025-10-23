@@ -6,7 +6,7 @@ import { ServerPlayer } from "../entity/ServerPlayer";
 import { PlayListener } from "../../../core/src/net/listener/PlayListener";
 import { Packet } from "../../../core/src/net/Packet";
 import { PacketBuffer } from "../../../core/src/net/PacketBuffer";
-import { DebugS2CPacket } from "../../../core/src/net/packets/raw/DebugS2CPacket";
+import { DebugS2CPacket } from "../../../core/src/net/packets/DebugS2CPacket";
 
 export class ServerConnection {
   private listener: ServerPlayNetworkHandler;
