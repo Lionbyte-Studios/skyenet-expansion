@@ -27,6 +27,7 @@ export class WsJoinMessageHandler
     if (typeof json === "undefined" || json === undefined) return;
     const joinData = schemas.PlayerJoinMessage.safeParse(json);
     if (!joinData.success) return;
+    // @ts-expect-error rawr :3
     const player = serverMgr.game.generatePlayer(data.socketData.socket_id);
     player.shipSprite = joinData.data.shipSprite;
     player.shipEngineSprite = joinData.data.shipEngineSprite;

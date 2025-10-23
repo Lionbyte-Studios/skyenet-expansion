@@ -24,7 +24,7 @@ export class ChatMessageLogComponent extends Component<ChatMessageLogComponentDa
       onEnter: (component) => {
         const command = component.text;
         component.text = "";
-        clientManager.webSocketManager.sendCommand({ command: command });
+        clientManager.webSocketClient.sendCommand({ command: command });
       },
       onEscape: (component) => {
         component.data.selected = false;

@@ -1,5 +1,7 @@
 import { Game } from "../Game";
+import { PacketBuffer } from "../net/PacketBuffer";
 import { EntityID, PlayerID, ShipEngineSprite, ShipSprite } from "../types";
+import { toStringEnum } from "../util/Util";
 import { Entity, EntityType } from "./Entity";
 
 export class Player extends Entity {
@@ -40,6 +42,10 @@ export class Player extends Entity {
     this.shipEngineSprite = shipEngineSprite;
   }
 
+  public static override get entityType(): EntityType {
+    return EntityType.Player;
+  }
+
   protected move<T extends Game>(game: T) {
     this.y += this.velY;
     this.x += this.velX;
@@ -73,5 +79,27 @@ export class Player extends Entity {
   public override tick<T extends Game>(game?: T) {
     if (game === undefined) return;
     this.move(game);
+  }
+
+  public override netWrite(buf: PacketBuffer): void {
+    buf.writeString(this.playerID);
+    buf.writeString(this.entityID);
+    buf.writeFloat(this.x);
+    buf.writeFloat(this.y);
+    buf.writeFloat(this.rotation);
+    buf.writeString(this.shipSprite);
+    buf.writeString(this.shipEngineSprite);
+  }
+  public static override netRead(buf: PacketBuffer): Player {
+    return new Player(
+      buf.readString(),
+      buf.readString(),
+      buf.readFloat(),
+      buf.readFloat(),
+      buf.readFloat(),
+      toStringEnum(ShipSprite, buf.readString()) ?? ShipSprite.White,
+      toStringEnum(ShipEngineSprite, buf.readString()) ??
+        ShipEngineSprite.White,
+    );
   }
 }

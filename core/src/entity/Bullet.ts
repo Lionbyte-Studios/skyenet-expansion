@@ -1,3 +1,4 @@
+import { PacketBuffer } from "../net/PacketBuffer";
 import { PlayerID } from "../types";
 import { Entity, EntityType } from "./Entity";
 
@@ -6,7 +7,10 @@ export enum BulletType {
 }
 
 export class Bullet extends Entity {
-  entityType: EntityType = EntityType.Bullet;
+  public static override get entityType(): EntityType {
+    return EntityType.Bullet;
+  }
+
   type: BulletType = BulletType.Starter;
   velX: number = 0;
   velY: number = 0;
@@ -30,5 +34,25 @@ export class Bullet extends Entity {
     // toFixed(4) to prevent random float magic
     this.x = parseFloat((this.x + this.velX).toFixed(4));
     this.y = parseFloat((this.y + this.velY).toFixed(4));
+  }
+
+  public override netWrite(buf: PacketBuffer): void {
+    buf.writeFloat(this.x);
+    buf.writeFloat(this.y);
+    buf.writeFloat(this.velX);
+    buf.writeFloat(this.velY);
+    buf.writeString(this.owner);
+    buf.writeString(this.entityID);
+  }
+
+  public static override netRead(buf: PacketBuffer): Bullet {
+    return new Bullet(
+      buf.readFloat(),
+      buf.readFloat(),
+      buf.readFloat(),
+      buf.readFloat(),
+      buf.readString(),
+      buf.readString(),
+    );
   }
 }

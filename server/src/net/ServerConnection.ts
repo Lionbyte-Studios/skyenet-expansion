@@ -21,7 +21,10 @@ export class ServerConnection {
     this.ws = ws;
     this.ws.binaryType = "arraybuffer";
     this.registry = registry;
-    this.listener = new ServerPlayNetworkHandler(player);
+    this.listener = new ServerPlayNetworkHandler(
+      player,
+      this.sendPacket.bind(this),
+    );
 
     ws.on("message", (data) => this.handleIncoming(data));
 
@@ -42,7 +45,7 @@ export class ServerConnection {
   }
 
   public sendPacket<T extends Packet<PlayListener>>(packet: T) {
-    const buf = new PacketBuffer(new ArrayBuffer(256));
+    const buf = new PacketBuffer();
     buf.writeInt((packet.constructor as unknown as { id: number }).id);
     packet.write(buf);
     this.ws.send(buf.buffer.slice(0, buf.offset));

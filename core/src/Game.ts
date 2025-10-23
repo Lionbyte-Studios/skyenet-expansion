@@ -4,7 +4,7 @@ import { Entity } from "./entity/Entity";
 import { Player } from "./entity/Player";
 import { GameID, GameMode } from "./types";
 
-export class Game {
+export abstract class Game {
   public players: Player[];
   public gameID: GameID;
   public gameMode: GameMode;
@@ -24,4 +24,6 @@ export class Game {
   }
 
   public tick() {}
+
+  protected abstract registerEntities(): void;
 }

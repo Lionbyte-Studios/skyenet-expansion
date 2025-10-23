@@ -1,4 +1,5 @@
 import { Game } from "../Game";
+import { PacketBuffer } from "../net/PacketBuffer";
 import { alphabetForID, EntityID } from "../types";
 
 export enum EntityType {
@@ -23,7 +24,9 @@ export abstract class Entity {
   entityID: EntityID;
   x: number;
   y: number;
-  abstract entityType: EntityType;
+  static get entityType(): EntityType {
+    throw new Error("Entity did not implement get entityType");
+  }
   constructor(x: number, y: number, entityID?: EntityID) {
     if (entityID === undefined) {
       this.entityID = this.generateID();
@@ -41,4 +44,8 @@ export abstract class Entity {
     return false;
   }
   public damage(amount: number): void {}
+  public static netRead(buf: PacketBuffer): Entity {
+    throw new Error("Entity did not implement netRead()");
+  }
+  public abstract netWrite(buf: PacketBuffer): void;
 }

@@ -20,7 +20,7 @@ export class PacketRegistry<L extends PlayListener> {
     const id = buf.readInt();
     const packet = this.registry.get(id);
     if (packet === undefined) throw new Error(`Unknown packet id ${id}`);
-    // @ts-expect-error Doesn't wanna let me do the static method even though its static lol
+    // @ts-expect-error Doesn't wanna let me do the static method even though its static
     return packet.read(buf);
   }
 

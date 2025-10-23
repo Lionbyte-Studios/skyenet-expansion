@@ -54,13 +54,13 @@ export class ClientManager {
   public display: DisplayInfo;
   public currentScreen!: ClientScreen;
   public state: ClientState;
-  public webSocketManager: WebSocketClient;
+  public webSocketClient: WebSocketClient;
   public clientStorage: ClientStorage;
   public atlasManager: AtlasManager;
   public cursor: string = "crosshair";
   public loggedInUser: Promise<LoginCallback> | undefined = undefined;
 
-  constructor(atlasManager: AtlasManager) {
+  private constructor(atlasManager: AtlasManager) {
     document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
           <div>
           </div>
@@ -104,7 +104,7 @@ export class ClientManager {
       },
       ships: [],
     };
-    this.webSocketManager = new WebSocketClient("ws://" + socket_url);
+    this.webSocketClient = new WebSocketClient("ws://" + socket_url);
     this.clientStorage = new ClientStorage();
     this.atlasManager = atlasManager;
 

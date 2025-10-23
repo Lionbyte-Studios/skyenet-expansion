@@ -4,7 +4,7 @@ import { PacketBuffer } from "../PacketBuffer";
 
 export class DebugS2CPacket extends Packet<ClientPlayListener> {
   static override get id() {
-    return PacketID.DebugS2CPacket;
+    return PacketID.DebugS2C;
   }
   private message: string;
   constructor(message: string) {

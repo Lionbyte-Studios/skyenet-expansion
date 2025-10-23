@@ -7,9 +7,10 @@ export enum PacketDirection {
 }
 
 export enum PacketID {
-  PlayerMoveC2SPacket,
-  DebugS2CPacket,
-  JoinGameC2SPacket,
+  PlayerMoveC2S,
+  DebugS2C,
+  JoinGameC2S,
+  JoinCallbackS2C,
 }
 
 export abstract class Packet<L extends PlayListener> {

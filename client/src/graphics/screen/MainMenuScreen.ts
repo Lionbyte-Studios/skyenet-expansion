@@ -80,7 +80,7 @@ export class MainMenuScreen extends ClientScreen {
           text: "START GAME",
           onclick: () => {
             clientManager.setScreen(InGameScreen);
-            (clientManager.currentScreen as InGameScreen).initGame();
+            // (clientManager.currentScreen as InGameScreen).initGame();
           },
         },
       }),

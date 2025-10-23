@@ -5,7 +5,7 @@ import type {
   GameMode,
   PlayerID,
 } from "../../core/src/types";
-import type { ClientPlayer } from "./entity/ClientPlayer";
+import { ClientPlayer } from "./entity/ClientPlayer";
 import { MyPlayer } from "./entity/MyPlayer";
 import { Camera } from "./graphics/game/Camera";
 import { KeyManager } from "./lib/Keyman";
@@ -14,6 +14,11 @@ import { ClientSettings } from "./lib/settings/ClientSettings";
 import { GameLoopManager } from "../../core/src/GameLoopManager";
 import { clientManager } from "./Main";
 import type { GameRenderer } from "./graphics/game/GameRenderer";
+import { EntityRegistry } from "../../core/src/entity/EntityRegistry";
+import { EntityType } from "../../core/src/entity/Entity";
+import { ClientAsteroid } from "./entity/ClientAsteroid";
+import { ClientBullet } from "./entity/ClientBullet";
+import { ClientTextDisplay } from "./entity/ClientTextDisplay";
 
 export interface ClientGameStats {
   fps: number;
@@ -115,5 +120,12 @@ export class ClientGame extends Game {
   }
   public stopGameLoop() {
     this.gameLoopManager.stop();
+  }
+
+  protected override registerEntities(): void {
+    EntityRegistry.register(EntityType.Asteroid, ClientAsteroid);
+    EntityRegistry.register(EntityType.Bullet, ClientBullet);
+    EntityRegistry.register(EntityType.Player, ClientPlayer);
+    EntityRegistry.register(EntityType.TextDisplay, ClientTextDisplay);
   }
 }

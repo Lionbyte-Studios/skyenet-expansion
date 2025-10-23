@@ -86,7 +86,7 @@ export class MyPlayer extends ClientPlayer {
       this.HP--;
     }
     if (game.keyManager.wasKeyJustPressed("Space")) {
-      clientManager.webSocketManager.sendBullet({
+      clientManager.webSocketClient.sendBullet({
         bullet: {
           type: BulletType.Starter,
           x: this.x,
@@ -100,7 +100,7 @@ export class MyPlayer extends ClientPlayer {
   }
 
   public sendMovement() {
-    clientManager.webSocketManager.sendMovement({
+    clientManager.webSocketClient.sendMovement({
       playerID: this.playerID,
       x: this.x,
       y: this.y,

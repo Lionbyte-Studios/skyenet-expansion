@@ -1,29 +1,14 @@
-import type { Entity } from "../../../core/src/entity/Entity";
-import {
-  type EntityID,
-  type GameID,
-  type PlayerID,
-} from "../../../core/src/types";
-import type { ClientPlayer } from "../entity/ClientPlayer";
 import { ClientConnection } from "./ClientConnection";
 import { PacketRegistry } from "../../../core/src/net/PacketRegistry";
 import { ClientPlayListener } from "../../../core/src/net/listener/ClientPlayListener";
 import { DebugS2CPacket } from "../../../core/src/net/packets/DebugS2CPacket";
-import { PlayerMoveC2SPacket } from "../../../core/src/net/packets/PlayerMoveC2SPacket";
+import { JoinCallbackS2CPacket } from "../../../core/src/net/packets/JoinCallbackS2CPacket";
 
 export interface SocketMessageData<T> {
   client: WebSocketClient;
   socket: WebSocket;
   message: T;
 }
-
-export type JoinCallbackData = {
-  gameID: GameID;
-  playerID: PlayerID;
-  entityID: EntityID;
-  players: ClientPlayer[];
-  entities: Entity[];
-};
 
 export class WebSocketClient {
   // public joinCallbackData: Promise<JoinCallbackData>;
@@ -36,16 +21,15 @@ export class WebSocketClient {
   private registry: PacketRegistry<ClientPlayListener>;
 
   constructor(addr: string) {
-    console.log("WebSocketClient constructor");
     this.ws = new WebSocket(addr);
     this.ws.binaryType = "arraybuffer";
     this.registry = new PacketRegistry<ClientPlayListener>();
     this.registry.register(DebugS2CPacket.id, DebugS2CPacket);
+    this.registry.register(JoinCallbackS2CPacket.id, JoinCallbackS2CPacket);
     this.connection = new ClientConnection(this.ws, this.registry);
 
     this.ws.addEventListener("open", () => {
       console.log("Connected to websocket server!");
-      this.connection.sendPacket(new PlayerMoveC2SPacket(33, 66));
     });
     /*
     this.socket = new WebSocket(addr);

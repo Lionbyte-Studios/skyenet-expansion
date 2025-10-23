@@ -1,8 +1,11 @@
 # SpaceNet Software Architecture
+
 Here we document how the pieces come together i guess
 
 ## Networking
+
 As an example, movement logic:
+
 ```
 <Player presses button>
 |
@@ -66,7 +69,9 @@ ServerPlayNetworkHandler#onPlayerMove handles the player move logic. It gets the
 TLDR:
 Player presses button -> Packet is created -> Packet is sent -> Server receives packet -> Server finds the correct class of the packet and creates it -> Server handles the movement now that it has a packet class, it knows the x and y that the client sent, it was read from the buffer by the packet's class
 ```
+
 How a connection is established:
+
 ```
 <Player loads page>
 |

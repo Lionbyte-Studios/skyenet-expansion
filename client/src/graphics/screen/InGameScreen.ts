@@ -1,3 +1,5 @@
+import type { JoinCallbackS2CPacket } from "../../../../core/src/net/packets/JoinCallbackS2CPacket";
+import { JoinGameC2SPacket } from "../../../../core/src/net/packets/JoinGameC2SPacket";
 import { GameMode } from "../../../../core/src/types";
 import { ClientGame } from "../../ClientGame";
 import type { RenderInfo } from "../../ClientManager";
@@ -13,14 +15,15 @@ export interface ChatMessageEntry {
 }
 
 export class InGameScreen extends ClientScreen {
-  public initialized: boolean = false;
+  public state: "uninitialized" | "waitingforjoincallbackdata" | "gamerunning" =
+    "uninitialized";
   private chatMessages: ChatMessageEntry[] = [];
   public consoleShown: boolean = false;
   // Use base resolution for positioning (1280x720)
   // private readonly baseWidth = 1280;
   private readonly baseHeight = 720;
   public render(renderInfo: RenderInfo): void {
-    if (!this.initialized) return;
+    if (this.state !== "gamerunning") return;
     if (clientManager.game === undefined) {
       console.error(
         "Cannot render InGameScreen: clientManager.game is undefined.",
@@ -46,38 +49,38 @@ export class InGameScreen extends ClientScreen {
       ] as ChatMessageLogComponent
     ).messages = this.chatMessages;
   }
-  public async initGame() {
+  public initGame() {
+    this.state = "waitingforjoincallbackdata";
     const selectedShip = clientManager.state.selectedShip;
-    clientManager.webSocketManager.joinGame(
-      selectedShip.sprite,
-      selectedShip.engineSprite,
+    clientManager.webSocketClient.connection.sendPacket(
+      new JoinGameC2SPacket(selectedShip.sprite, selectedShip.engineSprite),
     );
-    const loginInfo = await clientManager.webSocketManager.joinCallbackData;
-    console.log(loginInfo);
+  }
+  public joinCallback(data: JoinCallbackS2CPacket) {
+    console.log(data);
     clientManager.game = new ClientGame(
-      loginInfo.gameID,
+      data.gameID,
       GameMode.FFA,
-      loginInfo.playerID,
-      loginInfo.entityID,
+      data.playerID,
+      data.entityID,
       // new GameRenderer(clientManager.getRenderInfo()),
     );
     clientManager.game.renderer = new GameRenderer(
       clientManager.getRenderInfo(),
     );
     clientManager.game.players.push(
-      ...loginInfo.players.filter(
-        (player) => player.playerID !== loginInfo.playerID,
-      ),
+      ...data.players.filter((player) => player.playerID !== data.playerID),
     );
-    clientManager.game.entities.push(...loginInfo.entities);
-    console.log(loginInfo.players);
+    clientManager.game.entities.push(...data.entities);
+    console.log(data.players);
     // Update player's selected ship
+    const selectedShip = clientManager.state.selectedShip;
     clientManager.game.myPlayer.setShipType(
       selectedShip.sprite,
       selectedShip.engineSprite,
     );
     clientManager.game.startGameLoop();
-    this.initialized = true;
+    this.state = "gamerunning";
   }
 
   public override init() {
@@ -91,6 +94,7 @@ export class InGameScreen extends ClientScreen {
         custom_id: "chat",
       }),
     ];
+    this.initGame();
   }
 
   public addChatMessage(message: string, sender?: string): void {

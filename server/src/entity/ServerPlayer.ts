@@ -10,7 +10,6 @@ import {
 import { serverMgr } from "../Main";
 
 export class ServerPlayer extends Player {
-  socket_id: string;
   admin: boolean;
   constructor(
     playerID: PlayerID,
@@ -20,11 +19,9 @@ export class ServerPlayer extends Player {
     rotation: number,
     shipSprite: ShipSprite,
     shipEngineSprite: ShipEngineSprite,
-    socket_id: string,
     admin?: boolean,
   ) {
     super(playerID, entityID, x, y, rotation, shipSprite, shipEngineSprite);
-    this.socket_id = socket_id;
     this.admin = admin === undefined ? false : admin;
   }
 

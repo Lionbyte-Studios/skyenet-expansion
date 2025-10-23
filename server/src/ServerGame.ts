@@ -1,4 +1,5 @@
-import { Entity } from "../../core/src/entity/Entity";
+import { Entity, EntityType } from "../../core/src/entity/Entity";
+import { EntityRegistry } from "../../core/src/entity/EntityRegistry";
 import { Game } from "../../core/src/Game";
 import { GameLoopManager } from "../../core/src/GameLoopManager";
 import * as schemas from "../../core/src/Schemas";
@@ -8,6 +9,8 @@ import {
   GameMode,
   ModifyEntitiesMessage,
   MovementMessage,
+  ShipEngineSprite,
+  ShipSprite,
   StatusMessage,
   WebSocketMessageType,
 } from "../../core/src/types";
@@ -18,7 +21,9 @@ import {
   randomNumberInRange,
 } from "../../core/src/util/Util";
 import { ServerAsteroid } from "./entity/ServerAsteroid";
+import { ServerBullet } from "./entity/ServerBullet";
 import { ServerPlayer } from "./entity/ServerPlayer";
+import { ServerTextDisplay } from "./entity/ServerTextDisplay";
 import { serverMgr } from "./Main";
 
 export interface ServerGameStats {
@@ -55,7 +60,10 @@ export class ServerGame extends Game {
   public static generateRandomPlayerID() {
     return genStringID(8);
   }
-  public generatePlayer(socket_id: string): ServerPlayer {
+  public generatePlayer(
+    shipSprite: ShipSprite,
+    shipEngineSprite: ShipEngineSprite,
+  ): ServerPlayer {
     const id = ServerGame.generateRandomPlayerID();
     const entityID = genStringID(8);
     return new ServerPlayer(
@@ -64,9 +72,8 @@ export class ServerGame extends Game {
       this.config.defaultSpawnCoords.x,
       this.config.defaultSpawnCoords.y,
       0,
-      this.config.defaultShipSprite,
-      this.config.defaultShipEngineSprite,
-      socket_id,
+      shipSprite,
+      shipEngineSprite,
     );
   }
 
@@ -178,5 +185,12 @@ export class ServerGame extends Game {
         ),
       );
     });
+  }
+
+  protected override registerEntities(): void {
+    EntityRegistry.register(EntityType.Asteroid, ServerAsteroid);
+    EntityRegistry.register(EntityType.Bullet, ServerBullet);
+    EntityRegistry.register(EntityType.Player, ServerPlayer);
+    EntityRegistry.register(EntityType.TextDisplay, ServerTextDisplay);
   }
 }

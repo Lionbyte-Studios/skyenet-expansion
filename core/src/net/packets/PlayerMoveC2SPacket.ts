@@ -4,7 +4,7 @@ import { PacketBuffer } from "../PacketBuffer";
 
 export class PlayerMoveC2SPacket extends Packet<ServerPlayListener> {
   static override get id() {
-    return PacketID.PlayerMoveC2SPacket;
+    return PacketID.PlayerMoveC2S;
   }
   static override direction = PacketDirection.C2S;
 
