@@ -1,28 +1,15 @@
 import type { Entity } from "../../../core/src/entity/Entity";
-import { PlayerJoinMessage } from "../../../core/src/Schemas";
 import {
-  WebSocketMessageType,
-  type BulletShootMessage,
-  type CommandMessage,
   type EntityID,
   type GameID,
-  type MovementMessage,
   type PlayerID,
-  type ShipEngineSprite,
-  type ShipSprite,
 } from "../../../core/src/types";
 import type { ClientPlayer } from "../entity/ClientPlayer";
-import type { WsMessageHandler } from "./handler/Handler";
-import { WsPlayerJoinCallbackMessageHandler } from "./handler/JoinCallbackHandler";
-import { WsMovementMessageHandler } from "./handler/MovementHandler";
-import { WsStatusMessageHandler } from "./handler/StatusHandler";
-import { WsUpdatePlayersMessageHandler } from "./handler/UpdatePlayersHandler";
-import * as schemas from "../../../core/src/Schemas";
-import { WsSpawnEntitiesMessageHandler } from "./handler/SpawnEntitiesHandler";
-import { WsModifyEntitiesMessageHandler } from "./handler/ModifyEntitiesHandler";
-import { WsKillEntitiesMessageHandler } from "./handler/KillEntitiesHandler";
-import { clientManager } from "../Main";
-import { WsChatMessageHandler } from "./handler/ChatHandler";
+import { ClientConnection } from "./ClientConnection";
+import { PacketRegistry } from "../../../core/src/net/PacketRegistry";
+import { ClientPlayListener } from "../../../core/src/net/listener/ClientPlayListener";
+import { DebugS2CPacket } from "../../../core/src/net/packets/raw/DebugS2CPacket";
+import { PlayerMoveC2SPacket } from "../../../core/src/net/packets/raw/PlayerMoveC2SPacket";
 
 export interface SocketMessageData<T> {
   client: WebSocketClient;
@@ -39,13 +26,28 @@ export type JoinCallbackData = {
 };
 
 export class WebSocketClient {
-  public joinCallbackData: Promise<JoinCallbackData>;
-  private joinCallbackDataResolve: (data: JoinCallbackData) => void;
-  private readonly socket;
-  private handlers: WsMessageHandler<unknown>[];
-  private queue: [WsMessageHandler<unknown>, message: unknown][];
+  // public joinCallbackData: Promise<JoinCallbackData>;
+  // private joinCallbackDataResolve: (data: JoinCallbackData) => void;
+  // private readonly socket;
+  // private handlers: WsMessageHandler<unknown>[];
+  // private queue: [WsMessageHandler<unknown>, message: unknown][];
+  public connection: ClientConnection;
+  private ws: WebSocket;
+  private registry: PacketRegistry<ClientPlayListener>;
 
   constructor(addr: string) {
+    console.log("WebSocketClient constructor");
+    this.ws = new WebSocket(addr);
+    this.ws.binaryType = "arraybuffer";
+    this.registry = new PacketRegistry<ClientPlayListener>();
+    this.registry.register(DebugS2CPacket.id, DebugS2CPacket);
+    this.connection = new ClientConnection(this.ws, this.registry);
+
+    this.ws.addEventListener("open", () => {
+      console.log("Connected to websocket server!");
+      this.connection.sendPacket(new PlayerMoveC2SPacket(33, 66));
+    });
+    /*
     this.socket = new WebSocket(addr);
     this.socket.onmessage = (event) => {
       this.onMessage(event);
@@ -148,9 +150,9 @@ export class WebSocketClient {
           message: json,
           client: this,
         });
-      });
+      });*/
   }
-
+  /*
   public resolveJoinCallbackData(data: JoinCallbackData) {
     this.joinCallbackDataResolve(data);
   }
@@ -181,4 +183,5 @@ export class WebSocketClient {
   public sendCommand(msg: Omit<CommandMessage, "type">) {
     this.socket.send(JSON.stringify(schemas.CommandMessage.parse(msg)));
   }
+    */
 }

@@ -113,6 +113,7 @@ export class ServerGame extends Game {
     entityPredicate: (entity: Entity, index: number) => boolean,
     data: IndexSignature<Partial<OmitFunctions<T>>>,
   ) {
+    return;
     const modified: ModifyEntitiesMessage = {
       type: WebSocketMessageType.ModifyEntities,
       modifications: [],
@@ -136,6 +137,7 @@ export class ServerGame extends Game {
   }
 
   public spawnEntity(entity: Entity) {
+    return;
     this.entities.push(entity);
 
     serverMgr.wsMgr.wss.clients.forEach((client) => {
@@ -157,6 +159,7 @@ export class ServerGame extends Game {
   public killEntity(
     entityPredicate: (entity: Entity, index: number) => boolean,
   ) {
+    return;
     const entitiesKilled: EntityID[] = [];
     this.entities.forEach((entity, index) => {
       if (!entityPredicate(entity, index)) return;

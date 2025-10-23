@@ -1,14 +1,14 @@
 import { WebSocket, WebSocketServer } from "ws";
-import { ServerError, StatusMessage } from "../../../core/src/Schemas";
-import { PlayerID, WebSocketMessageType } from "../../../core/src/types";
-import { WsMessageHandler } from "./handler/Handler";
-import { WsJoinMessageHandler } from "./handler/JoinHandler";
-import { WsStatusMessageHandler } from "./handler/StatusHandler";
-import { WsMovementMessageHandler } from "./handler/MovementHandler";
-import { WsBulletShootMessageHandler } from "./handler/BulletShootHandler";
-import { serverMgr } from "../Main";
-import { generateUserID } from "../api/Util";
-import { WsCommandMessageHandler } from "./handler/CommandHandler";
+import {
+  PlayerID,
+  ShipEngineSprite,
+  ShipSprite,
+} from "../../../core/src/types";
+import { PacketRegistry } from "../../../core/src/net/PacketRegistry";
+import { ServerPlayListener } from "../../../core/src/net/listener/ServerPlayListener";
+import { PlayerMoveC2SPacket } from "../../../core/src/net/packets/raw/PlayerMoveC2SPacket";
+import { ServerPlayer } from "../entity/ServerPlayer";
+import { ServerConnection } from "./ServerConnection";
 
 export interface SocketMessageData<T> {
   socket: WebSocketClientWithData;
@@ -28,9 +28,29 @@ export type WebSocketClientWithData = WebSocket & {
 
 export class WebSocketServerManager {
   public wss: WebSocketServer;
-  private handlers: WsMessageHandler<unknown>[];
+  // private handlers: WsMessageHandler<unknown>[];
+  public registry: PacketRegistry<ServerPlayListener>;
 
   constructor() {
+    console.log("WebSocketServerManager  constructor");
+    this.registry = new PacketRegistry<ServerPlayListener>();
+    this.registry.register(PlayerMoveC2SPacket.id, PlayerMoveC2SPacket);
+    this.wss = new WebSocketServer({ port: 8081 });
+
+    this.wss.on("connection", (ws) => {
+      const player = new ServerPlayer(
+        "a",
+        "a",
+        1,
+        1,
+        1,
+        ShipSprite.Black,
+        ShipEngineSprite.Black,
+        "a",
+      );
+      new ServerConnection(ws, player, this.registry);
+    });
+    /*
     this.handlers = [
       new WsJoinMessageHandler(),
       new WsStatusMessageHandler(),
@@ -59,7 +79,8 @@ export class WebSocketServerManager {
           `WebSocket closing: (PlayerID) ${serverMgr.game.players[index].playerID}`,
         );
         serverMgr.game.players[index].leave_game();
-        /*const id = ws.data.playerId;
+        */
+    /*const id = ws.data.playerId;
           if(id !== undefined) {
             const entityId = serverMgr.game.players.filter(player => player.playerID === id)[0].entityID;
             const index = serverMgr.game.players.findIndex(player => player.playerID === id);
@@ -75,7 +96,7 @@ export class WebSocketServerManager {
               )
             });
           }*/
-      });
+    /*});
 
       ws.on("message", async (data) => {
         let json;
@@ -138,7 +159,7 @@ export class WebSocketServerManager {
                 )
               )
             });
-          }*/
+          }*/ /*
           const index = serverMgr.game.players.findIndex(
             (player) => player.socket_id === client.data!.socket_id,
           );
@@ -154,14 +175,14 @@ export class WebSocketServerManager {
 
     this.wss.on("close", () => {
       clearInterval(ping_interval);
-    });
+    });*/
   }
-
+  /*
   public registerHandler<T>(handler: WsMessageHandler<T>) {
     this.handlers.push(handler);
   }
 
   public generateSocketId(): string {
     return generateUserID();
-  }
+  }*/
 }
