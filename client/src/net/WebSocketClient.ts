@@ -1,10 +1,6 @@
 import { ClientConnection } from "./ClientConnection";
 import { PacketRegistry } from "../../../core/src/net/PacketRegistry";
 import { ClientPlayListener } from "../../../core/src/net/listener/ClientPlayListener";
-import { DebugS2CPacket } from "../../../core/src/net/packets/DebugS2CPacket";
-import { JoinCallbackS2CPacket } from "../../../core/src/net/packets/JoinCallbackS2CPacket";
-import { JoinGameS2CPacket } from "../../../core/src/net/packets/JoinGameS2CPacket";
-import { PlayerMoveS2CPacket } from "../../../core/src/net/packets/PlayerMoveS2CPacket";
 
 export interface SocketMessageData<T> {
   client: WebSocketClient;

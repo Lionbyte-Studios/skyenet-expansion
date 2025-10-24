@@ -2,18 +2,17 @@ import { Entity, EntityType } from "../../core/src/entity/Entity";
 import { EntityRegistry } from "../../core/src/entity/EntityRegistry";
 import { Game } from "../../core/src/Game";
 import { GameLoopManager } from "../../core/src/GameLoopManager";
+import { ModifyEntitiesS2CPacket } from "../../core/src/net/packets/ModifyEntitiesS2CPacket";
 import { SpawnEntityS2CPacket } from "../../core/src/net/packets/SpawnEntityS2CPacket";
 import * as schemas from "../../core/src/Schemas";
 import {
   EntityID,
   GameID,
   GameMode,
-  ModifyEntitiesMessage,
   MovementMessage,
   ShipEngineSprite,
   ShipSprite,
   StatusMessage,
-  WebSocketMessageType,
 } from "../../core/src/types";
 import {
   genStringID,
@@ -92,7 +91,6 @@ export class ServerGame extends Game {
   }
 
   private randomTasks() {
-    return;
     if (randomNumberInRange(0, 300) === 0) {
       const xy = [
         randomNumberInRange(-1000, 1000),
@@ -118,31 +116,22 @@ export class ServerGame extends Game {
     this.gameLoopManager.stop();
   }
 
-  public modifyEntityData<T extends Entity = Entity>(
+  public override modifyEntityData<T extends Entity = Entity>(
     entityPredicate: (entity: Entity, index: number) => boolean,
     data: IndexSignature<Partial<OmitFunctions<T>>>,
   ) {
-    return;
-    const modified: ModifyEntitiesMessage = {
-      type: WebSocketMessageType.ModifyEntities,
-      modifications: [],
-    };
+    const modified: { entityID: string; modifications: object }[] = [];
     this.entities.forEach((entity, index) => {
       if (!entityPredicate(entity, index)) return;
-      modified.modifications.push({
+      modified.push({
         entityID: entity.entityID,
-        type: entity.entityType,
-        modified_data: data,
+        modifications: data,
       });
       for (const key in data) {
         this.entities[index][key] = data[key];
       }
     });
-    serverMgr.wsMgr.wss.clients.forEach((client) => {
-      client.send(
-        JSON.stringify(schemas.ModifyEntitiesMessage.parse(modified)),
-      );
-    });
+    serverMgr.wsMgr.broadcastPacket(new ModifyEntitiesS2CPacket(modified));
   }
 
   public spawnEntity(entity: Entity) {

@@ -1,7 +1,6 @@
 import { Game } from "../Game";
 import { PacketBuffer } from "../net/PacketBuffer";
 import { EntityID, PlayerID, ShipEngineSprite, ShipSprite } from "../types";
-import { toStringEnum } from "../util/Util";
 import { Entity, EntityType } from "./Entity";
 
 export abstract class Player extends Entity {

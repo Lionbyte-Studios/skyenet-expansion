@@ -6,7 +6,6 @@ import {
   WebSocketServerManager,
 } from "./net/WebSocketServer";
 import { ApiManager } from "./api/ApiManager";
-import { TextDisplay } from "../../core/src/entity/TextDisplay";
 import {
   CommandContext,
   CommandExecutionEnvironment,

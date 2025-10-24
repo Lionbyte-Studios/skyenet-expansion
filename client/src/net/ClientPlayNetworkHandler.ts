@@ -3,8 +3,10 @@ import type { DebugS2CPacket } from "../../../core/src/net/packets/DebugS2CPacke
 import type { JoinCallbackS2CPacket } from "../../../core/src/net/packets/JoinCallbackS2CPacket";
 import type { JoinGameS2CPacket } from "../../../core/src/net/packets/JoinGameS2CPacket";
 import type { KillEntitiesS2CPacket } from "../../../core/src/net/packets/KillEntitiesS2CPacket";
+import type { ModifyEntitiesS2CPacket } from "../../../core/src/net/packets/ModifyEntitiesS2CPacket";
 import type { PlayerMoveS2CPacket } from "../../../core/src/net/packets/PlayerMoveS2CPacket";
 import type { SpawnEntityS2CPacket } from "../../../core/src/net/packets/SpawnEntityS2CPacket";
+import type { IndexSignature } from "../../../core/src/util/Util";
 import { ClientPlayer } from "../entity/ClientPlayer";
 import { InGameScreen } from "../graphics/screen/InGameScreen";
 import { clientManager } from "../Main";
@@ -60,6 +62,37 @@ export class ClientPlayNetworkHandler extends ClientPlayListener {
       );
       if (index === -1) return;
       clientManager.game.entities.splice(index, 1);
+    });
+  }
+  public override onModifyEntities(packet: ModifyEntitiesS2CPacket): void {
+    packet.entityModifications.forEach((modification) => {
+      if (
+        clientManager.game.entities.find(
+          (entity) => entity.entityID === modification.entityID,
+        ) !== undefined
+      )
+        clientManager.game.modifyEntityData(
+          (entity) => entity.entityID === modification.entityID,
+          modification.modifications as IndexSignature<
+            typeof modification.modifications
+          >,
+        );
+      else if (
+        clientManager.game.players.find(
+          (player) => player.entityID === modification.entityID,
+        ) !== undefined
+      )
+        clientManager.game.modifyPlayerData(
+          (player) => player.entityID === modification.entityID,
+          modification.modifications as IndexSignature<
+            typeof modification.modifications
+          >,
+        );
+      else {
+        console.warn(
+          `Could not find entity nor player with entity id ${modification.entityID}. Could not apply modifications.`,
+        );
+      }
     });
   }
 }

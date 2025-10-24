@@ -1,9 +1,7 @@
 import { WebSocket, WebSocketServer } from "ws";
 import { PacketRegistry } from "../../../core/src/net/PacketRegistry";
 import { ServerPlayListener } from "../../../core/src/net/listener/ServerPlayListener";
-import { PlayerMoveC2SPacket } from "../../../core/src/net/packets/PlayerMoveC2SPacket";
 import { ServerConnection } from "./ServerConnection";
-import { JoinGameC2SPacket } from "../../../core/src/net/packets/JoinGameC2SPacket";
 import { Packet } from "../../../core/src/net/Packet";
 import { PlayListener } from "../../../core/src/net/listener/PlayListener";
 import { PacketBuffer } from "../../../core/src/net/PacketBuffer";

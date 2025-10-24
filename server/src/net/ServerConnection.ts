@@ -4,7 +4,6 @@ import { ServerPlayNetworkHandler } from "./ServerPlayNetworkHandler";
 import { PlayListener } from "../../../core/src/net/listener/PlayListener";
 import { Packet } from "../../../core/src/net/Packet";
 import { PacketBuffer } from "../../../core/src/net/PacketBuffer";
-import { DebugS2CPacket } from "../../../core/src/net/packets/DebugS2CPacket";
 import { WebSocketClientWithData } from "./WebSocketServer";
 
 export class ServerConnection {
