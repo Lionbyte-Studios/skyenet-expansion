@@ -1,5 +1,6 @@
 import { BulletType } from "../../../core/src/entity/Bullet";
 import type { Game } from "../../../core/src/Game";
+import { PlayerMoveC2SPacket } from "../../../core/src/net/packets/PlayerMoveC2SPacket";
 import {
   type ShipEngineSprite,
   type ShipSprite,
@@ -100,6 +101,7 @@ export class MyPlayer extends ClientPlayer {
   }
 
   public sendMovement() {
+    /*
     clientManager.webSocketClient.sendMovement({
       playerID: this.playerID,
       x: this.x,
@@ -111,6 +113,18 @@ export class MyPlayer extends ClientPlayer {
       velY: this.velY,
       velR: this.velR,
     });
+    */
+    clientManager.webSocketClient.connection.sendPacket(
+      new PlayerMoveC2SPacket(
+        this.x,
+        this.y,
+        this.rotation,
+        this.velX,
+        this.velY,
+        this.velR,
+        this.engineActive,
+      ),
+    );
   }
 
   public setShipType(shipSprite: ShipSprite, engineSprite: ShipEngineSprite) {

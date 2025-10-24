@@ -1,11 +1,7 @@
 import { Entity } from "../../entity/Entity";
 import { EntityRegistry } from "../../entity/EntityRegistry";
 import { Player } from "../../entity/Player";
-import {
-  EntityID,
-  GameID,
-  PlayerID,
-} from "../../types";
+import { EntityID, GameID, PlayerID } from "../../types";
 import { ClientPlayListener } from "../listener/ClientPlayListener";
 import { Packet, PacketID } from "../Packet";
 import { PacketBuffer } from "../PacketBuffer";
