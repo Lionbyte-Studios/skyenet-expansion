@@ -2,6 +2,7 @@ import { ClientPlayListener } from "../../../core/src/net/listener/ClientPlayLis
 import type { DebugS2CPacket } from "../../../core/src/net/packets/DebugS2CPacket";
 import type { JoinCallbackS2CPacket } from "../../../core/src/net/packets/JoinCallbackS2CPacket";
 import type { JoinGameS2CPacket } from "../../../core/src/net/packets/JoinGameS2CPacket";
+import type { KillEntitiesS2CPacket } from "../../../core/src/net/packets/KillEntitiesS2CPacket";
 import type { PlayerMoveS2CPacket } from "../../../core/src/net/packets/PlayerMoveS2CPacket";
 import type { SpawnEntityS2CPacket } from "../../../core/src/net/packets/SpawnEntityS2CPacket";
 import { ClientPlayer } from "../entity/ClientPlayer";
@@ -51,5 +52,14 @@ export class ClientPlayNetworkHandler extends ClientPlayListener {
     if (!(clientManager.currentScreen instanceof InGameScreen)) return;
     if (clientManager.currentScreen.state !== "gamerunning") return;
     clientManager.game.entities.push(packet.entity);
+  }
+  public override onKillEntities(packet: KillEntitiesS2CPacket): void {
+    packet.entityIDs.forEach((id) => {
+      const index = clientManager.game.entities.findIndex(
+        (entity) => entity.entityID === id,
+      );
+      if (index === -1) return;
+      clientManager.game.entities.splice(index, 1);
+    });
   }
 }
