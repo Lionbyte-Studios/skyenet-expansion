@@ -1,29 +1,27 @@
-import { WebSocket } from "ws";
 import { ServerPlayListener } from "../../../core/src/net/listener/ServerPlayListener";
 import { PacketRegistry } from "../../../core/src/net/PacketRegistry";
 import { ServerPlayNetworkHandler } from "./ServerPlayNetworkHandler";
-import { ServerPlayer } from "../entity/ServerPlayer";
 import { PlayListener } from "../../../core/src/net/listener/PlayListener";
 import { Packet } from "../../../core/src/net/Packet";
 import { PacketBuffer } from "../../../core/src/net/PacketBuffer";
 import { DebugS2CPacket } from "../../../core/src/net/packets/DebugS2CPacket";
+import { WebSocketClientWithData } from "./WebSocketServer";
 
 export class ServerConnection {
   private listener: ServerPlayNetworkHandler;
   private registry: PacketRegistry<ServerPlayListener>;
-  private ws: WebSocket;
+  private ws: WebSocketClientWithData;
 
   constructor(
-    ws: WebSocket,
-    player: ServerPlayer,
+    ws: WebSocketClientWithData,
     registry: PacketRegistry<ServerPlayListener>,
   ) {
     this.ws = ws;
     this.ws.binaryType = "arraybuffer";
     this.registry = registry;
     this.listener = new ServerPlayNetworkHandler(
-      player,
       this.sendPacket.bind(this),
+      this.ws.data.socket_id,
     );
 
     ws.on("message", (data) => this.handleIncoming(data));

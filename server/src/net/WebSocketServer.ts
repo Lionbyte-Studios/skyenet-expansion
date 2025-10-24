@@ -1,15 +1,13 @@
 import { WebSocket, WebSocketServer } from "ws";
-import {
-  PlayerID,
-  ShipEngineSprite,
-  ShipSprite,
-} from "../../../core/src/types";
 import { PacketRegistry } from "../../../core/src/net/PacketRegistry";
 import { ServerPlayListener } from "../../../core/src/net/listener/ServerPlayListener";
 import { PlayerMoveC2SPacket } from "../../../core/src/net/packets/PlayerMoveC2SPacket";
-import { ServerPlayer } from "../entity/ServerPlayer";
 import { ServerConnection } from "./ServerConnection";
 import { JoinGameC2SPacket } from "../../../core/src/net/packets/JoinGameC2SPacket";
+import { Packet } from "../../../core/src/net/Packet";
+import { PlayListener } from "../../../core/src/net/listener/PlayListener";
+import { PacketBuffer } from "../../../core/src/net/PacketBuffer";
+import { genStringID } from "../../../core/src/util/Util";
 
 export interface SocketMessageData<T> {
   socket: WebSocketClientWithData;
@@ -18,18 +16,15 @@ export interface SocketMessageData<T> {
 }
 
 export type WebSocketClientData = {
-  isAlive: boolean;
   socket_id: string;
-  playerID?: PlayerID;
 };
 
 export type WebSocketClientWithData = WebSocket & {
-  data?: WebSocketClientData;
+  data: WebSocketClientData;
 };
 
 export class WebSocketServerManager {
   public wss: WebSocketServer;
-  // private handlers: WsMessageHandler<unknown>[];
   public registry: PacketRegistry<ServerPlayListener>;
 
   constructor() {
@@ -40,19 +35,34 @@ export class WebSocketServerManager {
     this.wss = new WebSocketServer({ port: 8081 });
 
     this.wss.on("connection", (ws) => {
-      const player = new ServerPlayer(
-        "a",
-        "a",
-        1,
-        1,
-        1,
-        ShipSprite.Black,
-        ShipEngineSprite.Black,
-        "a",
-      );
-      new ServerConnection(ws, player, this.registry);
+      (ws as WebSocketClientWithData).data = {
+        socket_id: this.generateSocketID(),
+      };
+      new ServerConnection(ws as WebSocketClientWithData, this.registry);
     });
-    /*
+  }
+
+  public broadcastPacket<T extends Packet<PlayListener>>(
+    packet: T,
+    exclude?: string[],
+  ) {
+    const buf = new PacketBuffer();
+    buf.writeInt((packet.constructor as unknown as { id: number }).id);
+    packet.write(buf);
+    this.wss.clients.forEach((client) => {
+      if (
+        exclude !== undefined &&
+        exclude.includes((client as WebSocketClientWithData).data.socket_id)
+      )
+        return;
+      client.send(buf.buffer.slice(0, buf.offset));
+    });
+  }
+
+  private generateSocketID(): string {
+    return genStringID(64);
+  }
+  /*
     this.handlers = [
       new WsJoinMessageHandler(),
       new WsStatusMessageHandler(),
@@ -82,7 +92,7 @@ export class WebSocketServerManager {
         );
         serverMgr.game.players[index].leave_game();
         */
-    /*const id = ws.data.playerId;
+  /*const id = ws.data.playerId;
           if(id !== undefined) {
             const entityId = serverMgr.game.players.filter(player => player.playerID === id)[0].entityID;
             const index = serverMgr.game.players.findIndex(player => player.playerID === id);
@@ -98,7 +108,7 @@ export class WebSocketServerManager {
               )
             });
           }*/
-    /*});
+  /*});
 
       ws.on("message", async (data) => {
         let json;
@@ -178,7 +188,6 @@ export class WebSocketServerManager {
     this.wss.on("close", () => {
       clearInterval(ping_interval);
     });*/
-  }
   /*
   public registerHandler<T>(handler: WsMessageHandler<T>) {
     this.handlers.push(handler);

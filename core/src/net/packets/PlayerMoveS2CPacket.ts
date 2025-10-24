@@ -1,14 +1,16 @@
 import { Player } from "../../entity/Player";
-import { ServerPlayListener } from "../listener/ServerPlayListener";
+import { PlayerID } from "../../types";
+import { ClientPlayListener } from "../listener/ClientPlayListener";
 import { Packet, PacketID } from "../Packet";
 import { PacketBuffer } from "../PacketBuffer";
 
-export class PlayerMoveC2SPacket extends Packet<ServerPlayListener> {
+export class PlayerMoveS2CPacket extends Packet<ClientPlayListener> {
   static override get id() {
-    return PacketID.PlayerMoveC2S;
+    return PacketID.PlayerMoveS2C;
   }
 
   constructor(
+    public playerID: PlayerID,
     public x: number,
     public y: number,
     public rotation: number,
@@ -21,6 +23,7 @@ export class PlayerMoveC2SPacket extends Packet<ServerPlayListener> {
   }
 
   override write(buf: PacketBuffer): void {
+    buf.writeString(this.playerID);
     buf.writeFloat(this.x);
     buf.writeFloat(this.y);
     buf.writeFloat(this.rotation);
@@ -30,8 +33,9 @@ export class PlayerMoveC2SPacket extends Packet<ServerPlayListener> {
     buf.writeBoolean(this.engineActive);
   }
 
-  static override read(buf: PacketBuffer): PlayerMoveC2SPacket {
-    return new PlayerMoveC2SPacket(
+  static override read(buf: PacketBuffer): PlayerMoveS2CPacket {
+    return new PlayerMoveS2CPacket(
+      buf.readString(),
       buf.readFloat(),
       buf.readFloat(),
       buf.readFloat(),
@@ -42,7 +46,7 @@ export class PlayerMoveC2SPacket extends Packet<ServerPlayListener> {
     );
   }
 
-  override apply(listener: ServerPlayListener): void {
+  override apply(listener: ClientPlayListener): void {
     listener.onPlayerMove(this);
   }
 
@@ -58,5 +62,18 @@ export class PlayerMoveC2SPacket extends Packet<ServerPlayListener> {
     player.velY = this.velY;
     player.velR = this.velR;
     player.engineActive = this.engineActive;
+  }
+
+  public static fromPlayer(player: Player): PlayerMoveS2CPacket {
+    return new PlayerMoveS2CPacket(
+      player.playerID,
+      player.x,
+      player.y,
+      player.rotation,
+      player.velX,
+      player.velY,
+      player.velR,
+      player.engineActive,
+    );
   }
 }

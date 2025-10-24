@@ -3,6 +3,8 @@ import { PacketRegistry } from "../../../core/src/net/PacketRegistry";
 import { ClientPlayListener } from "../../../core/src/net/listener/ClientPlayListener";
 import { DebugS2CPacket } from "../../../core/src/net/packets/DebugS2CPacket";
 import { JoinCallbackS2CPacket } from "../../../core/src/net/packets/JoinCallbackS2CPacket";
+import { JoinGameS2CPacket } from "../../../core/src/net/packets/JoinGameS2CPacket";
+import { PlayerMoveS2CPacket } from "../../../core/src/net/packets/PlayerMoveS2CPacket";
 
 export interface SocketMessageData<T> {
   client: WebSocketClient;
@@ -24,8 +26,12 @@ export class WebSocketClient {
     this.ws = new WebSocket(addr);
     this.ws.binaryType = "arraybuffer";
     this.registry = new PacketRegistry<ClientPlayListener>();
+
     this.registry.register(DebugS2CPacket.id, DebugS2CPacket);
     this.registry.register(JoinCallbackS2CPacket.id, JoinCallbackS2CPacket);
+    this.registry.register(JoinGameS2CPacket.id, JoinGameS2CPacket);
+    this.registry.register(PlayerMoveS2CPacket.id, PlayerMoveS2CPacket);
+
     this.connection = new ClientConnection(this.ws, this.registry);
 
     this.ws.addEventListener("open", () => {

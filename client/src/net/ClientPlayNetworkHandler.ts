@@ -1,10 +1,36 @@
 import { ClientPlayListener } from "../../../core/src/net/listener/ClientPlayListener";
 import type { DebugS2CPacket } from "../../../core/src/net/packets/DebugS2CPacket";
 import type { JoinCallbackS2CPacket } from "../../../core/src/net/packets/JoinCallbackS2CPacket";
+import type { JoinGameS2CPacket } from "../../../core/src/net/packets/JoinGameS2CPacket";
+import type { PlayerMoveS2CPacket } from "../../../core/src/net/packets/PlayerMoveS2CPacket";
+import { ClientPlayer } from "../entity/ClientPlayer";
 import { InGameScreen } from "../graphics/screen/InGameScreen";
 import { clientManager } from "../Main";
 
 export class ClientPlayNetworkHandler extends ClientPlayListener {
+  public onPlayerJoin(packet: JoinGameS2CPacket): void {
+    if (clientManager.game === undefined) return;
+    clientManager.game.players.push(
+      new ClientPlayer(
+        packet.playerID,
+        packet.entityID,
+        packet.x,
+        packet.y,
+        packet.rotation,
+        packet.selectedShip,
+        packet.selectedShipEngine,
+      ),
+    );
+    console.log(`New player with ID ${packet.playerID}`);
+  }
+  public onPlayerMove(packet: PlayerMoveS2CPacket): void {
+    if (clientManager.game === undefined) return;
+    const index = clientManager.game.players.findIndex(
+      (player) => player.playerID === packet.playerID,
+    );
+    if (index === -1) return;
+    packet.updatePlayer(clientManager.game.players[index]);
+  }
   public onJoinCallback(packet: JoinCallbackS2CPacket): void {
     if (!(clientManager.currentScreen instanceof InGameScreen))
       throw new Error(
