@@ -6,7 +6,7 @@ export enum AsteroidType {
   Average,
 }
 
-export class Asteroid extends Entity {
+export abstract class Asteroid extends Entity {
   public static override get entityType(): EntityType {
     return EntityType.Asteroid;
   }
@@ -52,12 +52,6 @@ export class Asteroid extends Entity {
   }
 
   public static override netRead(buf: PacketBuffer): Asteroid {
-    return new Asteroid(
-      buf.readFloat(),
-      buf.readFloat(),
-      buf.readFloat(),
-      buf.readInt(),
-      buf.readString(),
-    );
+    throw new Error("Method was not implemented.");
   }
 }

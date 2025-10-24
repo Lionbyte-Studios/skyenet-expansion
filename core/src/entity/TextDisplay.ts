@@ -2,7 +2,7 @@ import { PacketBuffer } from "../net/PacketBuffer";
 import { EntityID } from "../types";
 import { Entity, EntityType } from "./Entity";
 
-export class TextDisplay extends Entity {
+export abstract class TextDisplay extends Entity {
   public static override get entityType(): EntityType {
     return EntityType.TextDisplay;
   }
@@ -21,11 +21,6 @@ export class TextDisplay extends Entity {
   }
 
   public static override netRead(buf: PacketBuffer): TextDisplay {
-    return new TextDisplay(
-      buf.readString(),
-      buf.readFloat(),
-      buf.readFloat(),
-      buf.readString(),
-    );
+    throw new Error("Method was not implemented.");
   }
 }

@@ -27,12 +27,8 @@ export class WebSocketClient {
     this.ws.binaryType = "arraybuffer";
     this.registry = new PacketRegistry<ClientPlayListener>();
 
-    this.registry.register(DebugS2CPacket.id, DebugS2CPacket);
-    this.registry.register(JoinCallbackS2CPacket.id, JoinCallbackS2CPacket);
-    this.registry.register(JoinGameS2CPacket.id, JoinGameS2CPacket);
-    this.registry.register(PlayerMoveS2CPacket.id, PlayerMoveS2CPacket);
-
     this.connection = new ClientConnection(this.ws, this.registry);
+    this.connection.listener._registerPackets(this.registry);
 
     this.ws.addEventListener("open", () => {
       console.log("Connected to websocket server!");

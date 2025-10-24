@@ -23,13 +23,9 @@ export class ServerConnection {
       this.sendPacket.bind(this),
       this.ws.data.socket_id,
     );
+    this.listener._registerPackets(this.registry);
 
     ws.on("message", (data) => this.handleIncoming(data));
-
-    let i = 0;
-    setInterval(() => {
-      this.sendPacket(new DebugS2CPacket((i++).toString()));
-    }, 1000);
   }
 
   // @ts-expect-error The typescript checker thing won't wanna use the import of 'ws'

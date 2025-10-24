@@ -15,6 +15,9 @@ import {
 } from "../../core/src/commands/lib/CommandManager";
 import { registerCommands } from "./CommandRegisterer";
 import { ChatMessage } from "../../core/src/Schemas";
+import { ServerTextDisplay } from "./entity/ServerTextDisplay";
+import { Player } from "../../core/src/entity/Player";
+import { ServerPlayer } from "./entity/ServerPlayer";
 
 class ServerCommandExecutionEnvironment extends CommandExecutionEnvironment {
   public sendMessage(message: string, context: CommandContext): void {
@@ -43,6 +46,7 @@ export class ServerManager {
   public commandManager: CommandManager;
 
   constructor() {
+    ServerGame.registerEntities();
     this.game = new ServerGame(genStringID(8), GameMode.FFA);
     this.wsMgr = new WebSocketServerManager();
     this.commandManager = new CommandManager();
@@ -53,10 +57,12 @@ export class ServerManager {
   }
 }
 
+Player.registerPlayerClass(ServerPlayer);
+
 export const serverMgr = new ServerManager();
 serverMgr.game.startGameLoop();
 
 // Start the API (express.js)
 export const apiMgr = new ApiManager();
 
-serverMgr.game.spawnEntity(new TextDisplay("hii", 300, -300));
+serverMgr.game.spawnEntity(new ServerTextDisplay("hii", 300, -300));

@@ -25,5 +25,7 @@ export abstract class Game {
 
   public tick() {}
 
-  protected abstract registerEntities(): void;
+  public static registerEntities(): void {
+    throw new Error("Must be implemented.");
+  }
 }

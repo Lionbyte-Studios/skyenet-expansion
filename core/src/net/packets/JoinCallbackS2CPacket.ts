@@ -1,4 +1,4 @@
-import { Entity } from "../../entity/Entity";
+import { Entity, EntityType } from "../../entity/Entity";
 import { EntityRegistry } from "../../entity/EntityRegistry";
 import { Player } from "../../entity/Player";
 import { EntityID, GameID, PlayerID } from "../../types";
@@ -28,6 +28,9 @@ export class JoinCallbackS2CPacket extends Packet<ClientPlayListener> {
       item.netWrite(b);
     });
     buf.writeArray(this.entities, (b, item) => {
+      b.writeInt(
+        (item.constructor as unknown as { entityType: EntityType }).entityType,
+      );
       item.netWrite(b);
     });
   }
@@ -38,8 +41,8 @@ export class JoinCallbackS2CPacket extends Packet<ClientPlayListener> {
     const playerID = buf.readString();
     const entityID = buf.readString();
     const gameID = buf.readString();
-    const players: Player[] = buf.readArray<Player>((buf) => {
-      return Player.netRead(buf);
+    const players: Player[] = buf.readArray((buf) => {
+      return Player.playerClass.netRead(buf);
     });
     const entities: Entity[] = buf.readArray<Entity>((buf) => {
       return EntityRegistry.create(buf.readInt(), buf);

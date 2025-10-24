@@ -2,6 +2,7 @@ import { Entity, EntityType } from "../../core/src/entity/Entity";
 import { EntityRegistry } from "../../core/src/entity/EntityRegistry";
 import { Game } from "../../core/src/Game";
 import { GameLoopManager } from "../../core/src/GameLoopManager";
+import { SpawnEntityS2CPacket } from "../../core/src/net/packets/SpawnEntityS2CPacket";
 import * as schemas from "../../core/src/Schemas";
 import {
   EntityID,
@@ -91,6 +92,7 @@ export class ServerGame extends Game {
   }
 
   private randomTasks() {
+    return;
     if (randomNumberInRange(0, 300) === 0) {
       const xy = [
         randomNumberInRange(-1000, 1000),
@@ -144,23 +146,8 @@ export class ServerGame extends Game {
   }
 
   public spawnEntity(entity: Entity) {
-    return;
     this.entities.push(entity);
-
-    serverMgr.wsMgr.wss.clients.forEach((client) => {
-      client.send(
-        JSON.stringify(
-          schemas.SpawnEntitiesMessage.parse({
-            entities: [
-              {
-                type: entity.entityType,
-                data: entity,
-              },
-            ],
-          }),
-        ),
-      );
-    });
+    serverMgr.wsMgr.broadcastPacket(new SpawnEntityS2CPacket(entity));
   }
 
   public killEntity(
@@ -187,7 +174,7 @@ export class ServerGame extends Game {
     });
   }
 
-  protected override registerEntities(): void {
+  public static override registerEntities(): void {
     EntityRegistry.register(EntityType.Asteroid, ServerAsteroid);
     EntityRegistry.register(EntityType.Bullet, ServerBullet);
     EntityRegistry.register(EntityType.Player, ServerPlayer);

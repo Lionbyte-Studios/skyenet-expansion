@@ -1,5 +1,6 @@
 import { BulletType } from "../../../core/src/entity/Bullet";
 import type { Game } from "../../../core/src/Game";
+import { BulletShootC2SPacket } from "../../../core/src/net/packets/BulletShootC2SPacket";
 import { PlayerMoveC2SPacket } from "../../../core/src/net/packets/PlayerMoveC2SPacket";
 import {
   type ShipEngineSprite,
@@ -87,16 +88,16 @@ export class MyPlayer extends ClientPlayer {
       this.HP--;
     }
     if (game.keyManager.wasKeyJustPressed("Space")) {
-      clientManager.webSocketClient.sendBullet({
-        bullet: {
-          type: BulletType.Starter,
-          x: this.x,
-          y: this.y,
-          velX: this.velX - vertical * 10,
-          velY: this.velY - horizontal * 10,
-        },
-        playerID: this.playerID,
-      });
+      clientManager.webSocketClient.connection.sendPacket(
+        new BulletShootC2SPacket(
+          this.playerID,
+          BulletType.Starter,
+          this.x,
+          this.y,
+          this.velX - vertical * 10,
+          this.velY - horizontal * 10,
+        ),
+      );
     }
   }
 

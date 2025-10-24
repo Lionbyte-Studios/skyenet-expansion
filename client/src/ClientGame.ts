@@ -122,7 +122,8 @@ export class ClientGame extends Game {
     this.gameLoopManager.stop();
   }
 
-  protected override registerEntities(): void {
+  public static override registerEntities(): void {
+    console.log("Registering entities");
     EntityRegistry.register(EntityType.Asteroid, ClientAsteroid);
     EntityRegistry.register(EntityType.Bullet, ClientBullet);
     EntityRegistry.register(EntityType.Player, ClientPlayer);

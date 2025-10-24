@@ -6,7 +6,7 @@ export enum BulletType {
   Starter,
 }
 
-export class Bullet extends Entity {
+export abstract class Bullet extends Entity {
   public static override get entityType(): EntityType {
     return EntityType.Bullet;
   }
@@ -46,13 +46,6 @@ export class Bullet extends Entity {
   }
 
   public static override netRead(buf: PacketBuffer): Bullet {
-    return new Bullet(
-      buf.readFloat(),
-      buf.readFloat(),
-      buf.readFloat(),
-      buf.readFloat(),
-      buf.readString(),
-      buf.readString(),
-    );
+    throw new Error("Method was not implemented.");
   }
 }

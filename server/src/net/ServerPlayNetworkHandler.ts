@@ -1,9 +1,14 @@
+import { Bullet } from "../../../core/src/entity/Bullet";
 import { ServerPlayListener } from "../../../core/src/net/listener/ServerPlayListener";
+import { BulletShootC2SPacket } from "../../../core/src/net/packets/BulletShootC2SPacket";
+import { DebugS2CPacket } from "../../../core/src/net/packets/DebugS2CPacket";
 import { JoinCallbackS2CPacket } from "../../../core/src/net/packets/JoinCallbackS2CPacket";
 import { JoinGameC2SPacket } from "../../../core/src/net/packets/JoinGameC2SPacket";
 import { JoinGameS2CPacket } from "../../../core/src/net/packets/JoinGameS2CPacket";
 import { PlayerMoveC2SPacket } from "../../../core/src/net/packets/PlayerMoveC2SPacket";
 import { PlayerMoveS2CPacket } from "../../../core/src/net/packets/PlayerMoveS2CPacket";
+import { SpawnEntityS2CPacket } from "../../../core/src/net/packets/SpawnEntityS2CPacket";
+import { ServerBullet } from "../entity/ServerBullet";
 import { ServerPlayer } from "../entity/ServerPlayer";
 import { serverMgr } from "../Main";
 import { ServerConnection } from "./ServerConnection";
@@ -13,7 +18,7 @@ export class ServerPlayNetworkHandler extends ServerPlayListener {
   public player?: ServerPlayer;
   private socket_id: string;
 
-  public onJoinGame(packet: JoinGameC2SPacket): void {
+  public override onJoinGame(packet: JoinGameC2SPacket): void {
     const player = serverMgr.game.generatePlayer(
       packet.selectedShip,
       packet.selectedShipEngine,
@@ -48,12 +53,28 @@ export class ServerPlayNetworkHandler extends ServerPlayListener {
     this.packetSender = packetSender;
     this.socket_id = socket_id;
   }
-  public onPlayerMove(packet: PlayerMoveC2SPacket): void {
+  public override onPlayerMove(packet: PlayerMoveC2SPacket): void {
     if (this.player === undefined) return;
     packet.updatePlayer(this.player);
     serverMgr.wsMgr.broadcastPacket(
       PlayerMoveS2CPacket.fromPlayer(this.player),
       [this.socket_id],
     );
+  }
+
+  public override onBulletShoot(packet: BulletShootC2SPacket): void {
+    // this.packetSender(
+    //   new DebugS2CPacket(
+    //     "You shot a bullet"
+    //   ),
+    // );
+    const bullet = new ServerBullet(
+      packet.x,
+      packet.y,
+      packet.velX,
+      packet.velY,
+      packet.owner,
+    );
+    serverMgr.game.spawnEntity(bullet);
   }
 }

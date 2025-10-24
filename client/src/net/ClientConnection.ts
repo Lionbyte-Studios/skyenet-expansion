@@ -5,7 +5,7 @@ import { PacketBuffer } from "../../../core/src/net/PacketBuffer";
 import type { Packet } from "../../../core/src/net/Packet";
 
 export class ClientConnection {
-  private listener: ClientPlayNetworkHandler;
+  public listener: ClientPlayNetworkHandler;
   private registry: PacketRegistry<ClientPlayListener>;
   private ws: WebSocket;
 

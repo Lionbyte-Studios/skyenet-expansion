@@ -8,6 +8,8 @@ export enum PacketID {
   JoinGameC2S,
   JoinGameS2C,
   JoinCallbackS2C,
+  BulletShootC2S,
+  SpawnEntityS2C,
 }
 
 export abstract class Packet<L extends PlayListener> {

@@ -3,12 +3,13 @@ import type { DebugS2CPacket } from "../../../core/src/net/packets/DebugS2CPacke
 import type { JoinCallbackS2CPacket } from "../../../core/src/net/packets/JoinCallbackS2CPacket";
 import type { JoinGameS2CPacket } from "../../../core/src/net/packets/JoinGameS2CPacket";
 import type { PlayerMoveS2CPacket } from "../../../core/src/net/packets/PlayerMoveS2CPacket";
+import type { SpawnEntityS2CPacket } from "../../../core/src/net/packets/SpawnEntityS2CPacket";
 import { ClientPlayer } from "../entity/ClientPlayer";
 import { InGameScreen } from "../graphics/screen/InGameScreen";
 import { clientManager } from "../Main";
 
 export class ClientPlayNetworkHandler extends ClientPlayListener {
-  public onPlayerJoin(packet: JoinGameS2CPacket): void {
+  public override onPlayerJoin(packet: JoinGameS2CPacket): void {
     if (clientManager.game === undefined) return;
     clientManager.game.players.push(
       new ClientPlayer(
@@ -23,7 +24,7 @@ export class ClientPlayNetworkHandler extends ClientPlayListener {
     );
     console.log(`New player with ID ${packet.playerID}`);
   }
-  public onPlayerMove(packet: PlayerMoveS2CPacket): void {
+  public override onPlayerMove(packet: PlayerMoveS2CPacket): void {
     if (clientManager.game === undefined) return;
     const index = clientManager.game.players.findIndex(
       (player) => player.playerID === packet.playerID,
@@ -31,7 +32,7 @@ export class ClientPlayNetworkHandler extends ClientPlayListener {
     if (index === -1) return;
     packet.updatePlayer(clientManager.game.players[index]);
   }
-  public onJoinCallback(packet: JoinCallbackS2CPacket): void {
+  public override onJoinCallback(packet: JoinCallbackS2CPacket): void {
     if (!(clientManager.currentScreen instanceof InGameScreen))
       throw new Error(
         "Received JoinCallback packet while screen is not InGameScreen",
@@ -43,7 +44,12 @@ export class ClientPlayNetworkHandler extends ClientPlayListener {
     console.log("Received JoinCallback packet: " + JSON.stringify(packet));
     clientManager.currentScreen.joinCallback(packet);
   }
-  public onDebug(packet: DebugS2CPacket): void {
+  public override onDebug(packet: DebugS2CPacket): void {
     console.log("Debug message from server: " + packet.getMessage());
+  }
+  public override onSpawnEntity(packet: SpawnEntityS2CPacket): void {
+    if (!(clientManager.currentScreen instanceof InGameScreen)) return;
+    if (clientManager.currentScreen.state !== "gamerunning") return;
+    clientManager.game.entities.push(packet.entity);
   }
 }

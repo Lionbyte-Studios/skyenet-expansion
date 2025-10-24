@@ -4,7 +4,7 @@ import { EntityID, PlayerID, ShipEngineSprite, ShipSprite } from "../types";
 import { toStringEnum } from "../util/Util";
 import { Entity, EntityType } from "./Entity";
 
-export class Player extends Entity {
+export abstract class Player extends Entity {
   entityType: EntityType = EntityType.Player;
   playerID: PlayerID;
   velX: number = 0;
@@ -25,6 +25,7 @@ export class Player extends Entity {
     size?: number;
     rotation?: number;
   }[] = [];
+  static playerClass: typeof Player;
 
   constructor(
     playerID: PlayerID,
@@ -91,15 +92,10 @@ export class Player extends Entity {
     buf.writeString(this.shipEngineSprite);
   }
   public static override netRead(buf: PacketBuffer): Player {
-    return new Player(
-      buf.readString(),
-      buf.readString(),
-      buf.readFloat(),
-      buf.readFloat(),
-      buf.readFloat(),
-      toStringEnum(ShipSprite, buf.readString()) ?? ShipSprite.White,
-      toStringEnum(ShipEngineSprite, buf.readString()) ??
-        ShipEngineSprite.White,
-    );
+    throw new Error("Method was not implemented.");
+  }
+
+  public static registerPlayerClass(playerClass: typeof this.playerClass) {
+    Player.playerClass = playerClass;
   }
 }

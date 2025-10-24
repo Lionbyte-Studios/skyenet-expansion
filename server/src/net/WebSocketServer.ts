@@ -30,8 +30,6 @@ export class WebSocketServerManager {
   constructor() {
     console.log("WebSocketServerManager  constructor");
     this.registry = new PacketRegistry<ServerPlayListener>();
-    this.registry.register(PlayerMoveC2SPacket.id, PlayerMoveC2SPacket);
-    this.registry.register(JoinGameC2SPacket.id, JoinGameC2SPacket);
     this.wss = new WebSocketServer({ port: 8081 });
 
     this.wss.on("connection", (ws) => {
