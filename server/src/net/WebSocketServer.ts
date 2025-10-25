@@ -26,7 +26,6 @@ export class WebSocketServerManager {
   public registry: PacketRegistry<ServerPlayListener>;
 
   constructor() {
-    console.log("WebSocketServerManager  constructor");
     this.registry = new PacketRegistry<ServerPlayListener>();
     this.wss = new WebSocketServer({ port: 8081 });
 

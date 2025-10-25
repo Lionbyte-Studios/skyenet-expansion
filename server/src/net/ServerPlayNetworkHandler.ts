@@ -1,5 +1,6 @@
 import { ServerPlayListener } from "../../../core/src/net/listener/ServerPlayListener";
 import { BulletShootC2SPacket } from "../../../core/src/net/packets/BulletShootC2SPacket";
+import { CommandC2SPacket } from "../../../core/src/net/packets/CommandC2SPacket";
 import { JoinCallbackS2CPacket } from "../../../core/src/net/packets/JoinCallbackS2CPacket";
 import { JoinGameC2SPacket } from "../../../core/src/net/packets/JoinGameC2SPacket";
 import { JoinGameS2CPacket } from "../../../core/src/net/packets/JoinGameS2CPacket";
@@ -7,7 +8,7 @@ import { PlayerMoveC2SPacket } from "../../../core/src/net/packets/PlayerMoveC2S
 import { PlayerMoveS2CPacket } from "../../../core/src/net/packets/PlayerMoveS2CPacket";
 import { ServerBullet } from "../entity/ServerBullet";
 import { ServerPlayer } from "../entity/ServerPlayer";
-import { serverMgr } from "../Main";
+import { serverMgr, ServersideCommandSource } from "../Main";
 import { ServerConnection } from "./ServerConnection";
 
 export class ServerPlayNetworkHandler extends ServerPlayListener {
@@ -73,5 +74,18 @@ export class ServerPlayNetworkHandler extends ServerPlayListener {
       packet.owner,
     );
     serverMgr.game.spawnEntity(bullet);
+  }
+
+  public override onCommand(packet: CommandC2SPacket): void {
+    if (this.player === undefined) return;
+    serverMgr.commandManager.runCommand(
+      packet.command,
+      new ServersideCommandSource(
+        this.player.playerID,
+        this.socket_id,
+        this.player,
+        this.packetSender,
+      ),
+    );
   }
 }

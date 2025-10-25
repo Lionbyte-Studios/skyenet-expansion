@@ -10,7 +10,6 @@ import { ClientScreen } from "./Screen";
 
 export interface ChatMessageEntry {
   message: string;
-  sender?: string;
   created_at: number;
 }
 
@@ -97,10 +96,9 @@ export class InGameScreen extends ClientScreen {
     this.initGame();
   }
 
-  public addChatMessage(message: string, sender?: string): void {
+  public addChatMessage(message: string): void {
     this.chatMessages.push({
       message: message,
-      sender: sender,
       created_at: Date.now(),
     });
   }

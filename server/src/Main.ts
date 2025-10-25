@@ -1,10 +1,7 @@
-import { GameMode } from "../../core/src/types";
+import { GameMode, PlayerID } from "../../core/src/types";
 import { ServerGame } from "./ServerGame";
 import { genStringID } from "../../core/src/util/Util";
-import {
-  WebSocketClientWithData,
-  WebSocketServerManager,
-} from "./net/WebSocketServer";
+import { WebSocketServerManager } from "./net/WebSocketServer";
 import { ApiManager } from "./api/ApiManager";
 import {
   CommandContext,
@@ -13,10 +10,11 @@ import {
   CommandSource,
 } from "../../core/src/commands/lib/CommandManager";
 import { registerCommands } from "./CommandRegisterer";
-import { ChatMessage } from "../../core/src/Schemas";
 import { ServerTextDisplay } from "./entity/ServerTextDisplay";
 import { Player } from "../../core/src/entity/Player";
 import { ServerPlayer } from "./entity/ServerPlayer";
+import { ServerConnection } from "./net/ServerConnection";
+import { DebugS2CPacket } from "../../core/src/net/packets/DebugS2CPacket";
 
 class ServerCommandExecutionEnvironment extends CommandExecutionEnvironment {
   public sendMessage(message: string, context: CommandContext): void {
@@ -25,17 +23,16 @@ class ServerCommandExecutionEnvironment extends CommandExecutionEnvironment {
 }
 
 export class ServersideCommandSource extends CommandSource {
+  constructor(
+    playerID: PlayerID,
+    socket_id: string,
+    player: ServerPlayer,
+    public packetSender: ServerConnection["sendPacket"],
+  ) {
+    super(playerID, socket_id, player);
+  }
   public sendMessage(message: string): void {
-    serverMgr.wsMgr.wss.clients.forEach((client: WebSocketClientWithData) => {
-      if (client.data!.socket_id !== this.socket_id) return;
-      client.send(
-        JSON.stringify(
-          ChatMessage.parse({
-            message: message,
-          }),
-        ),
-      );
-    });
+    this.packetSender(new DebugS2CPacket(message));
   }
 }
 

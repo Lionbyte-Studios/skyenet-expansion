@@ -105,7 +105,6 @@ export class ServerGame extends Game {
           randomNumberInRange(-3, 3),
         ),
       );
-      console.log(`Spawning new asteroid at ${xy[0]} ${xy[1]}`);
     }
   }
 

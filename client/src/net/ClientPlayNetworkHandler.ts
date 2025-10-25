@@ -1,4 +1,5 @@
 import { ClientPlayListener } from "../../../core/src/net/listener/ClientPlayListener";
+import type { ChatMessageS2CPacket } from "../../../core/src/net/packets/ChatMessageS2CPacket";
 import type { DebugS2CPacket } from "../../../core/src/net/packets/DebugS2CPacket";
 import type { JoinCallbackS2CPacket } from "../../../core/src/net/packets/JoinCallbackS2CPacket";
 import type { JoinGameS2CPacket } from "../../../core/src/net/packets/JoinGameS2CPacket";
@@ -95,6 +96,13 @@ export class ClientPlayNetworkHandler extends ClientPlayListener {
         );
       }
     });
+  }
+
+  public override onChatMessage(packet: ChatMessageS2CPacket): void {
+    if (!acceptingInGamePackets()) return;
+    (clientManager.currentScreen as InGameScreen).addChatMessage(
+      packet.message,
+    );
   }
 }
 

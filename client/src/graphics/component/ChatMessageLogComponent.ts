@@ -1,3 +1,4 @@
+import { CommandC2SPacket } from "../../../../core/src/net/packets/CommandC2SPacket";
 import type { MouseInfo, RenderInfo } from "../../ClientManager";
 import { clientManager } from "../../Main";
 import { InGameScreen, type ChatMessageEntry } from "../screen/InGameScreen";
@@ -24,7 +25,9 @@ export class ChatMessageLogComponent extends Component<ChatMessageLogComponentDa
       onEnter: (component) => {
         const command = component.text;
         component.text = "";
-        clientManager.webSocketClient.sendCommand({ command: command });
+        clientManager.webSocketClient.connection.sendPacket(
+          new CommandC2SPacket(command),
+        );
       },
       onEscape: (component) => {
         component.data.selected = false;
@@ -51,13 +54,7 @@ export class ChatMessageLogComponent extends Component<ChatMessageLogComponentDa
     for (const message of this.messages.sort(
       (a, b) => b.created_at - a.created_at,
     )) {
-      renderInfo.ctx.fillText(
-        (message.sender === undefined ? "<server>" : `<${message.sender}>`) +
-          (message.sender === "" ? "" : " ") +
-          message.message,
-        this.args.x,
-        currentPos,
-      );
+      renderInfo.ctx.fillText(message.message, this.args.x, currentPos);
       currentPos -= textHeight;
     }
   }
