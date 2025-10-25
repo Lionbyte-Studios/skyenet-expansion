@@ -15,6 +15,7 @@ import { Player } from "../../core/src/entity/Player";
 import { ServerPlayer } from "./entity/ServerPlayer";
 import { ServerConnection } from "./net/ServerConnection";
 import { DebugS2CPacket } from "../../core/src/net/packets/DebugS2CPacket";
+import { ChatMessageS2CPacket } from "../../core/src/net/packets/ChatMessageS2CPacket";
 
 class ServerCommandExecutionEnvironment extends CommandExecutionEnvironment {
   public sendMessage(message: string, context: CommandContext): void {
@@ -32,7 +33,7 @@ export class ServersideCommandSource extends CommandSource {
     super(playerID, socket_id, player);
   }
   public sendMessage(message: string): void {
-    this.packetSender(new DebugS2CPacket(message));
+    this.packetSender(new ChatMessageS2CPacket(message));
   }
 }
 
