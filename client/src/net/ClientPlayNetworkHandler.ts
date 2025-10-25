@@ -13,7 +13,7 @@ import { clientManager } from "../Main";
 
 export class ClientPlayNetworkHandler extends ClientPlayListener {
   public override onPlayerJoin(packet: JoinGameS2CPacket): void {
-    if (clientManager.game === undefined) return;
+    if (!acceptingInGamePackets()) return;
     clientManager.game.players.push(
       new ClientPlayer(
         packet.playerID,
@@ -28,7 +28,7 @@ export class ClientPlayNetworkHandler extends ClientPlayListener {
     console.log(`New player with ID ${packet.playerID}`);
   }
   public override onPlayerMove(packet: PlayerMoveS2CPacket): void {
-    if (clientManager.game === undefined) return;
+    if (!acceptingInGamePackets()) return;
     const index = clientManager.game.players.findIndex(
       (player) => player.playerID === packet.playerID,
     );
@@ -51,11 +51,11 @@ export class ClientPlayNetworkHandler extends ClientPlayListener {
     console.log("Debug message from server: " + packet.getMessage());
   }
   public override onSpawnEntity(packet: SpawnEntityS2CPacket): void {
-    if (!(clientManager.currentScreen instanceof InGameScreen)) return;
-    if (clientManager.currentScreen.state !== "gamerunning") return;
+    if (!acceptingInGamePackets()) return;
     clientManager.game.entities.push(packet.entity);
   }
   public override onKillEntities(packet: KillEntitiesS2CPacket): void {
+    if (!acceptingInGamePackets()) return;
     packet.entityIDs.forEach((id) => {
       const index = clientManager.game.entities.findIndex(
         (entity) => entity.entityID === id,
@@ -65,6 +65,7 @@ export class ClientPlayNetworkHandler extends ClientPlayListener {
     });
   }
   public override onModifyEntities(packet: ModifyEntitiesS2CPacket): void {
+    if (!acceptingInGamePackets()) return;
     packet.entityModifications.forEach((modification) => {
       if (
         clientManager.game.entities.find(
@@ -95,4 +96,11 @@ export class ClientPlayNetworkHandler extends ClientPlayListener {
       }
     });
   }
+}
+
+function acceptingInGamePackets(): boolean {
+  return (
+    clientManager.currentScreen instanceof InGameScreen &&
+    clientManager.currentScreen.state === "gamerunning"
+  );
 }

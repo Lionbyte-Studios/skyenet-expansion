@@ -1,4 +1,4 @@
-import { Entity } from "../../entity/Entity";
+import { Entity, EntityType } from "../../entity/Entity";
 import { EntityRegistry } from "../../entity/EntityRegistry";
 import { ClientPlayListener } from "../listener/ClientPlayListener";
 import { Packet, PacketID } from "../Packet";
@@ -16,7 +16,10 @@ export class SpawnEntityS2CPacket extends Packet<ClientPlayListener> {
   write(buf: PacketBuffer): void {
     console.log("Sending spawn entity packet with entity:");
     console.log(this.entity);
-    buf.writeInt(this.entity.entityType);
+    buf.writeInt(
+      (this.entity.constructor as unknown as { entityType: EntityType })
+        .entityType,
+    );
     this.entity.netWrite(buf);
   }
   apply(listener: ClientPlayListener): void {

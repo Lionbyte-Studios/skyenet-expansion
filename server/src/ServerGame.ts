@@ -2,9 +2,9 @@ import { Entity, EntityType } from "../../core/src/entity/Entity";
 import { EntityRegistry } from "../../core/src/entity/EntityRegistry";
 import { Game } from "../../core/src/Game";
 import { GameLoopManager } from "../../core/src/GameLoopManager";
+import { KillEntitiesS2CPacket } from "../../core/src/net/packets/KillEntitiesS2CPacket";
 import { ModifyEntitiesS2CPacket } from "../../core/src/net/packets/ModifyEntitiesS2CPacket";
 import { SpawnEntityS2CPacket } from "../../core/src/net/packets/SpawnEntityS2CPacket";
-import * as schemas from "../../core/src/Schemas";
 import {
   EntityID,
   GameID,
@@ -142,25 +142,13 @@ export class ServerGame extends Game {
   public killEntity(
     entityPredicate: (entity: Entity, index: number) => boolean,
   ) {
-    return;
     const entitiesKilled: EntityID[] = [];
     this.entities.forEach((entity, index) => {
       if (!entityPredicate(entity, index)) return;
       entitiesKilled.push(entity.entityID);
       this.entities.splice(index, 1);
     });
-
-    console.log(`Killing entities: ${JSON.stringify(entitiesKilled)}`);
-
-    serverMgr.wsMgr.wss.clients.forEach((client) => {
-      client.send(
-        JSON.stringify(
-          schemas.KillEntitiesMessage.parse({
-            entities: entitiesKilled,
-          }),
-        ),
-      );
-    });
+    serverMgr.wsMgr.broadcastPacket(new KillEntitiesS2CPacket(entitiesKilled));
   }
 
   public static override registerEntities(): void {
