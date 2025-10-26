@@ -47,6 +47,8 @@ export class ClientGame extends Game {
   public stats: ClientGameStats;
   private gameLoopManager: GameLoopManager;
   public renderer!: GameRenderer;
+  public override isClient: boolean = true;
+  public override isServer: boolean = false;
 
   constructor(
     gameID: GameID,

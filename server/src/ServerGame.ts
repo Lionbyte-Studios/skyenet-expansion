@@ -36,6 +36,8 @@ export class ServerGame extends Game {
   public override players: ServerPlayer[];
   private gameLoopManager: GameLoopManager;
   public stats: ServerGameStats;
+  public override isClient: boolean = false;
+  public override isServer: boolean = true;
 
   constructor(gameID: GameID, gameMode: GameMode) {
     super(gameID, gameMode);

@@ -11,6 +11,8 @@ export abstract class Game {
   public gameMode: GameMode;
   public entities: Entity[];
   public config: Config;
+  public abstract isServer: boolean;
+  public abstract isClient: boolean;
 
   constructor(gameID: GameID, gameMode: GameMode) {
     this.gameID = gameID;
