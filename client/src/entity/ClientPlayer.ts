@@ -4,7 +4,7 @@ import { ShipEngineSprite, ShipSprite } from "../../../core/src/types";
 import { toStringEnum } from "../../../core/src/util/Util";
 
 export class ClientPlayer extends Player {
-  public static override netRead(buf: PacketBuffer): Player {
+  public static override netRead(buf: PacketBuffer): ClientPlayer {
     return new ClientPlayer(
       buf.readString(),
       buf.readString(),
