@@ -1,4 +1,4 @@
-import { Player } from "../../entity/Player";
+import { FlamesBits, Player } from "../../entity/Player";
 import { PlayerID } from "../../types";
 import { ClientPlayListener } from "../listener/ClientPlayListener";
 import { Packet, PacketID } from "../Packet";
@@ -18,6 +18,7 @@ export class PlayerMoveS2CPacket extends Packet<ClientPlayListener> {
     public velY: number,
     public velR: number,
     public engineActive: boolean,
+    public flames: FlamesBits,
   ) {
     super();
   }
@@ -31,6 +32,7 @@ export class PlayerMoveS2CPacket extends Packet<ClientPlayListener> {
     buf.writeFloat(this.velY);
     buf.writeFloat(this.velR);
     buf.writeBoolean(this.engineActive);
+    buf.writeInt(this.flames);
   }
 
   static override read(buf: PacketBuffer): PlayerMoveS2CPacket {
@@ -43,6 +45,7 @@ export class PlayerMoveS2CPacket extends Packet<ClientPlayListener> {
       buf.readFloat(),
       buf.readFloat(),
       buf.readBoolean(),
+      buf.readInt(),
     );
   }
 
@@ -62,6 +65,7 @@ export class PlayerMoveS2CPacket extends Packet<ClientPlayListener> {
     player.velY = this.velY;
     player.velR = this.velR;
     player.engineActive = this.engineActive;
+    player.flames = this.flames;
   }
 
   public static fromPlayer(player: Player): PlayerMoveS2CPacket {
@@ -74,6 +78,7 @@ export class PlayerMoveS2CPacket extends Packet<ClientPlayListener> {
       player.velY,
       player.velR,
       player.engineActive,
+      player.flames,
     );
   }
 }

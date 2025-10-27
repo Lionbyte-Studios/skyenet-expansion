@@ -107,6 +107,9 @@ export class ClientGame extends Game {
     this.entities.forEach((entity) => {
       entity.tick(this);
     });
+    this.players.forEach((player) => {
+      player.tickFlames();
+    });
     this.keyManager.update();
     this.myPlayer.tick(this);
     this.camera.tick();

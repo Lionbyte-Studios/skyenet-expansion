@@ -35,6 +35,7 @@ export class ClientPlayNetworkHandler extends ClientPlayListener {
     );
     if (index === -1) return;
     packet.updatePlayer(clientManager.game.players[index]);
+    clientManager.game.players[index].onMovementReceived();
   }
   public override onJoinCallback(packet: JoinCallbackS2CPacket): void {
     if (!(clientManager.currentScreen instanceof InGameScreen))

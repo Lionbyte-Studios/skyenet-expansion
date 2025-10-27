@@ -1,4 +1,4 @@
-import { Player } from "../../entity/Player";
+import { FlamesBits, Player } from "../../entity/Player";
 import { ServerPlayListener } from "../listener/ServerPlayListener";
 import { Packet, PacketID } from "../Packet";
 import { PacketBuffer } from "../PacketBuffer";
@@ -16,6 +16,7 @@ export class PlayerMoveC2SPacket extends Packet<ServerPlayListener> {
     public velY: number,
     public velR: number,
     public engineActive: boolean,
+    public flames: FlamesBits,
   ) {
     super();
   }
@@ -28,6 +29,7 @@ export class PlayerMoveC2SPacket extends Packet<ServerPlayListener> {
     buf.writeFloat(this.velY);
     buf.writeFloat(this.velR);
     buf.writeBoolean(this.engineActive);
+    buf.writeInt(this.flames);
   }
 
   static override read(buf: PacketBuffer): PlayerMoveC2SPacket {
@@ -39,6 +41,7 @@ export class PlayerMoveC2SPacket extends Packet<ServerPlayListener> {
       buf.readFloat(),
       buf.readFloat(),
       buf.readBoolean(),
+      buf.readInt(),
     );
   }
 
@@ -58,5 +61,6 @@ export class PlayerMoveC2SPacket extends Packet<ServerPlayListener> {
     player.velY = this.velY;
     player.velR = this.velR;
     player.engineActive = this.engineActive;
+    player.flames = this.flames;
   }
 }

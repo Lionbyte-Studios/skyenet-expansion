@@ -14,7 +14,6 @@ import { ServerTextDisplay } from "./entity/ServerTextDisplay";
 import { Player } from "../../core/src/entity/Player";
 import { ServerPlayer } from "./entity/ServerPlayer";
 import { ServerConnection } from "./net/ServerConnection";
-import { DebugS2CPacket } from "../../core/src/net/packets/DebugS2CPacket";
 import { ChatMessageS2CPacket } from "../../core/src/net/packets/ChatMessageS2CPacket";
 
 class ServerCommandExecutionEnvironment extends CommandExecutionEnvironment {

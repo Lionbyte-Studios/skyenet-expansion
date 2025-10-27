@@ -3,6 +3,14 @@ import { PacketBuffer } from "../net/PacketBuffer";
 import { EntityID, PlayerID, ShipEngineSprite, ShipSprite } from "../types";
 import { Entity, EntityType } from "./Entity";
 
+export enum FlamesBits {
+  None = 0b0000,
+  Forward = 0b0001,
+  Backward = 0b0010,
+  RotateClockwise = 0b0100,
+  RotateCounterClockwise = 0b1000,
+}
+
 export abstract class Player extends Entity {
   entityType: EntityType = EntityType.Player;
   playerID: PlayerID;
@@ -15,15 +23,16 @@ export abstract class Player extends Entity {
   engineActive: boolean = false;
   shipSprite: ShipSprite = ShipSprite.Gray;
   shipEngineSprite: ShipEngineSprite = ShipEngineSprite.Gray;
-  flames: {
-    x: number;
-    y: number;
-    z?: number;
-    velX?: number;
-    velY?: number;
-    size?: number;
-    rotation?: number;
-  }[] = [];
+  // flames: {
+  //   x: number;
+  //   y: number;
+  //   z?: number;
+  //   velX?: number;
+  //   velY?: number;
+  //   size?: number;
+  //   rotation?: number;
+  // }[] = [];
+  flames: FlamesBits = 0;
   static playerClass: typeof Player;
 
   constructor(
@@ -63,17 +72,6 @@ export abstract class Player extends Entity {
     }
     if (this.rotation <= 0) {
       this.rotation += 360;
-    }
-    for (let i = 0; i < this.flames.length; i++) {
-      this.flames[i].x += this.flames[i].velX!;
-      this.flames[i].y += this.flames[i].velY!;
-      this.flames[i].velY! *= 0.99; // Reduced friction to keep player moving longer
-      this.flames[i].velX! *= 0.99; // Reduced friction to keep player moving longer
-      this.flames[i].size! -= this.flames[i].z!;
-      if (this.flames[i].size! <= 0) {
-        this.flames.splice(i, 1);
-        i--;
-      }
     }
   }
   public override tick<T extends Game>(game?: T) {
