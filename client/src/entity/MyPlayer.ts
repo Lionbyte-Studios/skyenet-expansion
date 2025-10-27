@@ -17,11 +17,10 @@ export class MyPlayer extends ClientPlayer {
     if (game === undefined) return;
     if (!(game instanceof ClientGame)) return;
 
-    this.flamesToFlamesState();
-    this.tickFlames();
-
+    // Please don't change the order of these function calls unless you know what exactly you're doing
     this.velocityChange(game);
     this.move(game);
+    this.flamesToFlamesState();
     this.sendMovement();
   }
 
@@ -33,6 +32,7 @@ export class MyPlayer extends ClientPlayer {
     const horizontal = Math.cos((this.rotation * Math.PI) / 180) / 3;
     const vertical = Math.sin((this.rotation * Math.PI) / 180) / 3;
     if (game.keyManager.isKeyPressed("KeyW")) {
+      this.engineActive = true;
       this.velY -= horizontal;
       this.velX -= vertical;
       this.flames = this.flames | FlamesBits.Forward;
