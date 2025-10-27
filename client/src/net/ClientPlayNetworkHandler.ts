@@ -62,7 +62,17 @@ export class ClientPlayNetworkHandler extends ClientPlayListener {
       const index = clientManager.game.entities.findIndex(
         (entity) => entity.entityID === id,
       );
-      if (index === -1) return;
+      if (index === -1) {
+        const playerIndex = clientManager.game.players.findIndex(
+          (player) => player.entityID === id,
+        );
+        if (playerIndex === -1) {
+          console.warn("Could not find entity with id " + id);
+          return;
+        }
+        clientManager.game.players.splice(index, 1);
+        return;
+      }
       clientManager.game.entities.splice(index, 1);
     });
   }

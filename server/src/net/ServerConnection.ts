@@ -24,7 +24,13 @@ export class ServerConnection {
     );
     this.listener._registerPackets(this.registry);
 
-    ws.on("message", (data) => this.handleIncoming(data));
+    this.ws.on("message", (data) => this.handleIncoming(data));
+    this.ws.on(
+      "close",
+      (() => {
+        this.listener.player?.leave_game();
+      }).bind(this),
+    );
   }
 
   // @ts-expect-error The typescript checker thing won't wanna use the import of 'ws'
@@ -42,5 +48,10 @@ export class ServerConnection {
     buf.writeInt((packet.constructor as unknown as { id: number }).id);
     packet.write(buf);
     this.ws.send(buf.buffer.slice(0, buf.offset));
+  }
+
+  public pong() {
+    if (this.listener.player === undefined) return;
+    this.listener.player.lastPonged = Date.now();
   }
 }

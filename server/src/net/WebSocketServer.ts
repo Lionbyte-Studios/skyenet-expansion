@@ -6,6 +6,7 @@ import { Packet } from "../../../core/src/net/Packet";
 import { PlayListener } from "../../../core/src/net/listener/PlayListener";
 import { PacketBuffer } from "../../../core/src/net/PacketBuffer";
 import { genStringID } from "../../../core/src/util/Util";
+import { serverMgr } from "../Main";
 
 export interface SocketMessageData<T> {
   socket: WebSocketClientWithData;
@@ -24,16 +25,33 @@ export type WebSocketClientWithData = WebSocket & {
 export class WebSocketServerManager {
   public wss: WebSocketServer;
   public registry: PacketRegistry<ServerPlayListener>;
+  private pingInterval;
 
   constructor() {
     this.registry = new PacketRegistry<ServerPlayListener>();
     this.wss = new WebSocketServer({ port: 8081 });
 
+    this.pingInterval = setInterval(() => {
+      this.wss.clients.forEach((client) => client.ping());
+      serverMgr.game.players.forEach((player) => {
+        if (player.lastPonged + 7000 < Date.now()) {
+          player.leave_game();
+        }
+      });
+    }, 3000);
+
     this.wss.on("connection", (ws) => {
       (ws as WebSocketClientWithData).data = {
         socket_id: this.generateSocketID(),
       };
-      new ServerConnection(ws as WebSocketClientWithData, this.registry);
+      const connection = new ServerConnection(
+        ws as WebSocketClientWithData,
+        this.registry,
+      );
+
+      ws.on("pong", () => {
+        connection.pong();
+      });
     });
   }
 

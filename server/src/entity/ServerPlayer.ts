@@ -1,6 +1,5 @@
 import { WebSocket } from "ws";
 import { Player } from "../../../core/src/entity/Player";
-import { KillEntitiesMessage, StatusMessage } from "../../../core/src/Schemas";
 import {
   EntityID,
   PlayerID,
@@ -8,9 +7,11 @@ import {
   ShipSprite,
 } from "../../../core/src/types";
 import { serverMgr } from "../Main";
+import { KillEntitiesS2CPacket } from "../../../core/src/net/packets/KillEntitiesS2CPacket";
 
 export class ServerPlayer extends Player {
   admin: boolean;
+  lastPonged: number;
   constructor(
     playerID: PlayerID,
     entityID: EntityID,
@@ -23,10 +24,11 @@ export class ServerPlayer extends Player {
   ) {
     super(playerID, entityID, x, y, rotation, shipSprite, shipEngineSprite);
     this.admin = admin === undefined ? false : admin;
+    this.lastPonged = Date.now();
   }
 
   /**
-   * Terminates the WebSocket (sends a last message to the client) and deletes the player from the game.
+   * Terminates the WebSocket and deletes the player from the game.
    * Also sends the appropriate message to all other players telling them to remove the player locally.
    */
   public leave_game(ws?: WebSocket) {
@@ -36,24 +38,9 @@ export class ServerPlayer extends Player {
     if (index !== -1) {
       const entityID = serverMgr.game.players[index].entityID;
       serverMgr.game.players.splice(index, 1);
-      serverMgr.wsMgr.wss.clients.forEach((client) => {
-        client.send(
-          JSON.stringify(
-            KillEntitiesMessage.parse({
-              entities: [entityID],
-            }),
-          ),
-        );
-      });
+      serverMgr.wsMgr.broadcastPacket(new KillEntitiesS2CPacket([entityID]));
     }
     if (ws !== undefined) {
-      ws.send(
-        JSON.stringify(
-          StatusMessage.parse({
-            status: "disconnecting",
-          }),
-        ),
-      );
       ws.terminate();
     }
   }
