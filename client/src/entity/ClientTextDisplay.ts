@@ -1,6 +1,7 @@
 import type { RenderableEntity } from "./RenderableEntity";
 import { TextDisplay } from "../../../core/src/entity/TextDisplay";
 import type { RenderInfo } from "../ClientManager";
+import type { PacketBuffer } from "../../../core/src/net/PacketBuffer";
 
 export class ClientTextDisplay extends TextDisplay implements RenderableEntity {
   public render(info: RenderInfo) {
@@ -14,5 +15,13 @@ export class ClientTextDisplay extends TextDisplay implements RenderableEntity {
       this.y - info.game.camera.y,
     );
     info.ctx.translate(-info.game.camera.x, -info.game.camera.y);
+  }
+  public static override netRead(buf: PacketBuffer): TextDisplay {
+    return new ClientTextDisplay(
+      buf.readString(),
+      buf.readFloat(),
+      buf.readFloat(),
+      buf.readString(),
+    );
   }
 }

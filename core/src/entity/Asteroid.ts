@@ -1,3 +1,4 @@
+import { PacketBuffer } from "../net/PacketBuffer";
 import { isInArea } from "../util/Util";
 import { Entity, EntityType } from "./Entity";
 
@@ -5,8 +6,11 @@ export enum AsteroidType {
   Average,
 }
 
-export class Asteroid extends Entity {
-  entityType: EntityType = EntityType.Asteroid;
+export abstract class Asteroid extends Entity {
+  public static override get entityType(): EntityType {
+    return EntityType.Asteroid;
+  }
+
   type: AsteroidType = AsteroidType.Average;
   velX: number = 0;
   velY: number = 0;
@@ -37,5 +41,17 @@ export class Asteroid extends Entity {
       },
       { x: x, y: y },
     );
+  }
+
+  public override netWrite(buf: PacketBuffer): void {
+    buf.writeFloat(this.x);
+    buf.writeFloat(this.y);
+    buf.writeFloat(this.rotation);
+    buf.writeInt(this.size);
+    buf.writeString(this.entityID);
+  }
+
+  public static override netRead(buf: PacketBuffer): Asteroid {
+    throw new Error("Method was not implemented.");
   }
 }

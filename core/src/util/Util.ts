@@ -55,3 +55,12 @@ export function isInArea(
     pos.y <= area.y + area.height
   );
 }
+
+export function toStringEnum<E extends Record<string, string>>(
+  enumType: E,
+  value: string,
+): E[keyof E] | undefined {
+  const values = Object.values(enumType);
+  if (!values.includes(value)) return undefined;
+  return value as unknown as E[keyof E];
+}

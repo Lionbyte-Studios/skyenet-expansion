@@ -101,27 +101,30 @@ export class GameRenderer {
     });
 
     for (let i = renderInfo.game.players.length - 1; i >= 0; i--) {
-      for (let a = 0; a < renderInfo.game.players[i].flames.length; a++) {
+      for (let a = 0; a < renderInfo.game.players[i].flamesState.length; a++) {
         renderInfo.ctx.translate(
-          renderInfo.game.players[i].flames[a].x,
-          renderInfo.game.players[i].flames[a].y,
+          renderInfo.game.players[i].flamesState[a].x,
+          renderInfo.game.players[i].flamesState[a].y,
         );
         renderInfo.ctx.rotate(
-          -((renderInfo.game.players[i].flames[a].rotation! * Math.PI) / 180),
+          -(
+            (renderInfo.game.players[i].flamesState[a].rotation! * Math.PI) /
+            180
+          ),
         );
-        renderInfo.ctx.fillStyle = `rgb(${70 * renderInfo.game.players[i].flames[a].size! + 10},${(50 * renderInfo.game.players[i].flames[a].size!) / 2 + 30},10)`;
+        renderInfo.ctx.fillStyle = `rgb(${70 * renderInfo.game.players[i].flamesState[a].size! + 10},${(50 * renderInfo.game.players[i].flamesState[a].size!) / 2 + 30},10)`;
         renderInfo.ctx.fillRect(
-          -renderInfo.game.players[i].flames[a].size! / 2,
-          -renderInfo.game.players[i].flames[a].size! / 2,
-          renderInfo.game.players[i].flames[a].size!,
-          renderInfo.game.players[i].flames[a].size!,
+          -renderInfo.game.players[i].flamesState[a].size! / 2,
+          -renderInfo.game.players[i].flamesState[a].size! / 2,
+          renderInfo.game.players[i].flamesState[a].size!,
+          renderInfo.game.players[i].flamesState[a].size!,
         );
         renderInfo.ctx.rotate(
-          (renderInfo.game.players[i].flames[a].rotation! * Math.PI) / 180,
+          (renderInfo.game.players[i].flamesState[a].rotation! * Math.PI) / 180,
         );
         renderInfo.ctx.translate(
-          -renderInfo.game.players[i].flames[a].x,
-          -renderInfo.game.players[i].flames[a].y,
+          -renderInfo.game.players[i].flamesState[a].x,
+          -renderInfo.game.players[i].flamesState[a].y,
         );
       }
       /*const bullets = renderInfo.game.entities.filter(

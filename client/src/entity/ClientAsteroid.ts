@@ -1,4 +1,5 @@
 import { Asteroid } from "../../../core/src/entity/Asteroid";
+import type { PacketBuffer } from "../../../core/src/net/PacketBuffer";
 import type { EntityID } from "../../../core/src/types";
 import type { RenderInfo } from "../ClientManager";
 import type { RenderableEntity } from "./RenderableEntity";
@@ -51,5 +52,14 @@ export class ClientAsteroid extends Asteroid implements RenderableEntity {
 
   public onKill(info: RenderInfo) {
     /* TODO particles */
+  }
+  public static override netRead(buf: PacketBuffer): Asteroid {
+    return new ClientAsteroid(
+      buf.readFloat(),
+      buf.readFloat(),
+      buf.readFloat(),
+      buf.readInt(),
+      buf.readString(),
+    );
   }
 }

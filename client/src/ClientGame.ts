@@ -5,7 +5,7 @@ import type {
   GameMode,
   PlayerID,
 } from "../../core/src/types";
-import type { ClientPlayer } from "./entity/ClientPlayer";
+import { ClientPlayer } from "./entity/ClientPlayer";
 import { MyPlayer } from "./entity/MyPlayer";
 import { Camera } from "./graphics/game/Camera";
 import { KeyManager } from "./lib/Keyman";
@@ -14,6 +14,11 @@ import { ClientSettings } from "./lib/settings/ClientSettings";
 import { GameLoopManager } from "../../core/src/GameLoopManager";
 import { clientManager } from "./Main";
 import type { GameRenderer } from "./graphics/game/GameRenderer";
+import { EntityRegistry } from "../../core/src/entity/EntityRegistry";
+import { EntityType } from "../../core/src/entity/Entity";
+import { ClientAsteroid } from "./entity/ClientAsteroid";
+import { ClientBullet } from "./entity/ClientBullet";
+import { ClientTextDisplay } from "./entity/ClientTextDisplay";
 
 export interface ClientGameStats {
   fps: number;
@@ -42,6 +47,8 @@ export class ClientGame extends Game {
   public stats: ClientGameStats;
   private gameLoopManager: GameLoopManager;
   public renderer!: GameRenderer;
+  public override isClient: boolean = true;
+  public override isServer: boolean = false;
 
   constructor(
     gameID: GameID,
@@ -100,6 +107,9 @@ export class ClientGame extends Game {
     this.entities.forEach((entity) => {
       entity.tick(this);
     });
+    this.players.forEach((player) => {
+      player.tickFlames();
+    });
     this.keyManager.update();
     this.myPlayer.tick(this);
     this.camera.tick();
@@ -115,5 +125,13 @@ export class ClientGame extends Game {
   }
   public stopGameLoop() {
     this.gameLoopManager.stop();
+  }
+
+  public static override registerEntities(): void {
+    console.log("Registering entities");
+    EntityRegistry.register(EntityType.Asteroid, ClientAsteroid);
+    EntityRegistry.register(EntityType.Bullet, ClientBullet);
+    EntityRegistry.register(EntityType.Player, ClientPlayer);
+    EntityRegistry.register(EntityType.TextDisplay, ClientTextDisplay);
   }
 }

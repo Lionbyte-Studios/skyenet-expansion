@@ -1,12 +1,8 @@
-import { GameMode } from "../../core/src/types";
+import { GameMode, PlayerID } from "../../core/src/types";
 import { ServerGame } from "./ServerGame";
 import { genStringID } from "../../core/src/util/Util";
-import {
-  WebSocketClientWithData,
-  WebSocketServerManager,
-} from "./net/WebSocketServer";
+import { WebSocketServerManager } from "./net/WebSocketServer";
 import { ApiManager } from "./api/ApiManager";
-import { TextDisplay } from "../../core/src/entity/TextDisplay";
 import {
   CommandContext,
   CommandExecutionEnvironment,
@@ -14,7 +10,11 @@ import {
   CommandSource,
 } from "../../core/src/commands/lib/CommandManager";
 import { registerCommands } from "./CommandRegisterer";
-import { ChatMessage } from "../../core/src/Schemas";
+import { ServerTextDisplay } from "./entity/ServerTextDisplay";
+import { Player } from "../../core/src/entity/Player";
+import { ServerPlayer } from "./entity/ServerPlayer";
+import { ServerConnection } from "./net/ServerConnection";
+import { ChatMessageS2CPacket } from "../../core/src/net/packets/ChatMessageS2CPacket";
 
 class ServerCommandExecutionEnvironment extends CommandExecutionEnvironment {
   public sendMessage(message: string, context: CommandContext): void {
@@ -23,17 +23,16 @@ class ServerCommandExecutionEnvironment extends CommandExecutionEnvironment {
 }
 
 export class ServersideCommandSource extends CommandSource {
+  constructor(
+    playerID: PlayerID,
+    socket_id: string,
+    player: ServerPlayer,
+    public packetSender: ServerConnection["sendPacket"],
+  ) {
+    super(playerID, socket_id, player);
+  }
   public sendMessage(message: string): void {
-    serverMgr.wsMgr.wss.clients.forEach((client: WebSocketClientWithData) => {
-      if (client.data!.socket_id !== this.socket_id) return;
-      client.send(
-        JSON.stringify(
-          ChatMessage.parse({
-            message: message,
-          }),
-        ),
-      );
-    });
+    this.packetSender(new ChatMessageS2CPacket(message));
   }
 }
 
@@ -43,6 +42,7 @@ export class ServerManager {
   public commandManager: CommandManager;
 
   constructor() {
+    ServerGame.registerEntities();
     this.game = new ServerGame(genStringID(8), GameMode.FFA);
     this.wsMgr = new WebSocketServerManager();
     this.commandManager = new CommandManager();
@@ -53,10 +53,12 @@ export class ServerManager {
   }
 }
 
+Player.registerPlayerClass(ServerPlayer);
+
 export const serverMgr = new ServerManager();
 serverMgr.game.startGameLoop();
 
 // Start the API (express.js)
 export const apiMgr = new ApiManager();
 
-serverMgr.game.spawnEntity(new TextDisplay("hii", 300, -300));
+serverMgr.game.spawnEntity(new ServerTextDisplay("hii", 300, -300));

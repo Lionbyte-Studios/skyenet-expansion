@@ -1,15 +1,18 @@
-import { Entity } from "../../core/src/entity/Entity";
+import { Entity, EntityType } from "../../core/src/entity/Entity";
+import { EntityRegistry } from "../../core/src/entity/EntityRegistry";
 import { Game } from "../../core/src/Game";
 import { GameLoopManager } from "../../core/src/GameLoopManager";
-import * as schemas from "../../core/src/Schemas";
+import { KillEntitiesS2CPacket } from "../../core/src/net/packets/KillEntitiesS2CPacket";
+import { ModifyEntitiesS2CPacket } from "../../core/src/net/packets/ModifyEntitiesS2CPacket";
+import { SpawnEntityS2CPacket } from "../../core/src/net/packets/SpawnEntityS2CPacket";
 import {
   EntityID,
   GameID,
   GameMode,
-  ModifyEntitiesMessage,
   MovementMessage,
+  ShipEngineSprite,
+  ShipSprite,
   StatusMessage,
-  WebSocketMessageType,
 } from "../../core/src/types";
 import {
   genStringID,
@@ -18,7 +21,9 @@ import {
   randomNumberInRange,
 } from "../../core/src/util/Util";
 import { ServerAsteroid } from "./entity/ServerAsteroid";
+import { ServerBullet } from "./entity/ServerBullet";
 import { ServerPlayer } from "./entity/ServerPlayer";
+import { ServerTextDisplay } from "./entity/ServerTextDisplay";
 import { serverMgr } from "./Main";
 
 export interface ServerGameStats {
@@ -31,6 +36,8 @@ export class ServerGame extends Game {
   public override players: ServerPlayer[];
   private gameLoopManager: GameLoopManager;
   public stats: ServerGameStats;
+  public override isClient: boolean = false;
+  public override isServer: boolean = true;
 
   constructor(gameID: GameID, gameMode: GameMode) {
     super(gameID, gameMode);
@@ -55,7 +62,10 @@ export class ServerGame extends Game {
   public static generateRandomPlayerID() {
     return genStringID(8);
   }
-  public generatePlayer(socket_id: string): ServerPlayer {
+  public generatePlayer(
+    shipSprite: ShipSprite,
+    shipEngineSprite: ShipEngineSprite,
+  ): ServerPlayer {
     const id = ServerGame.generateRandomPlayerID();
     const entityID = genStringID(8);
     return new ServerPlayer(
@@ -64,9 +74,8 @@ export class ServerGame extends Game {
       this.config.defaultSpawnCoords.x,
       this.config.defaultSpawnCoords.y,
       0,
-      this.config.defaultShipSprite,
-      this.config.defaultShipEngineSprite,
-      socket_id,
+      shipSprite,
+      shipEngineSprite,
     );
   }
 
@@ -98,7 +107,6 @@ export class ServerGame extends Game {
           randomNumberInRange(-3, 3),
         ),
       );
-      console.log(`Spawning new asteroid at ${xy[0]} ${xy[1]}`);
     }
   }
 
@@ -109,49 +117,27 @@ export class ServerGame extends Game {
     this.gameLoopManager.stop();
   }
 
-  public modifyEntityData<T extends Entity = Entity>(
+  public override modifyEntityData<T extends Entity = Entity>(
     entityPredicate: (entity: Entity, index: number) => boolean,
     data: IndexSignature<Partial<OmitFunctions<T>>>,
   ) {
-    const modified: ModifyEntitiesMessage = {
-      type: WebSocketMessageType.ModifyEntities,
-      modifications: [],
-    };
+    const modified: { entityID: string; modifications: object }[] = [];
     this.entities.forEach((entity, index) => {
       if (!entityPredicate(entity, index)) return;
-      modified.modifications.push({
+      modified.push({
         entityID: entity.entityID,
-        type: entity.entityType,
-        modified_data: data,
+        modifications: data,
       });
       for (const key in data) {
         this.entities[index][key] = data[key];
       }
     });
-    serverMgr.wsMgr.wss.clients.forEach((client) => {
-      client.send(
-        JSON.stringify(schemas.ModifyEntitiesMessage.parse(modified)),
-      );
-    });
+    serverMgr.wsMgr.broadcastPacket(new ModifyEntitiesS2CPacket(modified));
   }
 
   public spawnEntity(entity: Entity) {
     this.entities.push(entity);
-
-    serverMgr.wsMgr.wss.clients.forEach((client) => {
-      client.send(
-        JSON.stringify(
-          schemas.SpawnEntitiesMessage.parse({
-            entities: [
-              {
-                type: entity.entityType,
-                data: entity,
-              },
-            ],
-          }),
-        ),
-      );
-    });
+    serverMgr.wsMgr.broadcastPacket(new SpawnEntityS2CPacket(entity));
   }
 
   public killEntity(
@@ -163,17 +149,13 @@ export class ServerGame extends Game {
       entitiesKilled.push(entity.entityID);
       this.entities.splice(index, 1);
     });
+    serverMgr.wsMgr.broadcastPacket(new KillEntitiesS2CPacket(entitiesKilled));
+  }
 
-    console.log(`Killing entities: ${JSON.stringify(entitiesKilled)}`);
-
-    serverMgr.wsMgr.wss.clients.forEach((client) => {
-      client.send(
-        JSON.stringify(
-          schemas.KillEntitiesMessage.parse({
-            entities: entitiesKilled,
-          }),
-        ),
-      );
-    });
+  public static override registerEntities(): void {
+    EntityRegistry.register(EntityType.Asteroid, ServerAsteroid);
+    EntityRegistry.register(EntityType.Bullet, ServerBullet);
+    EntityRegistry.register(EntityType.Player, ServerPlayer);
+    EntityRegistry.register(EntityType.TextDisplay, ServerTextDisplay);
   }
 }

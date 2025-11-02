@@ -69,11 +69,6 @@ export const alphabetForID =
 
 export const usernameRegexes = [/^[a-zA-Z0-9_.-]+$/gm, /[a-zA-Z]/gm];
 
-export enum EntityType {
-  Bullet,
-  Asteroid,
-}
-
 export enum ApiErrorType {
   UsernameIsNotString,
   EmailIsNotString,
