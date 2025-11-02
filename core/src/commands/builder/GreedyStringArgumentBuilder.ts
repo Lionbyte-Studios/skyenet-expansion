@@ -13,11 +13,10 @@ export class GreedyStringArgumentBuilder extends ArgumentCommandBuilder {
   public build(): CommandNode {
     const node = new GreedyStringArgumentNode(
       this.executor,
+      this.requiresFn,
       this.argument_name,
     );
-    for (const child of this.children) {
-      node.children.push(child.build());
-    }
+    this.commonBuildLogic(node);
     return node;
   }
 }

@@ -1,11 +1,15 @@
 import { StringReader } from "../CommandStringReader";
 import { ArgumentCommandNode } from "./ArgumentCommandNode";
-import { CommandExecutorFn } from "./CommandNode";
+import { CommandExecutorFn, CommandRequiresFn } from "./CommandNode";
 
 export class StringArgumentNode extends ArgumentCommandNode<string> {
   public argument_name: string;
-  constructor(executor: CommandExecutorFn, argument_name: string) {
-    super(executor);
+  constructor(
+    executor: CommandExecutorFn,
+    requires: CommandRequiresFn,
+    argument_name: string,
+  ) {
+    super(executor, requires);
     this.argument_name = argument_name;
   }
 

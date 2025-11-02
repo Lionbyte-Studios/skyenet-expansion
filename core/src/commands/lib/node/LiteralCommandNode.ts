@@ -1,10 +1,18 @@
 import { StringReader } from "../CommandStringReader";
-import { CommandExecutorFn, CommandNode } from "./CommandNode";
+import {
+  CommandExecutorFn,
+  CommandNode,
+  CommandRequiresFn,
+} from "./CommandNode";
 
 export class LiteralCommandNode extends CommandNode {
   private literal: string;
-  constructor(executor: CommandExecutorFn, literal: string) {
-    super(executor);
+  constructor(
+    executor: CommandExecutorFn,
+    requires: CommandRequiresFn,
+    literal: string,
+  ) {
+    super(executor, requires);
     this.literal = literal;
   }
   public parse(reader: StringReader): number | undefined {

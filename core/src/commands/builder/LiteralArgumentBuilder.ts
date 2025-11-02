@@ -11,10 +11,12 @@ export class LiteralArgumentBuilder extends CommandBuilder {
   }
 
   public build(): CommandNode {
-    const node = new LiteralCommandNode(this.executor, this.literal);
-    for (const child of this.children) {
-      node.children.push(child.build());
-    }
+    const node = new LiteralCommandNode(
+      this.executor,
+      this.requiresFn,
+      this.literal,
+    );
+    this.commonBuildLogic(node);
     return node;
   }
 }

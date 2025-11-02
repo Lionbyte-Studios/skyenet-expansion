@@ -11,10 +11,12 @@ export class IntegerArgumentBuilder extends ArgumentCommandBuilder {
   }
 
   public build(): CommandNode {
-    const node = new IntegerArgumentNode(this.executor, this.argument_name);
-    for (const child of this.children) {
-      node.children.push(child.build());
-    }
+    const node = new IntegerArgumentNode(
+      this.executor,
+      this.requiresFn,
+      this.argument_name,
+    );
+    this.commonBuildLogic(node);
     return node;
   }
 }

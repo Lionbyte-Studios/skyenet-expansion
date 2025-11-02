@@ -10,12 +10,17 @@ export type CommandExecutorFn = (
   source: CommandSource,
 ) => CommandResult;
 
+export type CommandRequiresFn = (source: CommandSource) => boolean;
+
 export abstract class CommandNode {
   public children: CommandNode[] = [];
   public executor: CommandExecutorFn;
+  public requires: CommandRequiresFn;
+  public requiresMsg: string = "You do not have permission to execute this.";
 
-  constructor(executor: CommandExecutorFn) {
+  constructor(executor: CommandExecutorFn, requires: CommandRequiresFn) {
     this.executor = executor;
+    this.requires = requires;
   }
 
   /**

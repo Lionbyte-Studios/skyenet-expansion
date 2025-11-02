@@ -24,10 +24,13 @@ export class CommandManager {
   public rootNode: RootCommandNode;
   private context: CommandContext | undefined;
   constructor() {
-    this.rootNode = new RootCommandNode((ctx: CommandContext) => {
-      ctx.sendMessage("The root command node cannot be executed.");
-      return 0;
-    });
+    this.rootNode = new RootCommandNode(
+      (ctx: CommandContext) => {
+        ctx.sendMessage("The root command node cannot be executed.");
+        return 0;
+      },
+      (source) => true,
+    );
   }
   public registerCommand(command: CommandBuilder) {
     this.rootNode.children.push(command.build());
@@ -65,6 +68,10 @@ export class CommandManager {
     context: CommandContext,
     source: CommandSource,
   ): CommandResult {
+    if (!node.requires(source)) {
+      source.sendMessage(node.requiresMsg);
+      return 0;
+    }
     if (node instanceof ArgumentCommandNode) {
       context.arguments.set(node.argument_name, node.getArgument());
     }

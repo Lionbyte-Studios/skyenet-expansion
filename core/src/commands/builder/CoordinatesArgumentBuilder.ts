@@ -14,10 +14,12 @@ export class CoordinatesArgumentBuilder extends ArgumentCommandBuilder {
   }
 
   public build(): CommandNode {
-    const node = new CoordinatesArgumentNode(this.executor, this.argument_name);
-    for (const child of this.children) {
-      node.children.push(child.build());
-    }
+    const node = new CoordinatesArgumentNode(
+      this.executor,
+      this.requiresFn,
+      this.argument_name,
+    );
+    this.commonBuildLogic(node);
     return node;
   }
 }
