@@ -1,4 +1,3 @@
-import { Player } from "../../../../core/src/entity/Player";
 import { CommandBuilder } from "../builder/CommandBuilder";
 import { StringReader } from "./CommandStringReader";
 import { ArgumentCommandNode } from "./node/ArgumentCommandNode";
@@ -7,20 +6,13 @@ import { RootCommandNode } from "./node/RootCommandNode";
 
 export type CommandResult = number;
 
-export abstract class CommandSource<T extends Player = Player> {
-  playerID: string;
-  socket_id: string;
-  player: T;
-  constructor(playerID: string, socket_id: string, player: T) {
-    this.playerID = playerID;
-    this.socket_id = socket_id;
-    this.player = player;
-  }
-
-  public abstract sendMessage(message: string): void;
+export interface CommandSender {
+  sendMessage(message: string): void;
+  getName(): string;
+  isAdmin(): boolean;
 }
 
-export class CommandManager<S extends Player> {
+export class CommandManager {
   public rootNode: RootCommandNode;
   private context: CommandContext | undefined;
   constructor() {
@@ -38,19 +30,19 @@ export class CommandManager<S extends Player> {
   public executeCommandWithContext(
     command: string,
     context: CommandContext,
-    source: CommandSource<S>,
+    sender: CommandSender,
   ): CommandResult {
     return this.execNode(
       new StringReader(command),
       this.rootNode,
       context,
-      source,
+      sender,
     );
   }
   public setGlobalContext(context: CommandContext) {
     this.context = context;
   }
-  public runCommand(command: string, source: CommandSource<S>): CommandResult {
+  public runCommand(command: string, sender: CommandSender): CommandResult {
     if (this.context === undefined)
       throw new Error(
         "context is undefined. use CommandManager#setGlobalContext() first!",
@@ -59,17 +51,17 @@ export class CommandManager<S extends Player> {
       new StringReader(command),
       this.rootNode,
       this.context,
-      source,
+      sender,
     );
   }
   private execNode(
     reader: StringReader,
     node: CommandNode,
     context: CommandContext,
-    source: CommandSource<S>,
+    sender: CommandSender,
   ): CommandResult {
-    if (!node.requires(source)) {
-      source.sendMessage(node.requiresMsg);
+    if (!node.requires(sender)) {
+      sender.sendMessage(node.requiresMsg);
       return 0;
     }
     if (node instanceof ArgumentCommandNode) {
@@ -79,13 +71,13 @@ export class CommandManager<S extends Player> {
       const parse_result = node.parse(reader);
       if (parse_result === undefined) return 0;
       if (parse_result === reader.currentString.length - 1)
-        return node.executor(context, source);
+        return node.executor(context, sender);
       reader.cursor = parse_result + 1;
     }
     for (const child of node.children) {
       const child_parse_result = child.parse(reader);
       if (child_parse_result === undefined) continue;
-      return this.execNode(reader, child, context, source);
+      return this.execNode(reader, child, context, sender);
     }
     return 0;
   }

@@ -5,15 +5,15 @@ import {
 import { GreedyStringArgumentBuilder } from "./commands/builder/GreedyStringArgumentBuilder";
 import { LiteralArgumentBuilder } from "./commands/builder/LiteralArgumentBuilder";
 import { StringArgumentBuilder } from "./commands/builder/StringArgumentBuilder";
-import { CommandManager, CommandSource } from "./commands/lib/CommandManager";
-import { ChatMessage } from "../../core/src/Schemas";
+import { CommandManager, CommandSender } from "./commands/lib/CommandManager";
 import { ServerAsteroid } from "./entity/ServerAsteroid";
 import { ServerPlayer } from "./entity/ServerPlayer";
 import { serverMgr } from "./Main";
+import { ChatMessageS2CPacket } from "../../core/src/net/packets/ChatMessageS2CPacket";
 
-export function registerCommands(mgr: CommandManager<ServerPlayer>) {
+export function registerCommands(mgr: CommandManager) {
   mgr.registerCommand(
-    new LiteralArgumentBuilder("echo").requires(requireAdmin).then(
+    new LiteralArgumentBuilder("echo").then(
       new GreedyStringArgumentBuilder("str").executes((ctx, source) => {
         source.sendMessage(ctx.getArgument<string>("str"));
         return 1;
@@ -48,23 +48,31 @@ export function registerCommands(mgr: CommandManager<ServerPlayer>) {
     new LiteralArgumentBuilder("summon").requires(requireAdmin).then(
       new LiteralArgumentBuilder("asteroid")
         .then(
-          new CoordinatesArgumentBuilder("coords").executes((ctx, source) => {
+          new CoordinatesArgumentBuilder("coords").executes((ctx, sender) => {
+            if (!(sender instanceof ServerPlayer)) {
+              sender.sendMessage("You must be a player.");
+              return 0;
+            }
             const coords = ctx.getArgument<CoordinatesType>("coords");
             let x = coords.x.value;
             let y = coords.y.value;
             if (coords.x.type === "relative") {
-              x += source.player.x;
+              x += sender.x;
             }
             if (coords.y.type === "relative") {
-              y += source.player.y;
+              y += sender.y;
             }
             serverMgr.game.spawnEntity(new ServerAsteroid(x, y, 0, 5, 0));
             return 1;
           }),
         )
-        .executes((ctx, source) => {
+        .executes((ctx, sender) => {
+          if (!(sender instanceof ServerPlayer)) {
+            sender.sendMessage("You must be a player.");
+            return 0;
+          }
           serverMgr.game.spawnEntity(
-            new ServerAsteroid(source.player.x, source.player.y, 0, 5, 0),
+            new ServerAsteroid(sender.x, sender.y, 0, 5, 0),
           );
           return 1;
         }),
@@ -73,26 +81,29 @@ export function registerCommands(mgr: CommandManager<ServerPlayer>) {
 
   mgr.registerCommand(
     new LiteralArgumentBuilder("broadcast").requires(requireAdmin).then(
-      new GreedyStringArgumentBuilder("message").executes((ctx, source) => {
+      new GreedyStringArgumentBuilder("message").executes((ctx, sender) => {
         const message = ctx.getArgument<string>("message");
-        serverMgr.wsMgr.wss.clients.forEach((client) => {
-          client.send(
-            JSON.stringify(
-              ChatMessage.parse({
-                sender: source.playerID,
-                message: message,
-              }),
-            ),
-          );
-        });
+        serverMgr.wsMgr.broadcastPacket(new ChatMessageS2CPacket(message));
+        return 1;
+      }),
+    ),
+  );
+
+  mgr.registerCommand(
+    new LiteralArgumentBuilder("say").then(
+      new GreedyStringArgumentBuilder("message").executes((ctx, sender) => {
+        const message = ctx.getArgument<string>("message");
+        serverMgr.wsMgr.broadcastPacket(
+          new ChatMessageS2CPacket("<" + sender.getName() + "> " + message),
+        );
         return 1;
       }),
     ),
   );
 }
 
-function requireAdmin(source: CommandSource): boolean {
+function requireAdmin(sender: CommandSender): boolean {
   return true;
-  if (!(source.player instanceof ServerPlayer)) return false;
-  return source.player.admin;
+  if (!(sender instanceof ServerPlayer)) return false;
+  return sender.isAdmin();
 }

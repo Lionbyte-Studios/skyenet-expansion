@@ -1,16 +1,16 @@
 import {
   CommandContext,
   CommandResult,
-  CommandSource,
+  CommandSender,
 } from "../CommandManager";
 import { StringReader } from "../CommandStringReader";
 
 export type CommandExecutorFn = (
   ctx: CommandContext,
-  source: CommandSource,
+  sender: CommandSender,
 ) => CommandResult;
 
-export type CommandRequiresFn = (source: CommandSource) => boolean;
+export type CommandRequiresFn = (sender: CommandSender) => boolean;
 
 export abstract class CommandNode {
   public children: CommandNode[] = [];

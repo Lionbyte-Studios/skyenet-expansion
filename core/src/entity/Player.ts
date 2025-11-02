@@ -33,7 +33,10 @@ export abstract class Player extends Entity {
   //   rotation?: number;
   // }[] = [];
   flames: FlamesBits = 0;
-  static playerClass: typeof Player;
+
+  // sorry
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  static playerClass: any;
 
   constructor(
     playerID: PlayerID,

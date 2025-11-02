@@ -25,6 +25,7 @@ import { ServerBullet } from "./entity/ServerBullet";
 import { ServerPlayer } from "./entity/ServerPlayer";
 import { ServerTextDisplay } from "./entity/ServerTextDisplay";
 import { serverMgr } from "./Main";
+import { ServerConnection } from "./net/ServerConnection";
 
 export interface ServerGameStats {
   tps: number;
@@ -65,6 +66,7 @@ export class ServerGame extends Game {
   public generatePlayer(
     shipSprite: ShipSprite,
     shipEngineSprite: ShipEngineSprite,
+    sendPacket: ServerConnection["sendPacket"],
   ): ServerPlayer {
     const id = ServerGame.generateRandomPlayerID();
     const entityID = genStringID(8);
@@ -76,6 +78,7 @@ export class ServerGame extends Game {
       0,
       shipSprite,
       shipEngineSprite,
+      sendPacket,
     );
   }
 

@@ -1,4 +1,4 @@
-import { GameMode, PlayerID } from "../../core/src/types";
+import { GameMode } from "../../core/src/types";
 import { ServerGame } from "./ServerGame";
 import { genStringID } from "../../core/src/util/Util";
 import { WebSocketServerManager } from "./net/WebSocketServer";
@@ -7,14 +7,11 @@ import {
   CommandContext,
   CommandExecutionEnvironment,
   CommandManager,
-  CommandSource,
 } from "./commands/lib/CommandManager";
 import { registerCommands } from "./CommandRegisterer";
 import { ServerTextDisplay } from "./entity/ServerTextDisplay";
 import { Player } from "../../core/src/entity/Player";
 import { ServerPlayer } from "./entity/ServerPlayer";
-import { ServerConnection } from "./net/ServerConnection";
-import { ChatMessageS2CPacket } from "../../core/src/net/packets/ChatMessageS2CPacket";
 
 class ServerCommandExecutionEnvironment extends CommandExecutionEnvironment {
   public sendMessage(message: string, context: CommandContext): void {
@@ -22,24 +19,10 @@ class ServerCommandExecutionEnvironment extends CommandExecutionEnvironment {
   }
 }
 
-export class ServersideCommandSource extends CommandSource<ServerPlayer> {
-  constructor(
-    playerID: PlayerID,
-    socket_id: string,
-    player: ServerPlayer,
-    public packetSender: ServerConnection["sendPacket"],
-  ) {
-    super(playerID, socket_id, player);
-  }
-  public sendMessage(message: string): void {
-    this.packetSender(new ChatMessageS2CPacket(message));
-  }
-}
-
 export class ServerManager {
   public game: ServerGame;
   public wsMgr: WebSocketServerManager;
-  public commandManager: CommandManager<ServerPlayer>;
+  public commandManager: CommandManager;
 
   constructor() {
     ServerGame.registerEntities();

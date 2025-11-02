@@ -8,7 +8,7 @@ import { PlayerMoveC2SPacket } from "../../../core/src/net/packets/PlayerMoveC2S
 import { PlayerMoveS2CPacket } from "../../../core/src/net/packets/PlayerMoveS2CPacket";
 import { ServerBullet } from "../entity/ServerBullet";
 import { ServerPlayer } from "../entity/ServerPlayer";
-import { serverMgr, ServersideCommandSource } from "../Main";
+import { serverMgr } from "../Main";
 import { ServerConnection } from "./ServerConnection";
 
 export class ServerPlayNetworkHandler extends ServerPlayListener {
@@ -21,6 +21,7 @@ export class ServerPlayNetworkHandler extends ServerPlayListener {
     const player = serverMgr.game.generatePlayer(
       packet.selectedShip,
       packet.selectedShipEngine,
+      this.packetSender,
     );
     serverMgr.game.addPlayer(player);
     this.player = player;
@@ -79,14 +80,6 @@ export class ServerPlayNetworkHandler extends ServerPlayListener {
 
   public override onCommand(packet: CommandC2SPacket): void {
     if (this.player === undefined) return;
-    serverMgr.commandManager.runCommand(
-      packet.command,
-      new ServersideCommandSource(
-        this.player.playerID,
-        this.socket_id,
-        this.player,
-        this.packetSender,
-      ),
-    );
+    serverMgr.commandManager.runCommand(packet.command, this.player);
   }
 }

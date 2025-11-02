@@ -1,4 +1,4 @@
-import { CommandContext, CommandSource } from "../lib/CommandManager";
+import { CommandContext, CommandSender } from "../lib/CommandManager";
 import {
   CommandExecutorFn,
   CommandRequiresFn,
@@ -13,7 +13,7 @@ export abstract class CommandBuilder {
     );
     return 0;
   };
-  protected requiresFn: CommandRequiresFn = (source: CommandSource) => {
+  protected requiresFn: CommandRequiresFn = (sender: CommandSender) => {
     return true;
   };
   protected requiresMsg: string | undefined;
