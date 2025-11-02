@@ -5,16 +5,18 @@ import {
 import { GreedyStringArgumentBuilder } from "../../core/src/commands/builder/GreedyStringArgumentBuilder";
 import { LiteralArgumentBuilder } from "../../core/src/commands/builder/LiteralArgumentBuilder";
 import { StringArgumentBuilder } from "../../core/src/commands/builder/StringArgumentBuilder";
-import { CommandManager } from "../../core/src/commands/lib/CommandManager";
+import {
+  CommandManager,
+  CommandSource,
+} from "../../core/src/commands/lib/CommandManager";
 import { ChatMessage } from "../../core/src/Schemas";
 import { ServerAsteroid } from "./entity/ServerAsteroid";
 import { ServerPlayer } from "./entity/ServerPlayer";
 import { serverMgr } from "./Main";
-import { WebSocketClientWithData } from "./net/WebSocketServer";
 
 export function registerCommands(mgr: CommandManager<ServerPlayer>) {
   mgr.registerCommand(
-    new LiteralArgumentBuilder("echo").then(
+    new LiteralArgumentBuilder("echo").requires(requireAdmin).then(
       new GreedyStringArgumentBuilder("str").executes((ctx, source) => {
         source.sendMessage(ctx.getArgument<string>("str"));
         return 1;
@@ -23,43 +25,30 @@ export function registerCommands(mgr: CommandManager<ServerPlayer>) {
   );
 
   mgr.registerCommand(
-    new LiteralArgumentBuilder("kick").then(
+    new LiteralArgumentBuilder("kick").requires(requireAdmin).then(
       new StringArgumentBuilder("player_id").executes((ctx) => {
         const id = ctx.getArgument<string>("player_id");
-        const index = serverMgr.game.players.findIndex(
-          (player) => player.playerID === id,
-        );
-        if (index === -1) return 0;
-        serverMgr.wsMgr.wss.clients.forEach(
-          (client: WebSocketClientWithData) => {
-            if (
-              client.data!.socket_id !== serverMgr.game.players[index].socket_id
-            )
-              return;
-            serverMgr.game.players[index].leave_game(client);
-          },
-        );
-        return 1;
+        for (const player of serverMgr.game.players) {
+          if (player.playerID !== id) continue;
+          player.leave_game();
+          return 1;
+        }
+        return 0;
       }),
     ),
   );
 
   mgr.registerCommand(
-    new LiteralArgumentBuilder("kickall").executes((ctx) => {
-      serverMgr.game.players.forEach((player) => {
-        serverMgr.wsMgr.wss.clients.forEach(
-          (client: WebSocketClientWithData) => {
-            if (client.data!.socket_id !== player.socket_id) return;
-            player.leave_game(client);
-          },
-        );
-      });
-      return 1;
-    }),
+    new LiteralArgumentBuilder("kickall")
+      .requires(requireAdmin)
+      .executes((ctx) => {
+        serverMgr.game.players.forEach((player) => player.leave_game());
+        return 1;
+      }),
   );
 
   mgr.registerCommand(
-    new LiteralArgumentBuilder("summon").then(
+    new LiteralArgumentBuilder("summon").requires(requireAdmin).then(
       new LiteralArgumentBuilder("asteroid")
         .then(
           new CoordinatesArgumentBuilder("coords").executes((ctx, source) => {
@@ -86,7 +75,7 @@ export function registerCommands(mgr: CommandManager<ServerPlayer>) {
   );
 
   mgr.registerCommand(
-    new LiteralArgumentBuilder("broadcast").then(
+    new LiteralArgumentBuilder("broadcast").requires(requireAdmin).then(
       new GreedyStringArgumentBuilder("message").executes((ctx, source) => {
         const message = ctx.getArgument<string>("message");
         serverMgr.wsMgr.wss.clients.forEach((client) => {
@@ -103,4 +92,9 @@ export function registerCommands(mgr: CommandManager<ServerPlayer>) {
       }),
     ),
   );
+}
+
+function requireAdmin(source: CommandSource): boolean {
+  if (!(source.player instanceof ServerPlayer)) return false;
+  return source.player.admin;
 }

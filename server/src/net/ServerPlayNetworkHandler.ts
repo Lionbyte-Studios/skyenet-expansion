@@ -17,6 +17,7 @@ export class ServerPlayNetworkHandler extends ServerPlayListener {
   private socket_id: string;
 
   public override onJoinGame(packet: JoinGameC2SPacket): void {
+    // TODO check admin status
     const player = serverMgr.game.generatePlayer(
       packet.selectedShip,
       packet.selectedShipEngine,

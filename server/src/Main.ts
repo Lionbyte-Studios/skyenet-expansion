@@ -22,7 +22,7 @@ class ServerCommandExecutionEnvironment extends CommandExecutionEnvironment {
   }
 }
 
-export class ServersideCommandSource extends CommandSource {
+export class ServersideCommandSource extends CommandSource<ServerPlayer> {
   constructor(
     playerID: PlayerID,
     socket_id: string,

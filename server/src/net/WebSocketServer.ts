@@ -26,8 +26,10 @@ export class WebSocketServerManager {
   public wss: WebSocketServer;
   public registry: PacketRegistry<ServerPlayListener>;
   private pingInterval;
+  public connections: ServerConnection[];
 
   constructor() {
+    this.connections = [];
     this.registry = new PacketRegistry<ServerPlayListener>();
     this.wss = new WebSocketServer({ port: 8081 });
 
@@ -48,6 +50,7 @@ export class WebSocketServerManager {
         ws as WebSocketClientWithData,
         this.registry,
       );
+      this.connections.push(connection);
 
       ws.on("pong", () => {
         connection.pong();
