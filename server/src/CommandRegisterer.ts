@@ -8,10 +8,11 @@ import { StringArgumentBuilder } from "../../core/src/commands/builder/StringArg
 import { CommandManager } from "../../core/src/commands/lib/CommandManager";
 import { ChatMessage } from "../../core/src/Schemas";
 import { ServerAsteroid } from "./entity/ServerAsteroid";
+import { ServerPlayer } from "./entity/ServerPlayer";
 import { serverMgr } from "./Main";
 import { WebSocketClientWithData } from "./net/WebSocketServer";
 
-export function registerCommands(mgr: CommandManager) {
+export function registerCommands(mgr: CommandManager<ServerPlayer>) {
   mgr.registerCommand(
     new LiteralArgumentBuilder("echo").then(
       new GreedyStringArgumentBuilder("str").executes((ctx, source) => {

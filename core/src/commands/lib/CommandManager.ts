@@ -20,7 +20,7 @@ export abstract class CommandSource<T extends Player = Player> {
   public abstract sendMessage(message: string): void;
 }
 
-export class CommandManager {
+export class CommandManager<S extends Player> {
   public rootNode: RootCommandNode;
   private context: CommandContext | undefined;
   constructor() {
@@ -38,7 +38,7 @@ export class CommandManager {
   public executeCommandWithContext(
     command: string,
     context: CommandContext,
-    source: CommandSource,
+    source: CommandSource<S>,
   ): CommandResult {
     return this.execNode(
       new StringReader(command),
@@ -50,7 +50,7 @@ export class CommandManager {
   public setGlobalContext(context: CommandContext) {
     this.context = context;
   }
-  public runCommand(command: string, source: CommandSource): CommandResult {
+  public runCommand(command: string, source: CommandSource<S>): CommandResult {
     if (this.context === undefined)
       throw new Error(
         "context is undefined. use CommandManager#setGlobalContext() first!",
@@ -66,7 +66,7 @@ export class CommandManager {
     reader: StringReader,
     node: CommandNode,
     context: CommandContext,
-    source: CommandSource,
+    source: CommandSource<S>,
   ): CommandResult {
     if (!node.requires(source)) {
       source.sendMessage(node.requiresMsg);

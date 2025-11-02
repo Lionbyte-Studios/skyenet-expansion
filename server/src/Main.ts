@@ -39,7 +39,7 @@ export class ServersideCommandSource extends CommandSource {
 export class ServerManager {
   public game: ServerGame;
   public wsMgr: WebSocketServerManager;
-  public commandManager: CommandManager;
+  public commandManager: CommandManager<ServerPlayer>;
 
   constructor() {
     ServerGame.registerEntities();
