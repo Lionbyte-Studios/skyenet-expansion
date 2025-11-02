@@ -8,7 +8,7 @@ import {
   CommandExecutionEnvironment,
   CommandManager,
   CommandSource,
-} from "../../core/src/commands/lib/CommandManager";
+} from "./commands/lib/CommandManager";
 import { registerCommands } from "./CommandRegisterer";
 import { ServerTextDisplay } from "./entity/ServerTextDisplay";
 import { Player } from "../../core/src/entity/Player";

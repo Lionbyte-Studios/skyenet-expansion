@@ -1,4 +1,4 @@
-import { Player } from "../../entity/Player";
+import { Player } from "../../../../core/src/entity/Player";
 import { CommandBuilder } from "../builder/CommandBuilder";
 import { StringReader } from "./CommandStringReader";
 import { ArgumentCommandNode } from "./node/ArgumentCommandNode";
