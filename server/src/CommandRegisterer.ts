@@ -103,7 +103,5 @@ export function registerCommands(mgr: CommandManager) {
 }
 
 function requireAdmin(sender: CommandSender): boolean {
-  return true;
-  if (!(sender instanceof ServerPlayer)) return false;
   return sender.isAdmin();
 }
