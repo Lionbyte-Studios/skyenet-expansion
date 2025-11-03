@@ -51,8 +51,13 @@ export class InGameScreen extends ClientScreen {
   public initGame() {
     this.state = "waitingforjoincallbackdata";
     const selectedShip = clientManager.state.selectedShip;
+    const token = clientManager.clientStorage.get("token");
     clientManager.webSocketClient.connection.sendPacket(
-      new JoinGameC2SPacket(selectedShip.sprite, selectedShip.engineSprite),
+      new JoinGameC2SPacket(
+        selectedShip.sprite,
+        selectedShip.engineSprite,
+        token,
+      ),
     );
   }
   public joinCallback(data: JoinCallbackS2CPacket) {

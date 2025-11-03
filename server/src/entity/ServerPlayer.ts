@@ -11,11 +11,14 @@ import { KillEntitiesS2CPacket } from "../../../core/src/net/packets/KillEntitie
 import { CommandSender } from "../commands/lib/CommandManager";
 import { ServerConnection } from "../net/ServerConnection";
 import { ChatMessageS2CPacket } from "../../../core/src/net/packets/ChatMessageS2CPacket";
+import { Session, User } from "../../../core/src/DatabaseSchemas";
 
 export class ServerPlayer extends Player implements CommandSender {
   admin: boolean;
   lastPonged: number;
   sendPacket: ServerConnection["sendPacket"];
+  db_user?: User;
+  db_session?: Session;
   constructor(
     playerID: PlayerID,
     entityID: EntityID,
@@ -58,6 +61,6 @@ export class ServerPlayer extends Player implements CommandSender {
     return this.playerID;
   }
   isAdmin(): boolean {
-    return true;
+    return this.admin;
   }
 }

@@ -8,16 +8,17 @@ export class JoinGameC2SPacket extends Packet<ServerPlayListener> {
   static override get id() {
     return PacketID.JoinGameC2S;
   }
-  public selectedShip: ShipSprite;
-  public selectedShipEngine: ShipEngineSprite;
-  constructor(selectedShip: ShipSprite, selectedShipEngine: ShipEngineSprite) {
+  constructor(
+    public selectedShip: ShipSprite,
+    public selectedShipEngine: ShipEngineSprite,
+    public token?: string,
+  ) {
     super();
-    this.selectedShip = selectedShip;
-    this.selectedShipEngine = selectedShipEngine;
   }
   write(buf: PacketBuffer): void {
     buf.writeString(this.selectedShip);
     buf.writeString(this.selectedShipEngine);
+    buf.writeString(this.token === undefined ? "" : this.token);
   }
   apply(listener: ServerPlayListener): void {
     listener.onJoinGame(this);
@@ -31,9 +32,14 @@ export class JoinGameC2SPacket extends Packet<ServerPlayListener> {
       ShipEngineSprite,
       buf.readString(),
     );
+    const token = buf.readString();
     if (shipSprite === undefined) throw new Error("shipSprite is invalid.");
     if (shipEngineSprite === undefined)
       throw new Error("shipEngineSprite is invalid.");
-    return new JoinGameC2SPacket(shipSprite, shipEngineSprite);
+    return new JoinGameC2SPacket(
+      shipSprite,
+      shipEngineSprite,
+      token.length === 0 ? undefined : token,
+    );
   }
 }

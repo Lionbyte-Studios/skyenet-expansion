@@ -6,23 +6,36 @@ import { JoinGameC2SPacket } from "../../../core/src/net/packets/JoinGameC2SPack
 import { JoinGameS2CPacket } from "../../../core/src/net/packets/JoinGameS2CPacket";
 import { PlayerMoveC2SPacket } from "../../../core/src/net/packets/PlayerMoveC2SPacket";
 import { PlayerMoveS2CPacket } from "../../../core/src/net/packets/PlayerMoveS2CPacket";
+import { getUserAndSessionByToken } from "../api/Database";
 import { ServerBullet } from "../entity/ServerBullet";
 import { ServerPlayer } from "../entity/ServerPlayer";
 import { serverMgr } from "../Main";
 import { ServerConnection } from "./ServerConnection";
+import { admins } from "../../../.serverconfig.json";
 
 export class ServerPlayNetworkHandler extends ServerPlayListener {
   private packetSender: ServerConnection["sendPacket"];
   public player?: ServerPlayer;
   private socket_id: string;
 
-  public override onJoinGame(packet: JoinGameC2SPacket): void {
+  public override async onJoinGame(packet: JoinGameC2SPacket): Promise<void> {
     // TODO check admin status
     const player = serverMgr.game.generatePlayer(
       packet.selectedShip,
       packet.selectedShipEngine,
       this.packetSender,
     );
+    if (packet.token !== undefined) {
+      const userAndSession = await getUserAndSessionByToken(packet.token);
+      if (userAndSession !== undefined) {
+        const id = userAndSession[0].discord.user_id;
+        if (admins.includes(id)) {
+          player.admin = true;
+        }
+        player.db_user = userAndSession[0];
+        player.db_session = userAndSession[1];
+      }
+    }
     serverMgr.game.addPlayer(player);
     this.player = player;
     this.packetSender(
