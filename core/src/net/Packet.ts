@@ -14,6 +14,7 @@ export enum PacketID {
   ModifyEntitiesS2C,
   CommandC2S,
   ChatMessageS2C,
+  PickupItemC2S,
 }
 
 export abstract class Packet<L extends PlayListener> {

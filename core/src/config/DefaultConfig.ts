@@ -11,4 +11,6 @@ export class DefaultConfig implements Config {
     velY: 0.01,
     velR: 0.01,
   };
+  itemPickupRange: number = 100;
+  itemPickupRangeSquared: number = 10_000;
 }

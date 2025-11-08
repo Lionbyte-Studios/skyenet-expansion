@@ -2,13 +2,17 @@ import { BulletType } from "../../../core/src/entity/Bullet";
 import { FlamesBits } from "../../../core/src/entity/Player";
 import type { Game } from "../../../core/src/Game";
 import { BulletShootC2SPacket } from "../../../core/src/net/packets/BulletShootC2SPacket";
+import { PickupItemsC2SPacket } from "../../../core/src/net/packets/PickupItemC2SPacket";
 import { PlayerMoveC2SPacket } from "../../../core/src/net/packets/PlayerMoveC2SPacket";
 import {
+  type EntityID,
   type ShipEngineSprite,
   type ShipSprite,
 } from "../../../core/src/types";
+import { distanceSq, manhattanDistance } from "../../../core/src/util/Util";
 import { ClientGame } from "../ClientGame";
 import { clientManager } from "../Main";
+import { ClientItemEntity } from "./ClientItem";
 import { ClientPlayer } from "./ClientPlayer";
 
 export class MyPlayer extends ClientPlayer {
@@ -22,6 +26,19 @@ export class MyPlayer extends ClientPlayer {
     this.move(game);
     this.flamesToFlamesState();
     this.sendMovement();
+
+    const nearbyItems = this.quickFindNearItems();
+    if (nearbyItems.length !== 0) {
+      const itemIDs: EntityID[] = [];
+      nearbyItems.forEach((item) => {
+        const distance = distanceSq(this.x, this.y, item.x, item.y);
+        if (distance > clientManager.game.config.itemPickupRangeSquared) return;
+        itemIDs.push(item.entityID);
+      });
+      clientManager.webSocketClient.connection.sendPacket(
+        new PickupItemsC2SPacket(itemIDs),
+      );
+    }
   }
 
   private velocityChange(game: ClientGame) {
@@ -88,5 +105,23 @@ export class MyPlayer extends ClientPlayer {
   public setShipType(shipSprite: ShipSprite, engineSprite: ShipEngineSprite) {
     this.shipSprite = shipSprite;
     this.shipEngineSprite = engineSprite;
+  }
+
+  /**
+   * Uses the manhattan distance to efficiently find nearby items. Note that the manhattan distance does not search in a circle range.
+   * @param maxDistance Maximum (manhattan-) distance to the item
+   * @returns The list of items that are in the specified distance
+   */
+  public quickFindNearItems(
+    maxDistance: number = clientManager.game.config.itemPickupRange * 2,
+  ): ClientItemEntity[] {
+    const items: ClientItemEntity[] = [];
+    clientManager.game.entities
+      .filter((entity) => entity instanceof ClientItemEntity)
+      .forEach((item) => {
+        if (manhattanDistance(this.x, this.y, item.x, item.y) <= maxDistance)
+          items.push(item);
+      });
+    return items;
   }
 }

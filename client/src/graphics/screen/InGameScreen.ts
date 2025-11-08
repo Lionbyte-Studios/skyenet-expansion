@@ -74,18 +74,20 @@ export class InGameScreen extends ClientScreen {
       clientManager.getRenderInfo(),
     );
     const playersToPush: ClientPlayer[] = [];
-    data.players.forEach(player => {
-      if(player.playerID === data.playerID) return;
-      playersToPush.push(new ClientPlayer(
-        player.playerID,
-        player.entityID,
-        player.x,
-        player.y,
-        player.rotation,
-        player.shipSprite,
-        player.shipEngineSprite,
-      ));
-    })
+    data.players.forEach((player) => {
+      if (player.playerID === data.playerID) return;
+      playersToPush.push(
+        new ClientPlayer(
+          player.playerID,
+          player.entityID,
+          player.x,
+          player.y,
+          player.rotation,
+          player.shipSprite,
+          player.shipEngineSprite,
+        ),
+      );
+    });
     clientManager.game.players.push(...playersToPush);
     clientManager.game.entities.push(...data.entities);
     console.log(data.players);

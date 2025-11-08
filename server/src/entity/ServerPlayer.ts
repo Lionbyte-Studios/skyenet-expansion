@@ -12,6 +12,7 @@ import { CommandSender } from "../commands/lib/CommandManager";
 import { ServerConnection } from "../net/ServerConnection";
 import { ChatMessageS2CPacket } from "../../../core/src/net/packets/ChatMessageS2CPacket";
 import { Session, User } from "../../../core/src/DatabaseSchemas";
+import { ServerItemEntity } from "./ServerItem";
 
 export class ServerPlayer extends Player implements CommandSender {
   admin: boolean;
@@ -52,6 +53,12 @@ export class ServerPlayer extends Player implements CommandSender {
     if (ws !== undefined) {
       ws.terminate();
     }
+  }
+
+  // Performs no checks of whether the player can actually pick this item up or not
+  public pickupItem(item: ServerItemEntity) {
+    /* TODO: Inventory */
+    serverMgr.game.killEntity((e) => e.entityID === item.entityID);
   }
 
   sendMessage(message: string): void {

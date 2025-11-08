@@ -103,16 +103,18 @@ export class AtlasManager {
   ): boolean {
     ctx.save();
     info.ctx.translate(info.game.camera.x, info.game.camera.y);
-    info.ctx.translate(
+    info.ctx.translate(x - info.game.camera.x, y - info.game.camera.y);
+    info.ctx.rotate((degrees * Math.PI) / 180);
+    info.ctx.translate(-(x - info.game.camera.x), -(y - info.game.camera.y));
+    const res = this.drawTextureCentered(
+      atlasName,
+      textureName,
+      ctx,
       x - info.game.camera.x,
       y - info.game.camera.y,
+      dWidth,
+      dHeight,
     );
-    info.ctx.rotate((degrees * Math.PI) / 180);
-    info.ctx.translate(
-      -(x - info.game.camera.x),
-      -(y - info.game.camera.y),
-    );
-    const res = this.drawTextureCentered(atlasName, textureName, ctx, x - info.game.camera.x, y - info.game.camera.y, dWidth, dHeight);
     ctx.restore();
     return res;
   }

@@ -12,6 +12,9 @@ import { ServerPlayer } from "../entity/ServerPlayer";
 import { serverMgr } from "../Main";
 import { ServerConnection } from "./ServerConnection";
 import { admins } from "../../../.serverconfig.json";
+import { PickupItemsC2SPacket } from "../../../core/src/net/packets/PickupItemC2SPacket";
+import { ServerItemEntity } from "../entity/ServerItem";
+import { distanceSq } from "../../../core/src/util/Util";
 
 export class ServerPlayNetworkHandler extends ServerPlayListener {
   private packetSender: ServerConnection["sendPacket"];
@@ -94,5 +97,20 @@ export class ServerPlayNetworkHandler extends ServerPlayListener {
   public override onCommand(packet: CommandC2SPacket): void {
     if (this.player === undefined) return;
     serverMgr.commandManager.runCommand(packet.command, this.player);
+  }
+
+  public override onPickupItem(packet: PickupItemsC2SPacket): void {
+    if (this.player === undefined) return;
+    const itemEntities: ServerItemEntity[] = serverMgr.game.entities.filter(
+      (entity) =>
+        entity instanceof ServerItemEntity &&
+        packet.items.includes(entity.entityID),
+    ) as ServerItemEntity[]; // this is fine because we have checked for instanceof in the filter() function
+    for (const item of itemEntities) {
+      const distance = distanceSq(this.player.x, this.player.y, item.x, item.y);
+      // if item is not in distance, don't pick it up
+      if (distance <= serverMgr.game.config.itemPickupRangeSquared)
+        this.player.pickupItem(item);
+    }
   }
 }

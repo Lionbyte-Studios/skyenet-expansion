@@ -18,7 +18,7 @@ export class ClientAsteroid extends Asteroid implements RenderableEntity {
   }
   public render(info: RenderInfo) {
     if (this.spawnAnimationState < 100) this.spawnAnimationState += 2;
-   info.atlasManager.drawInGameTextureCenteredRotated(
+    info.atlasManager.drawInGameTextureCenteredRotated(
       "entities",
       "asteroid",
       info.ctx,

@@ -214,6 +214,7 @@ export class GameRenderer {
       debugList.push(
         `${renderInfo.game.players.length} ${renderInfo.game.players.length === 1 ? "player is" : "players are"} connected`,
       );
+      debugList.push(`E:${renderInfo.game.entities.length} `);
 
       for (let i = 0; i < debugList.length; i++) {
         renderInfo.ctx.fillText(`${debugList[i]}`, 0, (i + 1) * fontSize);

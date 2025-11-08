@@ -6,4 +6,6 @@ export interface Config {
   defaultSpawnCoords: { x: number; y: number };
   tps: number;
   velocityCap: { velX: number; velY: number; velR: number };
+  itemPickupRange: number;
+  itemPickupRangeSquared: number;
 }

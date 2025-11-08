@@ -18,16 +18,16 @@ Refer to [SETUP.md](SETUP.md) for the full setup guide.
 - [x] Make animation/texture for spaceship thrust
 - [ ] Asteroids
   - [ ] Collision with spaceship -> damage
-  - [X] Spawn randomly (?)
-  - [X] Different sizes
+  - [x] Spawn randomly (?)
+  - [x] Different sizes
   - [ ] Destroy them -> They drop materials/resources
 - [ ] Spaceship upgrading
 - [ ] Spaceship shooting stuff (lasers!!)
 - [ ] Spaceship combat
 - [ ] Power-ups
-- [X] Multiplayer
+- [x] Multiplayer
   - [ ] Host/Join game
-  - [X] Chat
+  - [x] Chat
 - [ ] Inventory
   - [ ] Show items in inventory
   - [ ] Use items
