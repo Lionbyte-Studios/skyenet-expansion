@@ -1,7 +1,10 @@
 import { Asteroid } from "../../../core/src/entity/Asteroid";
 import { Game } from "../../../core/src/Game";
+import { ItemMaterial, ItemStack } from "../../../core/src/item/ItemStack";
 import { EntityID } from "../../../core/src/types";
+import { randomNumberInRange } from "../../../core/src/util/Util";
 import { serverMgr } from "../Main";
+import { ServerItemEntity } from "./ServerItem";
 
 export class ServerAsteroid extends Asteroid {
   public velR: number;
@@ -35,6 +38,7 @@ export class ServerAsteroid extends Asteroid {
   public override damage(amount: number): void {
     this.health -= amount;
     if (this.health <= 0) {
+      serverMgr.game.spawnEntity(new ServerItemEntity(this.x, this.y, new ItemStack(ItemMaterial.GOLD)));
       serverMgr.game.killEntity((entity) => entity.entityID === this.entityID);
     }
   }

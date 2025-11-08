@@ -7,6 +7,7 @@ export enum EntityType {
   Asteroid,
   TextDisplay,
   Player,
+  Item,
 }
 
 // Making the function here without importing from Util.ts to prevent circular dependencies breaking everything

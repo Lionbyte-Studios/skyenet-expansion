@@ -19,6 +19,7 @@ import { EntityType } from "../../core/src/entity/Entity";
 import { ClientAsteroid } from "./entity/ClientAsteroid";
 import { ClientBullet } from "./entity/ClientBullet";
 import { ClientTextDisplay } from "./entity/ClientTextDisplay";
+import { ClientItemEntity } from "./entity/ClientItem";
 
 export interface ClientGameStats {
   fps: number;
@@ -133,5 +134,6 @@ export class ClientGame extends Game {
     EntityRegistry.register(EntityType.Bullet, ClientBullet);
     EntityRegistry.register(EntityType.Player, ClientPlayer);
     EntityRegistry.register(EntityType.TextDisplay, ClientTextDisplay);
+    EntityRegistry.register(EntityType.Item, ClientItemEntity);
   }
 }

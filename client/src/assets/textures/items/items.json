@@ -1,5 +1,6 @@
 {
   "bullet": { "x": 0, "y": 0, "width": 16, "height": 16 },
+  "coin": { "x": 16, "y": 0, "width": 16, "height": 16 },
   "missile": { "x": 16, "y": 0, "width": 16, "height": 16 },
   "laser": { "x": 32, "y": 0, "width": 16, "height": 16 },
   "plasma": { "x": 48, "y": 0, "width": 16, "height": 16 },
@@ -12,7 +13,6 @@
   "powerup-speed": { "x": 32, "y": 32, "width": 16, "height": 16 },
   "debris-1": { "x": 48, "y": 32, "width": 16, "height": 16 },
   "spark": { "x": 0, "y": 48, "width": 16, "height": 16 },
-  "coin": { "x": 16, "y": 48, "width": 16, "height": 16 },
   "crystal": { "x": 32, "y": 48, "width": 16, "height": 16 },
   "energy-cell": { "x": 48, "y": 48, "width": 16, "height": 16 }
 }

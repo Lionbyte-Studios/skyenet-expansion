@@ -1,3 +1,4 @@
+import type { RenderInfo } from "../ClientManager";
 import { TextureAtlas } from "./TextureAtlas";
 
 export class AtlasManager {
@@ -82,6 +83,38 @@ export class AtlasManager {
 
     atlas.drawTextureCentered(ctx, textureName, dx, dy, dWidth, dHeight);
     return true;
+  }
+
+  /**
+   * Draws a texture centered & rotated
+   * @param x This should be the REAL x coordinate of the texture in the game (not limited to canvas size)
+   * @param y This should be the REAL y coordinate of the texture in the game (not limited to canvas size)
+   */
+  public drawInGameTextureCenteredRotated(
+    atlasName: string,
+    textureName: string,
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    degrees: number,
+    info: RenderInfo,
+    dWidth?: number,
+    dHeight?: number,
+  ): boolean {
+    ctx.save();
+    info.ctx.translate(info.game.camera.x, info.game.camera.y);
+    info.ctx.translate(
+      x - info.game.camera.x,
+      y - info.game.camera.y,
+    );
+    info.ctx.rotate((degrees * Math.PI) / 180);
+    info.ctx.translate(
+      -(x - info.game.camera.x),
+      -(y - info.game.camera.y),
+    );
+    const res = this.drawTextureCentered(atlasName, textureName, ctx, x - info.game.camera.x, y - info.game.camera.y, dWidth, dHeight);
+    ctx.restore();
+    return res;
   }
 
   // Draw tile by grid coordinates

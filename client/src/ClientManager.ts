@@ -15,7 +15,7 @@ import { login } from "./net/api/Api";
 export interface RenderInfo {
   ctx: CanvasRenderingContext2D;
   canvas: HTMLCanvasElement;
-  game: ClientGame | undefined;
+  game: ClientGame;
   atlasManager: AtlasManager;
   state: ClientState;
   display: DisplayInfo;
