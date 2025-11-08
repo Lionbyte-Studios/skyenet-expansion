@@ -27,3 +27,6 @@ config.json
 *.njsproj
 *.sln
 *.sw?
+
+# testing file
+server/src/testing.ts

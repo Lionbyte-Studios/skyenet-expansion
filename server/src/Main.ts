@@ -12,6 +12,7 @@ import { registerCommands } from "./CommandRegisterer";
 import { ServerTextDisplay } from "./entity/ServerTextDisplay";
 import { Player } from "../../core/src/entity/Player";
 import { ServerPlayer } from "./entity/ServerPlayer";
+import { testing_loader } from "./testing_loader";
 
 class ServerCommandExecutionEnvironment extends CommandExecutionEnvironment {
   public sendMessage(message: string, context: CommandContext): void {
@@ -45,3 +46,5 @@ serverMgr.game.startGameLoop();
 export const apiMgr = new ApiManager();
 
 serverMgr.game.spawnEntity(new ServerTextDisplay("hii", 300, -300));
+
+testing_loader();
