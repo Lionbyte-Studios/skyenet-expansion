@@ -12,5 +12,5 @@ export class DefaultConfig implements Config {
     velR: 0.01,
   };
   itemPickupRange: number = 30;
-  itemPickupRangeSquared: number = 30*30;
+  itemPickupRangeSquared: number = 30 * 30;
 }

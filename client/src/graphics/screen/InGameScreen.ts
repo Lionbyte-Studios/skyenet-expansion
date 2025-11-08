@@ -6,6 +6,7 @@ import type { RenderInfo } from "../../ClientManager";
 import { ClientPlayer } from "../../entity/ClientPlayer";
 import { clientManager } from "../../Main";
 import { ChatMessageLogComponent } from "../component/ChatMessageLogComponent";
+import { TextComponent } from "../component/TextComponent";
 import { GameRenderer } from "../game/GameRenderer";
 import { ClientScreen } from "./Screen";
 
@@ -20,7 +21,7 @@ export class InGameScreen extends ClientScreen {
   private chatMessages: ChatMessageEntry[] = [];
   public consoleShown: boolean = false;
   // Use base resolution for positioning (1280x720)
-  // private readonly baseWidth = 1280;
+  private readonly baseWidth = 1280;
   private readonly baseHeight = 720;
   public render(renderInfo: RenderInfo): void {
     if (this.state !== "gamerunning") return;
@@ -110,6 +111,17 @@ export class InGameScreen extends ClientScreen {
           visible: false,
         },
         custom_id: "chat",
+      }),
+      new TextComponent({
+        x: this.baseWidth - 10,
+        y: this.baseHeight - 10,
+        data: {
+          text: "Coins: 0",
+          textProperties: {
+            align: "right",
+          },
+        },
+        custom_id: "coin_display",
       }),
     ];
     this.initGame();

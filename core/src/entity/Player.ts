@@ -23,6 +23,7 @@ export abstract class Player extends Entity {
   engineActive: boolean = false;
   shipSprite: ShipSprite = ShipSprite.Gray;
   shipEngineSprite: ShipEngineSprite = ShipEngineSprite.Gray;
+  inventory: { coins: number };
   // flames: {
   //   x: number;
   //   y: number;
@@ -52,6 +53,7 @@ export abstract class Player extends Entity {
     this.rotation = rotation;
     this.shipSprite = shipSprite;
     this.shipEngineSprite = shipEngineSprite;
+    this.inventory = { coins: 0 };
   }
 
   public static override get entityType(): EntityType {

@@ -6,13 +6,13 @@
 import * as fs from "node:fs";
 
 export async function testing_loader() {
-    const dirname = __dirname;
+  const dirname = __dirname;
 
-    const readDirRes = fs.readdirSync(dirname);
-    if(!readDirRes.includes("testing.ts")) return;
-    // real
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const testing = await import("./testing");
-    testing.run();
+  const readDirRes = fs.readdirSync(dirname);
+  if (!readDirRes.includes("testing.ts")) return;
+  // real
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const testing = await import("./testing");
+  testing.run();
 }

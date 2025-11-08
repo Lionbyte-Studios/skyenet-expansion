@@ -12,7 +12,7 @@ export abstract class ClientScreen {
   public onClick(info: MouseInfo): void {}
   // This method guarantees "clientManager" to be defined.
   public init(): void {}
-  protected setComponentData<T extends Component<T["args"]["data"]>>(
+  public modifyComponentData<T extends Component<T["args"]["data"]>>(
     componentPredicate: (component: T, index: number) => boolean,
     data: Partial<ComponentRenderArgs<Partial<T["args"]["data"]>>>,
   ) {

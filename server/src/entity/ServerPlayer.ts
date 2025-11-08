@@ -13,6 +13,8 @@ import { ServerConnection } from "../net/ServerConnection";
 import { ChatMessageS2CPacket } from "../../../core/src/net/packets/ChatMessageS2CPacket";
 import { Session, User } from "../../../core/src/DatabaseSchemas";
 import { ServerItemEntity } from "./ServerItem";
+import { ItemMaterial } from "../../../core/src/item/ItemStack";
+import { ModifyEntitiesS2CPacket } from "../../../core/src/net/packets/ModifyEntitiesS2CPacket";
 
 export class ServerPlayer extends Player implements CommandSender {
   admin: boolean;
@@ -57,7 +59,17 @@ export class ServerPlayer extends Player implements CommandSender {
 
   // Performs no checks of whether the player can actually pick this item up or not
   public pickupItem(item: ServerItemEntity) {
-    /* TODO: Inventory */
+    if (item.item.material === ItemMaterial.GOLD) {
+      this.inventory.coins++;
+      this.sendPacket(
+        new ModifyEntitiesS2CPacket([
+          {
+            entityID: this.entityID,
+            modifications: { inventory: this.inventory },
+          },
+        ]),
+      );
+    }
     serverMgr.game.killEntity((e) => e.entityID === item.entityID);
   }
 

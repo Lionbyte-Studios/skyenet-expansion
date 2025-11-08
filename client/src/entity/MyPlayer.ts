@@ -11,6 +11,8 @@ import {
 } from "../../../core/src/types";
 import { distanceSq, manhattanDistance } from "../../../core/src/util/Util";
 import { ClientGame } from "../ClientGame";
+import type { TextComponent } from "../graphics/component/TextComponent";
+import { InGameScreen } from "../graphics/screen/InGameScreen";
 import { clientManager } from "../Main";
 import { ClientItemEntity } from "./ClientItem";
 import { ClientPlayer } from "./ClientPlayer";
@@ -37,6 +39,14 @@ export class MyPlayer extends ClientPlayer {
       });
       clientManager.webSocketClient.connection.sendPacket(
         new PickupItemsC2SPacket(itemIDs),
+      );
+    }
+
+    if (clientManager.currentScreen instanceof InGameScreen) {
+      // update the component data each tick (stfu this is not actually as inefficient as it seems since it re-renders each frame anyway)
+      clientManager.currentScreen.modifyComponentData<TextComponent>(
+        (c) => c.args.custom_id === "coin_display",
+        { data: { text: "Coins: " + this.inventory.coins } },
       );
     }
   }
