@@ -15,7 +15,7 @@ import { clientManager } from "../Main";
 export class ClientPlayNetworkHandler extends ClientPlayListener {
   public override onPlayerJoin(packet: JoinGameS2CPacket): void {
     if (!acceptingInGamePackets()) return;
-    clientManager.game.players.push(
+    clientManager.game.entities.push(
       new ClientPlayer(
         packet.playerID,
         packet.entityID,
@@ -30,12 +30,13 @@ export class ClientPlayNetworkHandler extends ClientPlayListener {
   }
   public override onPlayerMove(packet: PlayerMoveS2CPacket): void {
     if (!acceptingInGamePackets()) return;
-    const index = clientManager.game.players.findIndex(
-      (player) => player.playerID === packet.playerID,
+    const index = clientManager.game.entities.findIndex(
+      (entity) =>
+        entity instanceof ClientPlayer && entity.playerID === packet.playerID,
     );
     if (index === -1) return;
-    packet.updatePlayer(clientManager.game.players[index]);
-    clientManager.game.players[index].onMovementReceived();
+    packet.updatePlayer(clientManager.game.entities[index] as ClientPlayer);
+    clientManager.game.entities[index].onMovementReceived();
   }
   public override onJoinCallback(packet: JoinCallbackS2CPacket): void {
     if (!(clientManager.currentScreen instanceof InGameScreen))
@@ -63,14 +64,14 @@ export class ClientPlayNetworkHandler extends ClientPlayListener {
         (entity) => entity.entityID === id,
       );
       if (index === -1) {
-        const playerIndex = clientManager.game.players.findIndex(
+        const playerIndex = clientManager.game.entities.findIndex(
           (player) => player.entityID === id,
         );
         if (playerIndex === -1) {
           console.warn("Could not find entity with id " + id);
           return;
         }
-        clientManager.game.players.splice(index, 1);
+        clientManager.game.entities.splice(index, 1);
         return;
       }
       clientManager.game.entities.splice(index, 1);
@@ -91,7 +92,7 @@ export class ClientPlayNetworkHandler extends ClientPlayListener {
           >,
         );
       else if (
-        clientManager.game.players.find(
+        clientManager.game.entities.find(
           (player) => player.entityID === modification.entityID,
         ) !== undefined
       )

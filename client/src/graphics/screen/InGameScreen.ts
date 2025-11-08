@@ -3,7 +3,6 @@ import { JoinGameC2SPacket } from "../../../../core/src/net/packets/JoinGameC2SP
 import { GameMode } from "../../../../core/src/types";
 import { ClientGame } from "../../ClientGame";
 import type { RenderInfo } from "../../ClientManager";
-import { ClientPlayer } from "../../entity/ClientPlayer";
 import { clientManager } from "../../Main";
 import { ChatMessageLogComponent } from "../component/ChatMessageLogComponent";
 import { TextComponent } from "../component/TextComponent";
@@ -74,24 +73,30 @@ export class InGameScreen extends ClientScreen {
     clientManager.game.renderer = new GameRenderer(
       clientManager.getRenderInfo(),
     );
-    const playersToPush: ClientPlayer[] = [];
-    data.players.forEach((player) => {
-      if (player.playerID === data.playerID) return;
-      playersToPush.push(
-        new ClientPlayer(
-          player.playerID,
-          player.entityID,
-          player.x,
-          player.y,
-          player.rotation,
-          player.shipSprite,
-          player.shipEngineSprite,
-        ),
-      );
-    });
-    clientManager.game.players.push(...playersToPush);
+    // const playersToPush: ClientPlayer[] = [];
+    // data.players.forEach((player) => {
+    //   if (player.playerID === data.playerID) return;
+    //   playersToPush.push(
+    //     new ClientPlayer(
+    //       player.playerID,
+    //       player.entityID,
+    //       player.x,
+    //       player.y,
+    //       player.rotation,
+    //       player.shipSprite,
+    //       player.shipEngineSprite,
+    //     ),
+    //   );
+    // });
+    // clientManager.game.players.push(...playersToPush);
+    const myPlayerIndex = data.entities.findIndex(
+      (entity) => entity.entityID === data.entityID,
+    );
+    if (myPlayerIndex !== -1) {
+      data.entities.splice(myPlayerIndex, 1);
+    }
     clientManager.game.entities.push(...data.entities);
-    console.log(data.players);
+    // console.log(data.players);
     // Update player's selected ship
     const selectedShip = clientManager.state.selectedShip;
     clientManager.game.myPlayer.setShipType(

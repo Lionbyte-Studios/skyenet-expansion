@@ -1,6 +1,5 @@
 import { Entity, EntityType } from "../../entity/Entity";
 import { EntityRegistry } from "../../entity/EntityRegistry";
-import { Player } from "../../entity/Player";
 import { EntityID, GameID, PlayerID } from "../../types";
 import { ClientPlayListener } from "../listener/ClientPlayListener";
 import { Packet, PacketID } from "../Packet";
@@ -15,7 +14,7 @@ export class JoinCallbackS2CPacket extends Packet<ClientPlayListener> {
     public playerID: PlayerID,
     public entityID: EntityID,
     public gameID: GameID,
-    public players: Player[],
+    // public players: Player[],
     public entities: Entity[],
   ) {
     super();
@@ -24,9 +23,9 @@ export class JoinCallbackS2CPacket extends Packet<ClientPlayListener> {
     buf.writeString(this.playerID);
     buf.writeString(this.entityID);
     buf.writeString(this.gameID);
-    buf.writeArray(this.players, (b, item) => {
-      item.netWrite(b);
-    });
+    // buf.writeArray(this.players, (b, item) => {
+    //   item.netWrite(b);
+    // });
     buf.writeArray(this.entities, (b, item) => {
       b.writeInt(
         (item.constructor as unknown as { entityType: EntityType }).entityType,
@@ -41,9 +40,9 @@ export class JoinCallbackS2CPacket extends Packet<ClientPlayListener> {
     const playerID = buf.readString();
     const entityID = buf.readString();
     const gameID = buf.readString();
-    const players: Player[] = buf.readArray((buf) => {
-      return Player.playerClass.netRead(buf);
-    });
+    // const players: Player[] = buf.readArray((buf) => {
+    //   return Player.playerClass.netRead(buf);
+    // });
     const entities: Entity[] = buf.readArray<Entity>((buf) => {
       return EntityRegistry.create(buf.readInt(), buf);
     });
@@ -52,7 +51,7 @@ export class JoinCallbackS2CPacket extends Packet<ClientPlayListener> {
       playerID,
       entityID,
       gameID,
-      players,
+      // players,
       entities,
     );
   }

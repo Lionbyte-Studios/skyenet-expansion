@@ -6,7 +6,7 @@ import { GameID, GameMode } from "./types";
 import { IndexSignature, OmitFunctions } from "./util/Util";
 
 export abstract class Game {
-  public players: Player[];
+  // public players: Player[];
   public gameID: GameID;
   public gameMode: GameMode;
   public entities: Entity[];
@@ -19,11 +19,11 @@ export abstract class Game {
     this.gameMode = gameMode;
     this.config = new DefaultConfig();
     this.entities = [];
-    this.players = [];
+    // this.players = [];
   }
 
   public addPlayer(player: Player) {
-    this.players.push(player);
+    this.entities.push(player);
   }
 
   public tick() {}
@@ -48,11 +48,13 @@ export abstract class Game {
     playerPredicate: (player: Player, index: number) => boolean,
     data: IndexSignature<Partial<OmitFunctions<T>>>,
   ) {
-    this.players.forEach((player, index) => {
-      if (!playerPredicate(player, index)) return;
-      for (const key in data) {
-        this.players[index][key] = data[key];
-      }
-    });
+    this.entities
+      .filter((entity) => entity instanceof Player)
+      .forEach((player, index) => {
+        if (!playerPredicate(player, index)) return;
+        for (const key in data) {
+          this.entities[index][key] = data[key];
+        }
+      });
   }
 }

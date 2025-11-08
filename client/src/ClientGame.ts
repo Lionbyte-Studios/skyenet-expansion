@@ -31,7 +31,7 @@ export interface ClientGameStats {
 }
 
 export class ClientGame extends Game {
-  public players: ClientPlayer[] = [];
+  // public players: ClientPlayer[] = [];
   public keyManager = new KeyManager();
   public camera = new Camera(this);
   public myPlayer: MyPlayer;
@@ -80,7 +80,7 @@ export class ClientGame extends Game {
       this.config.defaultShipSprite,
       this.config.defaultShipEngineSprite,
     );
-    this.players = [this.myPlayer];
+    this.entities = [this.myPlayer];
     for (let i = 0; i < 50; i++) {
       this.stars.push({
         x: -30 + Math.random() * 1330,
@@ -106,9 +106,11 @@ export class ClientGame extends Game {
     } else this.stats.ticksThisSecond++;
 
     this.entities.forEach((entity) => {
+      if (entity.entityID === this.myPlayer.entityID) return;
       entity.tick(this);
     });
-    this.players.forEach((player) => {
+    this.entities.forEach((player) => {
+      if (!(player instanceof ClientPlayer)) return;
       player.tickFlames();
     });
     this.keyManager.update();

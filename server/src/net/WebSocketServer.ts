@@ -7,6 +7,7 @@ import { PlayListener } from "../../../core/src/net/listener/PlayListener";
 import { PacketBuffer } from "../../../core/src/net/PacketBuffer";
 import { genStringID } from "../../../core/src/util/Util";
 import { serverMgr } from "../Main";
+import { ServerPlayer } from "../entity/ServerPlayer";
 
 export interface SocketMessageData<T> {
   socket: WebSocketClientWithData;
@@ -35,7 +36,8 @@ export class WebSocketServerManager {
 
     this.pingInterval = setInterval(() => {
       this.wss.clients.forEach((client) => client.ping());
-      serverMgr.game.players.forEach((player) => {
+      serverMgr.game.entities.forEach((player) => {
+        if (!(player instanceof ServerPlayer)) return;
         if (player.lastPonged + 7000 < Date.now()) {
           player.leave_game();
         }

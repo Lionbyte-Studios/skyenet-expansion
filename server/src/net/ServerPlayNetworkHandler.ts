@@ -46,7 +46,7 @@ export class ServerPlayNetworkHandler extends ServerPlayListener {
         player.playerID,
         player.entityID,
         serverMgr.game.gameID,
-        serverMgr.game.players,
+        // serverMgr.game.players,
         serverMgr.game.entities,
       ),
     );

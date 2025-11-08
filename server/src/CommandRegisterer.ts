@@ -25,7 +25,9 @@ export function registerCommands(mgr: CommandManager) {
     new LiteralArgumentBuilder("kick").requires(requireAdmin).then(
       new StringArgumentBuilder("player_id").executes((ctx) => {
         const id = ctx.getArgument<string>("player_id");
-        for (const player of serverMgr.game.players) {
+        for (const player of serverMgr.game.entities.filter(
+          (entity) => entity instanceof ServerPlayer,
+        )) {
           if (player.playerID !== id) continue;
           player.leave_game();
           return 1;
@@ -39,7 +41,9 @@ export function registerCommands(mgr: CommandManager) {
     new LiteralArgumentBuilder("kickall")
       .requires(requireAdmin)
       .executes((ctx) => {
-        serverMgr.game.players.forEach((player) => player.leave_game());
+        serverMgr.game.entities
+          .filter((entity) => entity instanceof ServerPlayer)
+          .forEach((player) => player.leave_game());
         return 1;
       }),
   );
