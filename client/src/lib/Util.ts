@@ -32,3 +32,25 @@ export type DeepRequired<T> = {
       : DeepRequired<T[K]>
     : T[K];
 };
+
+/**
+ * @param maxDist Number of pixels out of the canvas that should still be counted as "inside" the canvas.
+ */
+export function areCoordinatesInCanvas(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  maxDist: number = 0,
+): boolean {
+  const transform = ctx.getTransform();
+
+  const tx = transform.a * x + transform.c * y + transform.e;
+  const ty = transform.b * x + transform.d * y + transform.f;
+
+  return (
+    tx >= 0 - maxDist &&
+    tx < ctx.canvas.width + maxDist &&
+    ty >= 0 - maxDist &&
+    ty < ctx.canvas.height + maxDist
+  );
+}

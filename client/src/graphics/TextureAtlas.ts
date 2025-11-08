@@ -1,3 +1,5 @@
+import { areCoordinatesInCanvas } from "../lib/Util";
+
 export interface TextureRegion {
   x: number;
   y: number;
@@ -54,6 +56,9 @@ export class TextureAtlas {
   ): void {
     if (!this.loaded) return;
 
+    // don't draw when out of view
+    if (!areCoordinatesInCanvas(ctx, dx, dy, 50)) return;
+
     const region = this.regions.get(textureName);
     if (!region) {
       console.warn(`Texture "${textureName}" not found in atlas`);
@@ -96,6 +101,9 @@ export class TextureAtlas {
     dHeight?: number,
   ): void {
     if (!this.loaded) return;
+
+    // don't draw when out of view
+    if (!areCoordinatesInCanvas(ctx, dx, dy, 50)) return;
 
     const region = this.regions.get(textureName);
     if (!region) {
