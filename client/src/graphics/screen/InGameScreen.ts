@@ -3,6 +3,7 @@ import { JoinGameC2SPacket } from "../../../../core/src/net/packets/JoinGameC2SP
 import { GameMode } from "../../../../core/src/types";
 import { ClientGame } from "../../ClientGame";
 import type { RenderInfo } from "../../ClientManager";
+import { ClientPlayer } from "../../entity/ClientPlayer";
 import { clientManager } from "../../Main";
 import { ChatMessageLogComponent } from "../component/ChatMessageLogComponent";
 import { GameRenderer } from "../game/GameRenderer";
@@ -72,9 +73,20 @@ export class InGameScreen extends ClientScreen {
     clientManager.game.renderer = new GameRenderer(
       clientManager.getRenderInfo(),
     );
-    clientManager.game.players.push(
-      ...data.players.filter((player) => player.playerID !== data.playerID),
-    );
+    const playersToPush: ClientPlayer[] = [];
+    data.players.forEach(player => {
+      if(player.playerID === data.playerID) return;
+      playersToPush.push(new ClientPlayer(
+        player.playerID,
+        player.entityID,
+        player.x,
+        player.y,
+        player.rotation,
+        player.shipSprite,
+        player.shipEngineSprite,
+      ));
+    })
+    clientManager.game.players.push(...playersToPush);
     clientManager.game.entities.push(...data.entities);
     console.log(data.players);
     // Update player's selected ship
