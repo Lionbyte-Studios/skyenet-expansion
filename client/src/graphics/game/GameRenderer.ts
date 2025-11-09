@@ -52,12 +52,6 @@ export class GameRenderer {
       if (this.stars[i].y + renderInfo.game.camera.y / this.stars[i].z! < -30) {
         this.stars[i].y += 770;
       }
-      // renderInfo.ctx.fillRect(
-      //   this.stars[i].x + renderInfo.game.camera.x / this.stars[i].z!,
-      //   this.stars[i].y + renderInfo.game.camera.y / this.stars[i].z!,
-      //   7 - this.stars[i].z! / 2,
-      //   7 - this.stars[i].z! / 2,
-      // );
       renderInfo.ctx.beginPath();
       renderInfo.ctx.moveTo(
         this.stars[i].x + renderInfo.game.camera.x / this.stars[i].z!,
@@ -104,70 +98,35 @@ export class GameRenderer {
       renderInfo.ctx.restore();
     });
 
-    for (let i = renderInfo.game.entities.length - 1; i >= 0; i--) {
-      if (!(renderInfo.game.entities[i] instanceof ClientPlayer)) continue;
-      for (let a = 0; a < renderInfo.game.entities[i].flamesState.length; a++) {
-        renderInfo.ctx.translate(
-          renderInfo.game.entities[i].flamesState[a].x,
-          renderInfo.game.entities[i].flamesState[a].y,
-        );
-        renderInfo.ctx.rotate(
-          -(
-            (renderInfo.game.entities[i].flamesState[a].rotation! * Math.PI) /
-            180
-          ),
-        );
-        renderInfo.ctx.fillStyle = `rgb(${70 * renderInfo.game.entities[i].flamesState[a].size! + 10},${(50 * renderInfo.game.entities[i].flamesState[a].size!) / 2 + 30},10)`;
+    for (const entity of renderInfo.game.entities) {
+      if (!(entity instanceof ClientPlayer)) continue;
+      for (const flameState of entity.flamesState) {
+        renderInfo.ctx.translate(flameState.x, flameState.y);
+        renderInfo.ctx.rotate(-((flameState.rotation! * Math.PI) / 180));
+        renderInfo.ctx.fillStyle = `rgb(${70 * flameState.size! + 10},${(50 * flameState.size!) / 2 + 30},10)`;
         renderInfo.ctx.fillRect(
-          -renderInfo.game.entities[i].flamesState[a].size! / 2,
-          -renderInfo.game.entities[i].flamesState[a].size! / 2,
-          renderInfo.game.entities[i].flamesState[a].size!,
-          renderInfo.game.entities[i].flamesState[a].size!,
+          -flameState.size! / 2,
+          -flameState.size! / 2,
+          flameState.size!,
+          flameState.size!,
         );
-        renderInfo.ctx.rotate(
-          (renderInfo.game.entities[i].flamesState[a].rotation! * Math.PI) /
-            180,
-        );
-        renderInfo.ctx.translate(
-          -renderInfo.game.entities[i].flamesState[a].x,
-          -renderInfo.game.entities[i].flamesState[a].y,
-        );
+        renderInfo.ctx.rotate((flameState.rotation! * Math.PI) / 180);
+        renderInfo.ctx.translate(-flameState.x, -flameState.y);
       }
-      /*const bullets = renderInfo.game.entities.filter(
-        (entity) => entity instanceof ClientBullet,
-      );
-      for (let a = 0; a < bullets.length; a++) {*/
-      /*renderInfo.ctx.translate(bullets[a].x, bullets[a].y);
-        renderInfo.ctx.fillStyle = `#ffffaa`;
-        renderInfo.ctx.fillRect(-5, -5, 10, 10);
-        renderInfo.ctx.translate(-bullets[a].x, -bullets[a].y);*/
-      /*  bullets[a].render(renderInfo.ctx);
-      }*/
 
-      renderInfo.ctx.translate(
-        renderInfo.game.entities[i].x,
-        renderInfo.game.entities[i].y,
-      );
+      renderInfo.ctx.translate(entity.x, entity.y);
       renderInfo.ctx.fillStyle = `#aaaaaa77`;
       renderInfo.ctx.fillRect(-52, -52, 104, 14);
       renderInfo.ctx.fillStyle = `#ffffaa77`;
-      renderInfo.ctx.fillRect(
-        -50,
-        -50,
-        (100 / renderInfo.game.entities[i].MaxHP) *
-          renderInfo.game.entities[i].HP,
-        10,
-      );
-      renderInfo.ctx.rotate(
-        -((renderInfo.game.entities[i].rotation * Math.PI) / 180),
-      );
+      renderInfo.ctx.fillRect(-50, -50, (100 / entity.MaxHP) * entity.HP, 10);
+      renderInfo.ctx.rotate(-((entity.rotation * Math.PI) / 180));
 
       // Apply 3  x scale for player ship
       renderInfo.ctx.scale(3, 3);
 
       // Check if atlas is loaded before drawing
       if (renderInfo.atlasManager.areAllLoaded()) {
-        const shipTexture = renderInfo.game.entities[i].shipSprite;
+        const shipTexture = entity.shipSprite;
 
         renderInfo.atlasManager.drawTextureCentered(
           "entities",
@@ -185,13 +144,8 @@ export class GameRenderer {
 
       // Reset scale after drawing
       renderInfo.ctx.scale(1 / 3, 1 / 3);
-      renderInfo.ctx.rotate(
-        (renderInfo.game.entities[i].rotation * Math.PI) / 180,
-      );
-      renderInfo.ctx.translate(
-        -renderInfo.game.entities[i].x,
-        -renderInfo.game.entities[i].y,
-      );
+      renderInfo.ctx.rotate((entity.rotation * Math.PI) / 180);
+      renderInfo.ctx.translate(-entity.x, -entity.y);
     }
     renderInfo.ctx.translate(
       -renderInfo.game.camera.x,
