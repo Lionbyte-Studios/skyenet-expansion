@@ -70,9 +70,7 @@ export class ClientItemEntity extends ItemEntity implements RenderableEntity {
         this.kill();
         return;
       }
-      if (
-        this.timeInPickingUpState > 90 /* 1.5 seconds, since tick speed is 60 */
-      ) {
+      if (this.timeInPickingUpState > clientManager.game.config.tps * 1.5) {
         this.kill();
         return;
       }
