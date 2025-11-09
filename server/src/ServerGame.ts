@@ -145,6 +145,7 @@ export class ServerGame extends Game {
 
   public killEntity(
     entityPredicate: (entity: Entity, index: number) => boolean,
+    sendPacket: boolean = true,
   ) {
     const entitiesKilled: EntityID[] = [];
     this.entities.forEach((entity, index) => {
@@ -152,7 +153,10 @@ export class ServerGame extends Game {
       entitiesKilled.push(entity.entityID);
       this.entities.splice(index, 1);
     });
-    serverMgr.wsMgr.broadcastPacket(new KillEntitiesS2CPacket(entitiesKilled));
+    if (sendPacket)
+      serverMgr.wsMgr.broadcastPacket(
+        new KillEntitiesS2CPacket(entitiesKilled),
+      );
   }
 
   public static override registerEntities(): void {

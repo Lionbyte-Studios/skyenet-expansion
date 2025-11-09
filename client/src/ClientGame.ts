@@ -105,14 +105,16 @@ export class ClientGame extends Game {
       this.stats.ticksThisSecond = 1;
     } else this.stats.ticksThisSecond++;
 
-    this.keyManager.update();
     this.entities.forEach((entity) => {
+      if (entity.entityID === this.myPlayer.entityID) return;
       entity.tick(this);
     });
     this.entities.forEach((player) => {
       if (!(player instanceof ClientPlayer)) return;
       player.tickFlames();
     });
+    this.keyManager.update();
+    this.myPlayer.tick(this);
     this.camera.tick();
     this.debug.tick();
   }

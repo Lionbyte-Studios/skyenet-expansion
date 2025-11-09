@@ -70,7 +70,8 @@ export class ServerPlayer extends Player implements CommandSender {
         ]),
       );
     }
-    serverMgr.game.killEntity((e) => e.entityID === item.entityID);
+    item.pickUp(this.playerID);
+    serverMgr.game.killEntity((e) => e.entityID === item.entityID, false);
   }
 
   sendMessage(message: string): void {

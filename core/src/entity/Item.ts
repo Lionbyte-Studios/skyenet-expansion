@@ -1,10 +1,17 @@
 import { ItemStack } from "../item/ItemStack";
 import { PacketBuffer } from "../net/PacketBuffer";
-import { EntityID } from "../types";
+import { EntityID, PlayerID } from "../types";
 import { Entity, EntityType } from "./Entity";
+
+export enum ItemState {
+  Idle,
+  PickingUp,
+}
 
 export abstract class ItemEntity extends Entity {
   public item: ItemStack;
+  public state: ItemState = ItemState.Idle;
+  public playerPickingUp: PlayerID | undefined = undefined;
 
   constructor(x: number, y: number, item: ItemStack, entityID?: EntityID) {
     super(x, y, entityID);

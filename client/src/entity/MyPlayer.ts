@@ -1,4 +1,5 @@
 import { BulletType } from "../../../core/src/entity/Bullet";
+import { ItemState } from "../../../core/src/entity/Item";
 import { FlamesBits } from "../../../core/src/entity/Player";
 import type { Game } from "../../../core/src/Game";
 import { BulletShootC2SPacket } from "../../../core/src/net/packets/BulletShootC2SPacket";
@@ -127,10 +128,13 @@ export class MyPlayer extends ClientPlayer {
   ): ClientItemEntity[] {
     const items: ClientItemEntity[] = [];
     clientManager.game.entities
-      .filter((entity) => entity instanceof ClientItemEntity)
+      .filter(
+        (entity) =>
+          entity instanceof ClientItemEntity && entity.state === ItemState.Idle,
+      )
       .forEach((item) => {
         if (manhattanDistance(this.x, this.y, item.x, item.y) <= maxDistance)
-          items.push(item);
+          items.push(item as ClientItemEntity /* safe */);
       });
     return items;
   }
