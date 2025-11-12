@@ -39,7 +39,7 @@ export class ServerPlayNetworkHandler extends ServerPlayListener {
         player.db_session = userAndSession[1];
       }
     }
-    serverMgr.game.addPlayer(player);
+    serverMgr.game.spawnEntity(player);
     this.player = player;
     this.packetSender(
       new JoinCallbackS2CPacket(
@@ -47,7 +47,8 @@ export class ServerPlayNetworkHandler extends ServerPlayListener {
         player.entityID,
         serverMgr.game.gameID,
         // serverMgr.game.players,
-        serverMgr.game.entities,
+        serverMgr.game.world.getAllEntities(),
+        serverMgr.game.world.world_id,
       ),
     );
     serverMgr.wsMgr.broadcastPacket(
@@ -101,7 +102,7 @@ export class ServerPlayNetworkHandler extends ServerPlayListener {
 
   public override onPickupItem(packet: PickupItemsC2SPacket): void {
     if (this.player === undefined) return;
-    const itemEntities: ServerItemEntity[] = serverMgr.game.entities.filter(
+    const itemEntities: ServerItemEntity[] = serverMgr.game.findEntities(
       (entity) =>
         entity instanceof ServerItemEntity &&
         packet.items.includes(entity.entityID),

@@ -1,6 +1,7 @@
 import { Game } from "../Game";
 import { PacketBuffer } from "../net/PacketBuffer";
 import { alphabetForID, EntityID } from "../types";
+import { Position } from "../world/Position";
 
 export enum EntityType {
   Bullet,
@@ -23,8 +24,19 @@ export abstract class Entity {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [index: string]: any;
   entityID: EntityID;
-  x: number;
-  y: number;
+  public position: Position;
+  public get x(): number {
+    return this.position.x;
+  }
+  public get y(): number {
+    return this.position.y;
+  }
+  public set x(x: number) {
+    this.position.x = x;
+  }
+  public set y(y: number) {
+    this.position.y = y;
+  }
   static get entityType(): EntityType {
     throw new Error("Entity did not implement get entityType");
   }
@@ -34,8 +46,7 @@ export abstract class Entity {
     } else {
       this.entityID = entityID;
     }
-    this.x = x;
-    this.y = y;
+    this.position = new Position(x, y);
   }
   public generateID(): EntityID {
     return genStringID(8);

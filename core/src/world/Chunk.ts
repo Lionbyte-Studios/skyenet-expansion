@@ -1,12 +1,12 @@
 import { Entity } from "../entity/Entity";
 
 export interface ChunkPosition {
-  chunk_x: string;
-  chunk_y: string;
+  chunk_x: number;
+  chunk_y: number;
 }
 
-export class Chunk<E extends Entity> {
-  public entities: E[] = [];
+export class Chunk {
+  public entities: Entity[] = [];
 
   constructor(public readonly pos: ChunkPosition) {}
 }

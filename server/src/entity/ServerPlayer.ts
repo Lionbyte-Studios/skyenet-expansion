@@ -44,14 +44,8 @@ export class ServerPlayer extends Player implements CommandSender {
    * Also sends the appropriate message to all other players telling them to remove the player locally.
    */
   public leave_game(ws?: WebSocket) {
-    const index = serverMgr.game.entities.findIndex(
-      (entity) => entity.entityID === this.entityID,
-    );
-    if (index !== -1) {
-      const entityID = serverMgr.game.entities[index].entityID;
-      serverMgr.game.entities.splice(index, 1);
-      serverMgr.wsMgr.broadcastPacket(new KillEntitiesS2CPacket([entityID]));
-    }
+    serverMgr.game.killEntity((entity) => entity.entityID === this.entityID);
+    serverMgr.wsMgr.broadcastPacket(new KillEntitiesS2CPacket([this.entityID]));
     if (ws !== undefined) {
       ws.terminate();
     }

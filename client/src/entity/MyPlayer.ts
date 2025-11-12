@@ -127,7 +127,8 @@ export class MyPlayer extends ClientPlayer {
     maxDistance: number = clientManager.game.config.itemPickupRange * 2,
   ): ClientItemEntity[] {
     const items: ClientItemEntity[] = [];
-    clientManager.game.entities
+    clientManager.game.world
+      .getAllEntities()
       .filter(
         (entity) =>
           entity instanceof ClientItemEntity && entity.state === ItemState.Idle,

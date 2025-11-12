@@ -78,9 +78,7 @@ export class GameRenderer {
     );
     renderInfo.ctx.font = "48px serif";
     renderInfo.ctx.textAlign = "center";
-    const playerCount = renderInfo.game.entities.filter(
-      (entity) => entity instanceof ClientPlayer,
-    ).length;
+    const playerCount = renderInfo.game.world.getAllPlayers().length;
     renderInfo.ctx.fillText(
       `${playerCount} ${playerCount === 1 ? "player is" : "players are"} connected`,
       0,
@@ -89,7 +87,7 @@ export class GameRenderer {
 
     const renderableEntities: (Entity & {
       render: (info: RenderInfo) => void;
-    })[] = renderInfo.game.entities.filter(
+    })[] = renderInfo.game.findEntities(
       (entity) => "render" in entity && typeof entity.render === "function",
     ) as (Entity & { render: (info: RenderInfo) => void })[];
     renderableEntities.forEach((entity) => {
@@ -98,8 +96,7 @@ export class GameRenderer {
       renderInfo.ctx.restore();
     });
 
-    for (const entity of renderInfo.game.entities) {
-      if (!(entity instanceof ClientPlayer)) continue;
+    for (const entity of renderInfo.game.world.getAllPlayers() as ClientPlayer[]) {
       for (const flameState of entity.flamesState) {
         renderInfo.ctx.translate(flameState.x, flameState.y);
         renderInfo.ctx.rotate(-((flameState.rotation! * Math.PI) / 180));
@@ -171,13 +168,11 @@ export class GameRenderer {
       debugList.push(
         `HP:${renderInfo.game.myPlayer.HP} / ${renderInfo.game.myPlayer.MaxHP} `,
       );
-      const playerCount = renderInfo.game.entities.filter(
-        (entity) => entity instanceof ClientPlayer,
-      ).length;
+      const playerCount = renderInfo.game.world.getAllPlayers().length;
       debugList.push(
         `${playerCount} ${playerCount === 1 ? "player is" : "players are"} connected`,
       );
-      debugList.push(`E:${renderInfo.game.entities.length} `);
+      debugList.push(`E:${renderInfo.game.world.getAllEntities().length} `);
 
       for (let i = 0; i < debugList.length; i++) {
         renderInfo.ctx.fillText(`${debugList[i]}`, 0, (i + 1) * fontSize);

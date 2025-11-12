@@ -53,11 +53,11 @@ export class ClientItemEntity extends ItemEntity implements RenderableEntity {
     if (this.state === ItemState.PickingUp) {
       // NOTE that in this state the entity is client-side only.
       this.timeInPickingUpState++;
-      const playerPickingUp = clientManager.game.entities.find(
+      const playerPickingUp = clientManager.game.findEntities(
         (entity) =>
           entity instanceof ClientPlayer &&
           entity.playerID === this.playerPickingUp,
-      ) as ClientPlayer;
+      )[0] as ClientPlayer;
       // if player not found, kill
       if (playerPickingUp === undefined) {
         this.kill();
@@ -81,11 +81,6 @@ export class ClientItemEntity extends ItemEntity implements RenderableEntity {
   }
 
   private kill() {
-    clientManager.game.entities.splice(
-      clientManager.game.entities.findIndex(
-        (entity) => entity.entityID === this.entityID,
-      ),
-      1,
-    );
+    clientManager.game.world.killEntity(this.entityID);
   }
 }

@@ -16,6 +16,7 @@ export class JoinCallbackS2CPacket extends Packet<ClientPlayListener> {
     public gameID: GameID,
     // public players: Player[],
     public entities: Entity[],
+    public world_id: string,
   ) {
     super();
   }
@@ -32,6 +33,7 @@ export class JoinCallbackS2CPacket extends Packet<ClientPlayListener> {
       );
       item.netWrite(b);
     });
+    buf.writeString(this.world_id);
   }
   apply(listener: ClientPlayListener): void {
     listener.onJoinCallback(this);
@@ -46,6 +48,7 @@ export class JoinCallbackS2CPacket extends Packet<ClientPlayListener> {
     const entities: Entity[] = buf.readArray<Entity>((buf) => {
       return EntityRegistry.create(buf.readInt(), buf);
     });
+    const world_id = buf.readString();
 
     return new JoinCallbackS2CPacket(
       playerID,
@@ -53,6 +56,7 @@ export class JoinCallbackS2CPacket extends Packet<ClientPlayListener> {
       gameID,
       // players,
       entities,
+      world_id,
     );
   }
 }

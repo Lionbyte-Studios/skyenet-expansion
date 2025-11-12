@@ -3,6 +3,7 @@
     "strict": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "noUnusedParameters": false
+    "noUnusedParameters": false,
+    "downlevelIteration": true
   }
 }

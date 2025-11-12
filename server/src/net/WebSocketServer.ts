@@ -36,8 +36,7 @@ export class WebSocketServerManager {
 
     this.pingInterval = setInterval(() => {
       this.wss.clients.forEach((client) => client.ping());
-      serverMgr.game.entities.forEach((player) => {
-        if (!(player instanceof ServerPlayer)) return;
+      serverMgr.game.world.getAllPlayers(ServerPlayer).forEach((player) => {
         if (player.lastPonged + 7000 < Date.now()) {
           player.leave_game();
         }

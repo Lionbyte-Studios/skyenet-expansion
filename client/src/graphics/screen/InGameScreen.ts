@@ -1,6 +1,7 @@
 import type { JoinCallbackS2CPacket } from "../../../../core/src/net/packets/JoinCallbackS2CPacket";
 import { JoinGameC2SPacket } from "../../../../core/src/net/packets/JoinGameC2SPacket";
 import { GameMode } from "../../../../core/src/types";
+import { World } from "../../../../core/src/world/World";
 import { ClientGame } from "../../ClientGame";
 import type { RenderInfo } from "../../ClientManager";
 import { clientManager } from "../../Main";
@@ -69,6 +70,7 @@ export class InGameScreen extends ClientScreen {
       data.playerID,
       data.entityID,
       // new GameRenderer(clientManager.getRenderInfo()),
+      new World(data.world_id),
     );
     clientManager.game.renderer = new GameRenderer(
       clientManager.getRenderInfo(),
@@ -95,7 +97,7 @@ export class InGameScreen extends ClientScreen {
     if (myPlayerIndex !== -1) {
       data.entities.splice(myPlayerIndex, 1);
     }
-    clientManager.game.entities.push(...data.entities);
+    data.entities.forEach((entity) => clientManager.game.spawnEntity(entity));
     // console.log(data.players);
     // Update player's selected ship
     const selectedShip = clientManager.state.selectedShip;

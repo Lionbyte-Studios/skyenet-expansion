@@ -15,7 +15,7 @@ import { clientManager } from "../Main";
 export class ClientPlayNetworkHandler extends ClientPlayListener {
   public override onPlayerJoin(packet: JoinGameS2CPacket): void {
     if (!acceptingInGamePackets()) return;
-    clientManager.game.entities.push(
+    clientManager.game.spawnEntity(
       new ClientPlayer(
         packet.playerID,
         packet.entityID,
@@ -30,13 +30,11 @@ export class ClientPlayNetworkHandler extends ClientPlayListener {
   }
   public override onPlayerMove(packet: PlayerMoveS2CPacket): void {
     if (!acceptingInGamePackets()) return;
-    const index = clientManager.game.entities.findIndex(
-      (entity) =>
-        entity instanceof ClientPlayer && entity.playerID === packet.playerID,
-    );
-    if (index === -1) return;
-    packet.updatePlayer(clientManager.game.entities[index] as ClientPlayer);
-    clientManager.game.entities[index].onMovementReceived();
+    const player = clientManager.game.findEntities(
+      (e) => e instanceof ClientPlayer && e.playerID === packet.playerID,
+    )[0];
+    packet.updatePlayer(player as ClientPlayer);
+    player.onMovementReceived();
   }
   public override onJoinCallback(packet: JoinCallbackS2CPacket): void {
     if (!(clientManager.currentScreen instanceof InGameScreen))
@@ -55,58 +53,26 @@ export class ClientPlayNetworkHandler extends ClientPlayListener {
   }
   public override onSpawnEntity(packet: SpawnEntityS2CPacket): void {
     if (!acceptingInGamePackets()) return;
-    clientManager.game.entities.push(packet.entity);
+    clientManager.game.spawnEntity(packet.entity);
   }
   public override onKillEntities(packet: KillEntitiesS2CPacket): void {
     if (!acceptingInGamePackets()) return;
     packet.entityIDs.forEach((id) => {
-      const index = clientManager.game.entities.findIndex(
-        (entity) => entity.entityID === id,
-      );
-      if (index === -1) {
-        const playerIndex = clientManager.game.entities.findIndex(
-          (player) => player.entityID === id,
-        );
-        if (playerIndex === -1) {
-          console.warn("Could not find entity with id " + id);
-          return;
-        }
-        clientManager.game.entities.splice(index, 1);
-        return;
+      const entityKilled = clientManager.game.world.killEntity(id);
+      if (!entityKilled) {
+        console.warn(`Entity with id ${id} not found.`);
       }
-      clientManager.game.entities.splice(index, 1);
     });
   }
   public override onModifyEntities(packet: ModifyEntitiesS2CPacket): void {
     if (!acceptingInGamePackets()) return;
     packet.entityModifications.forEach((modification) => {
-      if (
-        clientManager.game.entities.find(
-          (entity) => entity.entityID === modification.entityID,
-        ) !== undefined
-      )
-        clientManager.game.modifyEntityData(
-          (entity) => entity.entityID === modification.entityID,
-          modification.modifications as IndexSignature<
-            typeof modification.modifications
-          >,
-        );
-      else if (
-        clientManager.game.entities.find(
-          (player) => player.entityID === modification.entityID,
-        ) !== undefined
-      )
-        clientManager.game.modifyPlayerData(
-          (player) => player.entityID === modification.entityID,
-          modification.modifications as IndexSignature<
-            typeof modification.modifications
-          >,
-        );
-      else {
-        console.warn(
-          `Could not find entity nor player with entity id ${modification.entityID}. Could not apply modifications.`,
-        );
-      }
+      clientManager.game.modifyEntityData(
+        (entity) => entity.entityID === modification.entityID,
+        modification.modifications as IndexSignature<
+          typeof modification.modifications
+        >,
+      );
     });
   }
 

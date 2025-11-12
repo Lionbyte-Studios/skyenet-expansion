@@ -102,3 +102,9 @@ export interface LoginCallback {
 export interface LogoutCallback {
   ok: boolean;
 }
+
+export type Constructor<T> =
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  | (new (...args: any[]) => T)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  | (abstract new (...args: any[]) => T);

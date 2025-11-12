@@ -30,12 +30,6 @@ export abstract class Bullet extends Entity {
     this.owner = owner;
   }
 
-  public tick() {
-    // toFixed(4) to prevent random float magic
-    this.x = parseFloat((this.x + this.velX).toFixed(4));
-    this.y = parseFloat((this.y + this.velY).toFixed(4));
-  }
-
   public override netWrite(buf: PacketBuffer): void {
     buf.writeFloat(this.x);
     buf.writeFloat(this.y);

@@ -20,6 +20,7 @@ import {
   OmitFunctions,
   randomNumberInRange,
 } from "../../core/src/util/Util";
+import { World } from "../../core/src/world/World";
 import { ServerAsteroid } from "./entity/ServerAsteroid";
 import { ServerBullet } from "./entity/ServerBullet";
 import { ServerPlayer } from "./entity/ServerPlayer";
@@ -41,7 +42,7 @@ export class ServerGame extends Game {
   public override isServer: boolean = true;
 
   constructor(gameID: GameID, gameMode: GameMode) {
-    super(gameID, gameMode);
+    super(gameID, gameMode, new World("main"));
     this.gameLoopManager = new GameLoopManager(
       () => this.tick(),
       this.config.tps,
@@ -51,6 +52,10 @@ export class ServerGame extends Game {
       lastTickSecondTimestamp: Date.now(),
       ticksThisSecond: 0,
     };
+
+    setInterval(() => {
+      console.log("TPS: " + this.stats.tps);
+    }, 3000);
     // this.players = [];
   }
 
@@ -89,7 +94,7 @@ export class ServerGame extends Game {
       this.stats.tps = this.stats.ticksThisSecond;
       this.stats.ticksThisSecond = 1;
     } else this.stats.ticksThisSecond++;
-    this.entities.forEach((entity) => {
+    this.world.getAllEntities().forEach((entity) => {
       entity.tick();
     });
     this.randomTasks();
@@ -125,21 +130,22 @@ export class ServerGame extends Game {
     data: IndexSignature<Partial<OmitFunctions<T>>>,
   ) {
     const modified: { entityID: string; modifications: object }[] = [];
-    this.entities.forEach((entity, index) => {
+    const entities = this.findEntities(entityPredicate);
+    entities.forEach((entity, index) => {
       if (!entityPredicate(entity, index)) return;
       modified.push({
         entityID: entity.entityID,
         modifications: data,
       });
       for (const key in data) {
-        this.entities[index][key] = data[key];
+        entity[key] = data[key];
       }
     });
     serverMgr.wsMgr.broadcastPacket(new ModifyEntitiesS2CPacket(modified));
   }
 
   public spawnEntity(entity: Entity) {
-    this.entities.push(entity);
+    super.spawnEntity(entity);
     serverMgr.wsMgr.broadcastPacket(new SpawnEntityS2CPacket(entity));
   }
 
@@ -148,10 +154,10 @@ export class ServerGame extends Game {
     sendPacket: boolean = true,
   ) {
     const entitiesKilled: EntityID[] = [];
-    this.entities.forEach((entity, index) => {
-      if (!entityPredicate(entity, index)) return;
+    const entities = this.findEntities(entityPredicate);
+    entities.forEach((entity, index) => {
       entitiesKilled.push(entity.entityID);
-      this.entities.splice(index, 1);
+      this.world.killEntity(entity.entityID);
     });
     if (sendPacket)
       serverMgr.wsMgr.broadcastPacket(

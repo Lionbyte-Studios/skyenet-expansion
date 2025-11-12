@@ -20,6 +20,7 @@ import { ClientAsteroid } from "./entity/ClientAsteroid";
 import { ClientBullet } from "./entity/ClientBullet";
 import { ClientTextDisplay } from "./entity/ClientTextDisplay";
 import { ClientItemEntity } from "./entity/ClientItem";
+import { World } from "../../core/src/world/World";
 
 export interface ClientGameStats {
   fps: number;
@@ -57,8 +58,9 @@ export class ClientGame extends Game {
     myPlayerID: PlayerID,
     myEntityID: EntityID,
     // renderer: GameRenderer,
+    world: World,
   ) {
-    super(gameID, gameMode);
+    super(gameID, gameMode, world);
     this.stats = {
       fps: 0,
       tps: 0,
@@ -80,7 +82,7 @@ export class ClientGame extends Game {
       this.config.defaultShipSprite,
       this.config.defaultShipEngineSprite,
     );
-    this.entities = [this.myPlayer];
+    this.spawnEntity(this.myPlayer);
     for (let i = 0; i < 50; i++) {
       this.stars.push({
         x: -30 + Math.random() * 1330,
@@ -105,14 +107,16 @@ export class ClientGame extends Game {
       this.stats.ticksThisSecond = 1;
     } else this.stats.ticksThisSecond++;
 
-    this.entities.forEach((entity) => {
-      if (entity.entityID === this.myPlayer.entityID) return;
+    this.findEntities(
+      (entity) => entity.entityID === this.myPlayer.entityID,
+    ).forEach((entity) => {
       entity.tick(this);
     });
-    this.entities.forEach((player) => {
-      if (!(player instanceof ClientPlayer)) return;
-      player.tickFlames();
-    });
+    this.findEntities((entity) => entity instanceof ClientPlayer).forEach(
+      (player) => {
+        (player as ClientPlayer).tickFlames();
+      },
+    );
     this.keyManager.update();
     this.myPlayer.tick(this);
     this.camera.tick();
