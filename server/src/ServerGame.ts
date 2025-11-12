@@ -9,10 +9,8 @@ import {
   EntityID,
   GameID,
   GameMode,
-  MovementMessage,
   ShipEngineSprite,
   ShipSprite,
-  StatusMessage,
 } from "../../core/src/types";
 import {
   genStringID,
@@ -52,13 +50,6 @@ export class ServerGame extends Game {
       ticksThisSecond: 0,
     };
     // this.players = [];
-  }
-
-  public handleMovementMessage(message: MovementMessage) {
-    console.log(message);
-  }
-  public handleStatusMessage(message: StatusMessage) {
-    console.log(message);
   }
   public static generateRandomPlayerID() {
     return genStringID(8);
