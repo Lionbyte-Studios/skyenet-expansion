@@ -9,6 +9,7 @@ import { InGameScreen } from "./InGameScreen";
 import { ClientScreen } from "./Screen";
 import { ShipSelectionScreen } from "./ShipSelectionScreen";
 import { discord } from "../../../../config.json";
+import { ConnectionIndicatorComponent } from "../component/ConnectionIndicatorComponent";
 
 export class MainMenuScreen extends ClientScreen {
   private mouseInfo: MouseInfo = nullMouseInfo();
@@ -142,6 +143,11 @@ export class MainMenuScreen extends ClientScreen {
           },
         },
         custom_id: "selected_ship_description",
+      }),
+      new ConnectionIndicatorComponent({
+        x: this.baseWidth * 0.5,
+        y: this.baseHeight * 0.9,
+        data: {},
       }),
     ];
     (async () => {
