@@ -6,8 +6,6 @@ export class ConnectionIndicatorComponent extends Component<{
   circleRadius?: number;
   textFont?: string;
 }> {
-  private state: "waiting" | "connected" | "disconnected" = "waiting";
-
   constructor(
     args: ComponentRenderArgs<{ circleRadius?: number; textFont?: string }>,
   ) {
@@ -19,13 +17,14 @@ export class ConnectionIndicatorComponent extends Component<{
   public render(renderInfo: RenderInfo): void {
     let text: string = "";
     let color: string = "";
-    if (this.state === "waiting") {
+    const currentWsState = clientManager.webSocketClient.currentConnectionState;
+    if (currentWsState === "connecting") {
       text = "connecting...";
       color = "yellow";
-    } else if (this.state === "connected") {
+    } else if (currentWsState === "connected") {
       text = "connected";
       color = "green";
-    } else if (this.state === "disconnected") {
+    } else if (currentWsState === "disconnected") {
       text = "disconnected";
       color = "red";
     }
@@ -48,16 +47,5 @@ export class ConnectionIndicatorComponent extends Component<{
       this.args.x + this.args.data.circleRadius! * 2,
       this.args.y,
     );
-  }
-  public override init(): void {
-    this.state = "waiting";
-    (async () => {
-      const res = await clientManager.webSocketClient.webSocketConnectionMade;
-      if (res) {
-        this.state = "connected";
-      } else {
-        this.state = "disconnected";
-      }
-    })();
   }
 }
