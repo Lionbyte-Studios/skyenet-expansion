@@ -145,8 +145,8 @@ export class MainMenuScreen extends ClientScreen {
         custom_id: "selected_ship_description",
       }),
       new ConnectionIndicatorComponent({
-        x: this.baseWidth * 0.5,
-        y: this.baseHeight * 0.9,
+        x: this.baseWidth * 0.1,
+        y: this.baseHeight * 0.1,
         data: {},
       }),
     ];
