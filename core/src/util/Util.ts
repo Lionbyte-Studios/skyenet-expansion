@@ -1,3 +1,4 @@
+import { Entity } from "../entity/Entity";
 import { alphabetForID } from "../types";
 
 export function genStringID(length: number) {
@@ -61,4 +62,27 @@ export function distanceSq(
   y2: number,
 ): number {
   return Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2);
+}
+
+export function xyDistance(
+  obj1: Entity,
+  obj2: Entity,
+  absoluteValue: boolean = false,
+): { x: number; y: number } {
+  if (absoluteValue) {
+    return {
+      x: Math.abs(obj1.x - obj2.x),
+      y: Math.abs(obj1.y - obj2.y),
+    };
+  } else {
+    return {
+      x: obj1.x - obj2.x,
+      y: obj1.y - obj2.y,
+    };
+  }
+}
+
+export function inverse_sqrt(x: number): number {
+  // if this becomes too slow, could be moved to WASM instead, but we'll see
+  return 1 / Math.sqrt(x);
 }
