@@ -24,7 +24,7 @@ export class ClientParticles extends Particles implements RenderableEntity {
   constructor(
     x: number,
     y: number,
-    color: string,
+    color: [number, number, number],
     particleType: ParticleType,
     amount: number,
     delta: number,
@@ -37,14 +37,14 @@ export class ClientParticles extends Particles implements RenderableEntity {
 
   render(info: RenderInfo) {
     info.ctx.save();
-    info.ctx.fillStyle = this.color;
     this.particles.forEach((particle) => {
+      info.ctx.fillStyle = `rgba(${this.color[0]}, ${this.color[1]}, ${this.color[2]}, ${particle.opacity})`;
       info.ctx.translate(particle.offsetX + this.x, particle.offsetY + this.y);
       info.ctx.rotate(2 * Math.PI * (particle.rotation / 360));
       const x = this.x;
       const y = this.y;
       info.ctx.fillRect(x, y, x + particle.size, y + particle.size);
-      info.ctx.rotate(-particle.rotation);
+      info.ctx.rotate(-(2 * Math.PI * (particle.rotation / 360)));
       info.ctx.translate(
         -(particle.offsetX + this.x),
         -(particle.offsetY + this.y),
@@ -57,7 +57,7 @@ export class ClientParticles extends Particles implements RenderableEntity {
     return new ClientParticles(
       buf.readFloat(),
       buf.readFloat(),
-      buf.readString(),
+      [buf.readFloat(), buf.readFloat(), buf.readFloat()],
       buf.readInt(),
       buf.readInt(),
       buf.readFloat(),
@@ -71,11 +71,11 @@ export class ClientParticles extends Particles implements RenderableEntity {
       this.particles.push({
         offsetX: 0,
         offsetY: 0,
-        velX: Math.random() * this.delta,
-        velY: Math.random() * this.delta,
+        velX: (Math.random() - 0.5) * this.delta,
+        velY: (Math.random() - 0.5) * this.delta,
         velR: (Math.random() - 0.5) * 5,
         rotation: Math.random() * 360,
-        opacity: 100,
+        opacity: 1,
         lifetime: Math.random() * this.delta * clientManager.game.config.tps,
         size: 3,
       });
@@ -92,7 +92,7 @@ export class ClientParticles extends Particles implements RenderableEntity {
         particle.lifetime <
         this.delta * clientManager.game.config.tps * 0.1
       ) {
-        particle.opacity--;
+        particle.opacity -= 0.05;
         particle.size *= 0.99;
       }
       particle.offsetX += particle.velX;

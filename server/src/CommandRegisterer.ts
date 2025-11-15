@@ -10,7 +10,7 @@ import { ServerAsteroid } from "./entity/ServerAsteroid";
 import { ServerPlayer } from "./entity/ServerPlayer";
 import { serverMgr } from "./Main";
 import { ChatMessageS2CPacket } from "../../core/src/net/packets/ChatMessageS2CPacket";
-import { Particles, ParticleType } from "../../core/src/entity/Particles";
+import { ParticleType } from "../../core/src/entity/Particles";
 import { ServerParticles } from "./entity/ServerParticles";
 
 export function registerCommands(mgr: CommandManager) {
@@ -121,10 +121,10 @@ export function registerCommands(mgr: CommandManager) {
             new ServerParticles(
               0,
               0,
-              "#ff0000",
+              [255, 0, 0],
               ParticleType.Square,
               100,
-              0.5,
+              2,
               1,
             ),
           ),

@@ -14,7 +14,7 @@ export abstract class Particles extends Entity {
   constructor(
     x: number,
     y: number,
-    public color: string,
+    public color: [number, number, number],
     public particleType: ParticleType,
     public amount: number,
     public delta: number,
@@ -27,7 +27,9 @@ export abstract class Particles extends Entity {
   public netWrite(buf: PacketBuffer): void {
     buf.writeFloat(this.x);
     buf.writeFloat(this.y);
-    buf.writeString(this.color);
+    buf.writeFloat(this.color[0]);
+    buf.writeFloat(this.color[1]);
+    buf.writeFloat(this.color[2]);
     buf.writeInt(this.particleType);
     buf.writeInt(this.amount);
     buf.writeFloat(this.delta);
