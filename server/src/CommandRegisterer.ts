@@ -10,6 +10,8 @@ import { ServerAsteroid } from "./entity/ServerAsteroid";
 import { ServerPlayer } from "./entity/ServerPlayer";
 import { serverMgr } from "./Main";
 import { ChatMessageS2CPacket } from "../../core/src/net/packets/ChatMessageS2CPacket";
+import { Particles, ParticleType } from "../../core/src/entity/Particles";
+import { ServerParticles } from "./entity/ServerParticles";
 
 export function registerCommands(mgr: CommandManager) {
   mgr.registerCommand(
@@ -103,6 +105,33 @@ export function registerCommands(mgr: CommandManager) {
         return 1;
       }),
     ),
+  );
+
+  let interval: NodeJS.Timeout | undefined = undefined;
+  mgr.registerCommand(
+    new LiteralArgumentBuilder("test").executes((ctx, sender) => {
+      if (!(sender instanceof ServerPlayer)) return 0;
+      if (interval !== undefined) {
+        clearInterval(interval);
+        return 1;
+      }
+      interval = setInterval(
+        () =>
+          serverMgr.game.spawnEntity(
+            new ServerParticles(
+              0,
+              0,
+              "#ff0000",
+              ParticleType.Square,
+              100,
+              0.5,
+              1,
+            ),
+          ),
+        2000,
+      );
+      return 1;
+    }),
   );
 }
 
