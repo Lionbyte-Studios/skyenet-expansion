@@ -41,38 +41,19 @@ export class ButtonComponent extends Component<ButtonComponentData> {
       this.fillStyle = "#00000000";
       this.hoverFillStyle = "#00000000";
     } else {
-      const font =
-        args.data.textProperties === undefined ||
-        args.data.textProperties.font === undefined
-          ? "24px Arial"
-          : args.data.textProperties.font;
-      const align =
-        args.data.textProperties === undefined ||
-        args.data.textProperties.align === undefined
-          ? "center"
-          : args.data.textProperties.align;
-      const fillStyle =
-        args.data.textProperties === undefined ||
-        args.data.textProperties.fillStyle === undefined
-          ? "#ffffff"
-          : args.data.textProperties.fillStyle;
-      const baseline =
-        args.data.textProperties === undefined ||
-        args.data.textProperties.baseline === undefined
-          ? "middle"
-          : args.data.textProperties.baseline;
+      args.data.textProperties ??= {};
+      const font = args.data.textProperties.font ?? "24px Arial";
+      const align = args.data.textProperties.align ?? "center";
+      const fillStyle = args.data.textProperties.fillStyle ?? "#ffffff";
+      const baseline = args.data.textProperties.baseline ?? "middle";
       this.textProperties = {
         font: font,
         align: align,
         fillStyle: fillStyle,
         baseline: baseline,
       };
-      this.fillStyle =
-        args.data.fillStyle === undefined ? "#333333" : args.data.fillStyle;
-      this.hoverFillStyle =
-        args.data.hoverFillStyle === undefined
-          ? "#535353"
-          : args.data.hoverFillStyle;
+      this.fillStyle = args.data.fillStyle ?? "#333333";
+      this.hoverFillStyle = args.data.hoverFillStyle ?? "#535353";
     }
   }
 

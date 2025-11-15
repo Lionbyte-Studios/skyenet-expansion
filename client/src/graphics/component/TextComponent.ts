@@ -21,31 +21,12 @@ export class TextComponent extends Component<TextComponentData> {
   constructor(args: ComponentRenderArgs<TextComponentData>) {
     super(args);
 
-    const font =
-      args.data.textProperties === undefined ||
-      args.data.textProperties.font === undefined
-        ? "24px Arial"
-        : args.data.textProperties.font;
-    const align =
-      args.data.textProperties === undefined ||
-      args.data.textProperties.align === undefined
-        ? "center"
-        : args.data.textProperties.align;
-    const fillStyle =
-      args.data.textProperties === undefined ||
-      args.data.textProperties.fillStyle === undefined
-        ? "#ffffff"
-        : args.data.textProperties.fillStyle;
-    const baseline =
-      args.data.textProperties === undefined ||
-      args.data.textProperties.baseline === undefined
-        ? "middle"
-        : args.data.textProperties.baseline;
-    const maxWidth =
-      args.data.textProperties === undefined ||
-      args.data.textProperties.maxWidth === undefined
-        ? -1
-        : args.data.textProperties.maxWidth;
+    args.data.textProperties ??= {};
+    const font = args.data.textProperties.font ?? "24px Arial";
+    const align = args.data.textProperties.align ?? "center";
+    const fillStyle = args.data.textProperties.fillStyle ?? "#ffffff";
+    const baseline = args.data.textProperties.baseline ?? "middle";
+    const maxWidth = args.data.textProperties.maxWidth ?? -1;
     this.textProperties = {
       font: font,
       align: align,

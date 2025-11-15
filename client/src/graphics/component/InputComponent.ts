@@ -22,24 +22,14 @@ export class InputComponent extends Component<InputComponentData> {
   public data: Required<InputComponentData>;
   constructor(args: ComponentRenderArgs<InputComponentData>) {
     super(args);
-    const placeholder =
-      args.data.placeholder === undefined ? "" : args.data.placeholder;
-    const initialValue =
-      args.data.initialValue === undefined ? "" : args.data.initialValue;
-    const font = args.data.font === undefined ? "20px Arial" : args.data.font;
-    const type = args.data.type === undefined ? "text" : args.data.type;
-    const password_redacter =
-      args.data.password_redacter === undefined
-        ? "●"
-        : args.data.password_redacter;
-    const textLengthLimit =
-      args.data.textLengthLimit === undefined
-        ? 1024
-        : args.data.textLengthLimit;
-    const onEnter =
-      args.data.onEnter === undefined ? () => {} : args.data.onEnter;
-    const onEscape =
-      args.data.onEscape === undefined ? () => {} : args.data.onEscape;
+    const placeholder = args.data.placeholder ?? "";
+    const initialValue = args.data.initialValue ?? "";
+    const font = args.data.font ?? "20px Arial";
+    const type = args.data.type ?? "text";
+    const password_redacter = args.data.password_redacter ?? "●";
+    const textLengthLimit = args.data.textLengthLimit ?? 1024;
+    const onEnter = args.data.onEnter ?? (() => {});
+    const onEscape = args.data.onEscape ?? (() => {});
     this.data = {
       placeholder: placeholder,
       initialValue: initialValue,
