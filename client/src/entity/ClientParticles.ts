@@ -37,18 +37,14 @@ export class ClientParticles extends Particles implements RenderableEntity {
 
   render(info: RenderInfo) {
     info.ctx.save();
+    info.ctx.translate(this.x, this.y);
     this.particles.forEach((particle) => {
       info.ctx.fillStyle = `rgba(${this.color[0]}, ${this.color[1]}, ${this.color[2]}, ${particle.opacity})`;
-      info.ctx.translate(particle.offsetX + this.x, particle.offsetY + this.y);
+      info.ctx.translate(particle.offsetX, particle.offsetY);
       info.ctx.rotate(2 * Math.PI * (particle.rotation / 360));
-      const x = this.x;
-      const y = this.y;
-      info.ctx.fillRect(x, y, x + particle.size, y + particle.size);
+      info.ctx.fillRect(0, 0, particle.size, particle.size);
       info.ctx.rotate(-(2 * Math.PI * (particle.rotation / 360)));
-      info.ctx.translate(
-        -(particle.offsetX + this.x),
-        -(particle.offsetY + this.y),
-      );
+      info.ctx.translate(-particle.offsetX, -particle.offsetY);
     });
     info.ctx.restore();
   }
