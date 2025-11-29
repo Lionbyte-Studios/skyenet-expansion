@@ -17,8 +17,8 @@ export abstract class Player extends Entity {
   velX: number = 0;
   velY: number = 0;
   velR: number = 0;
-  HP: number = 10;
-  MaxHP: number = 10;
+  health: number = 500;
+  maxHealth: number = 500;
   rotation: number;
   engineActive: boolean = false;
   shipSprite: ShipSprite = ShipSprite.Gray;

@@ -118,7 +118,12 @@ export class GameRenderer {
       renderInfo.ctx.fillStyle = `#aaaaaa77`;
       renderInfo.ctx.fillRect(-52, -52, 104, 14);
       renderInfo.ctx.fillStyle = `#ffffaa77`;
-      renderInfo.ctx.fillRect(-50, -50, (100 / entity.MaxHP) * entity.HP, 10);
+      renderInfo.ctx.fillRect(
+        -50,
+        -50,
+        (100 / entity.maxHealth) * entity.health,
+        10,
+      );
       renderInfo.ctx.rotate(-((entity.rotation * Math.PI) / 180));
 
       // Apply 3  x scale for player ship
@@ -169,7 +174,7 @@ export class GameRenderer {
       debugList.push(`VelY:${renderInfo.game.myPlayer.velY.toFixed(digits)} `);
       debugList.push(`VelR:${renderInfo.game.myPlayer.velR.toFixed(digits)} `);
       debugList.push(
-        `HP:${renderInfo.game.myPlayer.HP} / ${renderInfo.game.myPlayer.MaxHP} `,
+        `HP:${renderInfo.game.myPlayer.health} / ${renderInfo.game.myPlayer.maxHealth} `,
       );
       const playerCount = renderInfo.game.entities.filter(
         (entity) => entity instanceof ClientPlayer,

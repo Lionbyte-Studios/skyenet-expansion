@@ -79,10 +79,10 @@ export class MyPlayer extends ClientPlayer {
       this.flames = this.flames | FlamesBits.RotateClockwise;
     }
     if (game.keyManager.wasKeyJustPressed("KeyO")) {
-      this.HP++;
+      this.health++;
     }
     if (game.keyManager.wasKeyJustPressed("KeyL")) {
-      this.HP--;
+      this.health--;
     }
     if (game.keyManager.wasKeyJustPressed("Space")) {
       clientManager.webSocketClient.connection.sendPacket(

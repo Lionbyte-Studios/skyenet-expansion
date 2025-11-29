@@ -140,8 +140,12 @@ export class ServerPlayer extends Player implements CommandSender {
         {
           velX: this.velX + velXChange,
           velY: this.velY + velYChange,
+          health: this.health - 10,
         },
       );
+
+      this.sendMessage(this.health.toString());
+
       // the /2 is not perfect but it'll do for now
       serverMgr.game.spawnEntity(
         new ServerParticles(
