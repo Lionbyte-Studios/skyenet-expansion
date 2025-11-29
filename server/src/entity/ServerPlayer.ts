@@ -22,6 +22,8 @@ import {
   manhattanDistance,
   xyDistance,
 } from "../../../core/src/util/Util";
+import { ServerParticles } from "./ServerParticles";
+import { ParticleType } from "../../../core/src/entity/Particles";
 
 export class ServerPlayer extends Player implements CommandSender {
   admin: boolean;
@@ -104,9 +106,6 @@ export class ServerPlayer extends Player implements CommandSender {
       .filter((asteroid) => asteroid.isInHitbox(this.x, this.y));
     asteroidsInHitbox.forEach((asteroid) => {
       const distance = xyDistance(this, asteroid);
-      this.sendMessage(`${distance.x} ${distance.y}`);
-      // this.velX += distance.x * 10;
-      // this.velY += distance.y * 10;
       let velXChange;
       if (distance.x === 0) {
         velXChange = 0; // thought: mabye push in a random direction instead?
@@ -132,12 +131,28 @@ export class ServerPlayer extends Player implements CommandSender {
         velYChange *= asteroid.size / 2;
         if (velYChange > 10) velYChange = 10;
       }
+
+      velXChange *= 0.25;
+      velYChange *= 0.25;
+
       serverMgr.game.modifyEntityData<ServerPlayer>(
         (e) => e.entityID === this.entityID,
         {
           velX: this.velX + velXChange,
           velY: this.velY + velYChange,
         },
+      );
+      // the /2 is not perfect but it'll do for now
+      serverMgr.game.spawnEntity(
+        new ServerParticles(
+          this.x - distance.x / 2,
+          this.y - distance.y / 2,
+          [228, 136, 0],
+          ParticleType.Square,
+          10,
+          1,
+          1,
+        ),
       );
     });
   }
