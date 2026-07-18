@@ -135,6 +135,12 @@ export class ServerPlayer extends Player implements CommandSender {
       velXChange *= 0.25;
       velYChange *= 0.25;
 
+      /// Can happen if the player is exactly in the center of the asteroid
+      if (velXChange === 0 && velYChange === 0) {
+        velXChange = Math.random() * 0.1;
+        velYChange = Math.random() * 0.1;
+      }
+
       serverMgr.game.modifyEntityData<ServerPlayer>(
         (e) => e.entityID === this.entityID,
         {

@@ -4,5 +4,6 @@
     "client_id": "",
     "client_secret": ""
   },
-  "admins": []
+  "admins": [],
+  "everyone_is_admin": false
 }

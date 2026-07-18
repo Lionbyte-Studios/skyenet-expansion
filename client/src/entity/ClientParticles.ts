@@ -63,6 +63,9 @@ export class ClientParticles extends Particles implements RenderableEntity {
   }
 
   private generateParticles() {
+    if (!clientManager.isGameRunning()) {
+      return;
+    }
     for (let i = 0; i < this.amount; i++) {
       this.particles.push({
         offsetX: 0,
@@ -79,6 +82,9 @@ export class ClientParticles extends Particles implements RenderableEntity {
   }
 
   private tickParticles() {
+    if (!clientManager.isGameRunning()) {
+      return;
+    }
     this.particles.forEach((particle, index) => {
       if (particle.lifetime <= 0 || particle.opacity <= 0) {
         this.particles.splice(index, 1);
@@ -86,7 +92,7 @@ export class ClientParticles extends Particles implements RenderableEntity {
       }
       if (
         particle.lifetime <
-        this.delta * clientManager.game.config.tps * 0.1
+        this.delta * clientManager.game!.config.tps * 0.1
       ) {
         particle.opacity -= 0.05;
         particle.size *= 0.99;

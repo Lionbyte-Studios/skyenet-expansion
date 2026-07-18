@@ -12,6 +12,7 @@ import { serverMgr } from "./Main";
 import { ChatMessageS2CPacket } from "../../core/src/net/packets/ChatMessageS2CPacket";
 import { ParticleType } from "../../core/src/entity/Particles";
 import { ServerParticles } from "./entity/ServerParticles";
+import { ModifyEntitiesS2CPacket } from "../../core/src/net/packets/ModifyEntitiesS2CPacket";
 
 export function registerCommands(mgr: CommandManager) {
   mgr.registerCommand(
@@ -129,6 +130,28 @@ export function registerCommands(mgr: CommandManager) {
             ),
           ),
         2000,
+      );
+      return 1;
+    }),
+  );
+
+  mgr.registerCommand(
+    new LiteralArgumentBuilder("tp").executes((_ctx, sender) => {
+      if (!(sender instanceof ServerPlayer)) {
+        sender.sendMessage("You must be a player.");
+        return 0;
+      }
+      serverMgr.game.modifyPlayerData(
+        (player) => player.playerID === sender.playerID,
+        {
+          velX: 0,
+          velY: 0,
+        },
+      );
+      serverMgr.wsMgr.broadcastPacket(
+        new ModifyEntitiesS2CPacket([
+          { entityID: sender.entityID, modifications: { velX: 0, velY: 0 } },
+        ]),
       );
       return 1;
     }),

@@ -11,7 +11,7 @@ import { ServerBullet } from "../entity/ServerBullet";
 import { ServerPlayer } from "../entity/ServerPlayer";
 import { serverMgr } from "../Main";
 import { ServerConnection } from "./ServerConnection";
-import { admins } from "../../../.serverconfig.json";
+import { admins, everyone_is_admin } from "../../../.serverconfig.json";
 import { PickupItemsC2SPacket } from "../../../core/src/net/packets/PickupItemC2SPacket";
 import { ServerItemEntity } from "../entity/ServerItem";
 import { distanceSq } from "../../../core/src/util/Util";
@@ -28,6 +28,9 @@ export class ServerPlayNetworkHandler extends ServerPlayListener {
       packet.selectedShipEngine,
       this.packetSender,
     );
+    if (everyone_is_admin) {
+      player.admin = true;
+    }
     if (packet.token !== undefined) {
       const userAndSession = await getUserAndSessionByToken(packet.token);
       if (userAndSession !== undefined) {

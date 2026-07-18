@@ -14,7 +14,7 @@ import {
   getUserByUserID,
   replaceUser,
 } from "./Database";
-import { admins } from "../../../.serverconfig.json";
+import { admins, everyone_is_admin } from "../../../.serverconfig.json";
 
 export function generateUserID(): string {
   return uuidv4();
@@ -88,6 +88,7 @@ export async function isAdminByToken(token: string): Promise<boolean> {
   if (user_and_session === undefined) {
     return false;
   }
-  if (admins.includes(user_and_session[0].discord.user_id)) return true;
+  if (admins.includes(user_and_session[0].discord.user_id) || everyone_is_admin)
+    return true;
   return false;
 }

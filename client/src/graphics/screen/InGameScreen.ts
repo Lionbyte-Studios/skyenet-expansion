@@ -70,9 +70,10 @@ export class InGameScreen extends ClientScreen {
       data.entityID,
       // new GameRenderer(clientManager.getRenderInfo()),
     );
-    clientManager.game.renderer = new GameRenderer(
-      clientManager.getRenderInfo(),
-    );
+    const renderInfo = clientManager.getRenderInfo();
+    if (renderInfo !== undefined) {
+      clientManager.game.renderer = new GameRenderer(renderInfo);
+    }
     // const playersToPush: ClientPlayer[] = [];
     // data.players.forEach((player) => {
     //   if (player.playerID === data.playerID) return;

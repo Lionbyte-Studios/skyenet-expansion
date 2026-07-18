@@ -15,6 +15,9 @@ import { clientManager } from "../Main";
 export class ClientPlayNetworkHandler extends ClientPlayListener {
   public override onPlayerJoin(packet: JoinGameS2CPacket): void {
     if (!acceptingInGamePackets()) return;
+    if (clientManager.game === undefined) {
+      throw new Error("Received game-related packet while game is undefined.");
+    }
     clientManager.game.entities.push(
       new ClientPlayer(
         packet.playerID,
@@ -30,6 +33,9 @@ export class ClientPlayNetworkHandler extends ClientPlayListener {
   }
   public override onPlayerMove(packet: PlayerMoveS2CPacket): void {
     if (!acceptingInGamePackets()) return;
+    if (clientManager.game === undefined) {
+      throw new Error("Received game-related packet while game is undefined.");
+    }
     const index = clientManager.game.entities.findIndex(
       (entity) =>
         entity instanceof ClientPlayer && entity.playerID === packet.playerID,
@@ -55,48 +61,57 @@ export class ClientPlayNetworkHandler extends ClientPlayListener {
   }
   public override onSpawnEntity(packet: SpawnEntityS2CPacket): void {
     if (!acceptingInGamePackets()) return;
+    if (clientManager.game === undefined) {
+      throw new Error("Received game-related packet while game is undefined.");
+    }
     clientManager.game.entities.push(packet.entity);
   }
   public override onKillEntities(packet: KillEntitiesS2CPacket): void {
     if (!acceptingInGamePackets()) return;
+    if (clientManager.game === undefined) {
+      throw new Error("Received game-related packet while game is undefined.");
+    }
     packet.entityIDs.forEach((id) => {
-      const index = clientManager.game.entities.findIndex(
+      const index = clientManager.game!.entities.findIndex(
         (entity) => entity.entityID === id,
       );
       if (index === -1) {
-        const playerIndex = clientManager.game.entities.findIndex(
+        const playerIndex = clientManager.game!.entities.findIndex(
           (player) => player.entityID === id,
         );
         if (playerIndex === -1) {
           console.warn("Could not find entity with id " + id);
           return;
         }
-        clientManager.game.entities.splice(index, 1);
+        clientManager.game!.entities.splice(index, 1);
         return;
       }
-      clientManager.game.entities.splice(index, 1);
+      clientManager.game!.entities.splice(index, 1);
     });
   }
   public override onModifyEntities(packet: ModifyEntitiesS2CPacket): void {
     if (!acceptingInGamePackets()) return;
+    if (clientManager.game === undefined) {
+      throw new Error("Received game-related packet while game is undefined.");
+    }
     packet.entityModifications.forEach((modification) => {
       if (
-        clientManager.game.entities.find(
+        clientManager.game!.entities.find(
           (entity) => entity.entityID === modification.entityID,
         ) !== undefined
       )
-        clientManager.game.modifyEntityData(
+        clientManager.game!.modifyEntityData(
           (entity) => entity.entityID === modification.entityID,
           modification.modifications as IndexSignature<
             typeof modification.modifications
           >,
         );
       else if (
-        clientManager.game.entities.find(
+        clientManager.game!.entities.find(
           (player) => player.entityID === modification.entityID,
         ) !== undefined
       )
-        clientManager.game.modifyPlayerData(
+        clientManager.game!.modifyPlayerData(
           (player) => player.entityID === modification.entityID,
           modification.modifications as IndexSignature<
             typeof modification.modifications
@@ -119,6 +134,15 @@ export class ClientPlayNetworkHandler extends ClientPlayListener {
 }
 
 function acceptingInGamePackets(): boolean {
+  try {
+    // @ts-expect-error Intended
+    const _maybeClientManager = clientManager;
+  } catch (e) {
+    if (!(e instanceof ReferenceError)) {
+      console.warn("Error was not ReferenceError", e);
+    }
+    return false;
+  }
   return (
     clientManager.currentScreen instanceof InGameScreen &&
     clientManager.currentScreen.state === "gamerunning"

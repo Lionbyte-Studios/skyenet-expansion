@@ -4,18 +4,19 @@ import {
   type LoginCallback,
   type Ship,
 } from "../../core/src/types";
-import type { ClientGame } from "./ClientGame";
+import { ClientGame } from "./ClientGame";
 import { AtlasManager } from "./graphics/AtlasManager";
 import { ClientScreen } from "./graphics/screen/Screen";
 import { ClientStorage } from "./lib/settings/ClientStorage";
 import { WebSocketClient } from "./net/WebSocketClient";
 import { socket_url, proto } from "../../config.json";
 import { login } from "./net/api/Api";
+import { MainMenuScreen } from "./graphics/screen/MainMenuScreen";
 
 export interface RenderInfo {
   ctx: CanvasRenderingContext2D;
   canvas: HTMLCanvasElement;
-  game: ClientGame;
+  game?: ClientGame;
   atlasManager: AtlasManager;
   state: ClientState;
   display: DisplayInfo;
@@ -48,11 +49,11 @@ export interface MouseInfo {
 }
 
 export class ClientManager {
-  public game!: ClientGame;
+  public game?: ClientGame;
   public canvas: HTMLCanvasElement;
   public ctx: CanvasRenderingContext2D;
   public display: DisplayInfo;
-  public currentScreen!: ClientScreen;
+  public currentScreen: ClientScreen;
   public state: ClientState;
   public webSocketClient: WebSocketClient;
   public clientStorage: ClientStorage;
@@ -107,6 +108,7 @@ export class ClientManager {
     this.webSocketClient = new WebSocketClient("ws://" + socket_url);
     this.clientStorage = new ClientStorage();
     this.atlasManager = atlasManager;
+    this.currentScreen = new MainMenuScreen(this.getRenderInfo());
 
     // check for ?token=... and if it exists, set it in the localStorage and reload.
     const params = new URLSearchParams(document.location.search);
@@ -137,7 +139,7 @@ export class ClientManager {
     } else this.loggedInUser = undefined;
   }
 
-  public isGameRunning() {
+  public isGameRunning(): this is this & { game: ClientGame } {
     return this.game !== undefined;
   }
 
